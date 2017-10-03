@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.view.Gravity;
 import android.widget.Toast;
 
-public class Helpers {
+public class Utils {
     public static boolean checkBluetooth(BluetoothAdapter bluetoothAdapter) {
 
         // Ensures Bluetooth is available on the device and it is enabled. If not,

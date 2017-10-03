@@ -1,13 +1,13 @@
 package com.example.wimva.bluetoothtest;
 
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.os.Handler;
 
-class ScannerBTLE {
+
+public class Scanner_BTLE {
     private MainActivity ma;
 
     private BluetoothAdapter mBluetoothAdapter;
@@ -17,7 +17,7 @@ class ScannerBTLE {
     private long scanPeriod;
     private int signalStrength;
 
-    public ScannerBTLE(MainActivity mainActivity, long scanPeriod, int signalStrength) {
+    public Scanner_BTLE(MainActivity mainActivity, long scanPeriod, int signalStrength) {
         ma = mainActivity;
 
         mHandler = new Handler();
@@ -35,8 +35,8 @@ class ScannerBTLE {
     }
 
     public void start() {
-        if (!Helpers.checkBluetooth(mBluetoothAdapter)) {
-            Helpers.requestUserBluetooth(ma);
+        if (!Utils.checkBluetooth(mBluetoothAdapter)) {
+            Utils.requestUserBluetooth(ma);
             ma.stopScan();
         }
         else {
@@ -53,13 +53,13 @@ class ScannerBTLE {
     // providing an array of UUID objects that specify the GATT services your app supports.
     private void scanLeDevice(final boolean enable) {
         if (enable && !mScanning) {
-            Helpers.toast(ma.getApplicationContext(), "Starting BLE scan...");
+            Utils.toast(ma.getApplicationContext(), "Starting BLE scan...");
 
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Helpers.toast(ma.getApplicationContext(), "Stopping BLE scan...");
+                    Utils.toast(ma.getApplicationContext(), "Stopping BLE scan...");
 
                     mScanning = false;
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);

@@ -5,10 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-class BroadcastReceiverBTState extends BroadcastReceiver{
+public class BroadcastReceiver_BTState extends BroadcastReceiver {
     Context activityContext;
 
-    public BroadcastReceiverBTState(Context activityContext) {
+    public BroadcastReceiver_BTState(Context activityContext) {
         this.activityContext = activityContext;
     }
 
@@ -21,16 +21,16 @@ class BroadcastReceiverBTState extends BroadcastReceiver{
 
             switch (state) {
                 case BluetoothAdapter.STATE_OFF:
-                    Helpers.toast(activityContext, "Bluetooth is off");
+                    Utils.toast(activityContext, "Bluetooth is off");
                     break;
                 case BluetoothAdapter.STATE_TURNING_OFF:
-                    Helpers.toast(activityContext, "Bluetooth is turning off...");
+                    Utils.toast(activityContext, "Bluetooth is turning off...");
                     break;
                 case BluetoothAdapter.STATE_ON:
-                    Helpers.toast(activityContext, "Bluetooth is on");
+                    Utils.toast(activityContext, "Bluetooth is on");
                     break;
                 case BluetoothAdapter.STATE_TURNING_ON:
-                    Helpers.toast(activityContext, "Bluetooth is turning on...");
+                    Utils.toast(activityContext, "Bluetooth is turning on...");
                     break;
             }
         }

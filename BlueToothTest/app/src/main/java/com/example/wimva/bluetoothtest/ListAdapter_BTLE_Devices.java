@@ -1,6 +1,5 @@
 package com.example.wimva.bluetoothtest;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,31 +10,18 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
-
-    /*----------------------------------------------*/
-    /*------------------- FIELDS -------------------*/
-    /*----------------------------------------------*/
-
+class ListAdapter_BTLE_Devices extends ArrayAdapter<BTLE_Device> {
     Activity activity;
     int layoutResourceID;
-    ArrayList<BTLEDevice> devices;
+    ArrayList<BTLE_Device> devices;
 
-    /*---------------------------------------------------*/
-    /*------------------- CONSTRUCTOR -------------------*/
-    /*---------------------------------------------------*/
-
-    public ListAdapterBTLEDevices(Activity activity, int resource, ArrayList<BTLEDevice> objects) {
+    public ListAdapter_BTLE_Devices(Activity activity, int resource, ArrayList<BTLE_Device> objects) {
         super(activity.getApplicationContext(), resource, objects);
 
         this.activity = activity;
         layoutResourceID = resource;
         devices = objects;
     }
-
-    /*----------------------------------------------*/
-    /*------------------- METHODS -------------------*/
-    /*----------------------------------------------*/
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -46,7 +32,7 @@ class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
             convertView = inflater.inflate(layoutResourceID, parent, false);
         }
 
-        BTLEDevice device = devices.get(position);
+        BTLE_Device device = devices.get(position);
         String name = device.getName();
         String address = device.getAddress();
         int rssi = device.getRSSI();
@@ -54,7 +40,8 @@ class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
         TextView tv_name = (TextView) convertView.findViewById(R.id.tv_name);
         if (name != null && name.length() > 0) {
             tv_name.setText(device.getName());
-        } else {
+        }
+        else {
             tv_name.setText("No Name");
         }
 
@@ -64,7 +51,8 @@ class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
         TextView tv_macaddr = (TextView) convertView.findViewById(R.id.tv_macaddr);
         if (address != null && address.length() > 0) {
             tv_macaddr.setText(device.getAddress());
-        } else {
+        }
+        else {
             tv_macaddr.setText("No Address");
         }
 
