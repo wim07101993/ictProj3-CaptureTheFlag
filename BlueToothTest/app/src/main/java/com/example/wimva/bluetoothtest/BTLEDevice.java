@@ -3,11 +3,13 @@ package com.example.wimva.bluetoothtest;
 import android.bluetooth.BluetoothDevice;
 
 
-class BTLE_Device {
+class BTLEDevice {
+    // bluetooth device
     private BluetoothDevice bluetoothDevice;
+    // signal strength
     private int rssi;
 
-    public BTLE_Device(BluetoothDevice bluetoothDevice) {
+    public BTLEDevice(BluetoothDevice bluetoothDevice) {
         this.bluetoothDevice = bluetoothDevice;
     }
 

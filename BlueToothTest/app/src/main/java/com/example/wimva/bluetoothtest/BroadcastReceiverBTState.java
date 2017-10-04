@@ -5,10 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class BroadcastReceiver_BTState extends BroadcastReceiver {
+public class BroadcastReceiverBTState extends BroadcastReceiver {
     Context activityContext;
 
-    public BroadcastReceiver_BTState(Context activityContext) {
+    public BroadcastReceiverBTState(Context activityContext) {
         this.activityContext = activityContext;
     }
 

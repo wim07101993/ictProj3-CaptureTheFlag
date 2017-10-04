@@ -2,6 +2,9 @@
   <dictionary name="wimva">
     <words>
       <w>btle</w>
+      <w>hashmap</w>
+      <w>textview</w>
+      <w>textviews</w>
     </words>
   </dictionary>
 </component>
