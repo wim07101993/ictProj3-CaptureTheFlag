@@ -19,7 +19,7 @@ class BTLEDevice {
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    public BTLEDevice(BluetoothDevice bluetoothDevice) {
+    BTLEDevice(BluetoothDevice bluetoothDevice) {
         this.bluetoothDevice = bluetoothDevice;
     }
 
@@ -29,21 +29,21 @@ class BTLEDevice {
 
     /* ------------------------- GETTERS ------------------------- */
 
-    public String getAddress() {
+    String getAddress() {
         return bluetoothDevice.getAddress();
     }
 
-    public String getName() {
+    String getName() {
         return bluetoothDevice.getName();
     }
 
     /* ------------------------- SETTERS ------------------------- */
 
-    public void setRSSI(int rssi) {
+    void setRSSI(int rssi) {
         this.rssi = rssi;
     }
 
-    public int getRSSI() {
+    int getRSSI() {
         return rssi;
     }
 }

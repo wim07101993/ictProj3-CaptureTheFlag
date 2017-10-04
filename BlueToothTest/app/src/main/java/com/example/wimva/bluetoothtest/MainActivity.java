@@ -5,7 +5,9 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -15,12 +17,14 @@ import android.widget.ScrollView;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
+    @SuppressWarnings("unused")
     private final static String TAG = MainActivity.class.getSimpleName();
 
     public static final int REQUEST_ENABLE_BT = 1;
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     public void startScan() {
         // set button text
-        btnScan.setText("Scanning...");
+        btnScan.setText(R.string.scanning_button_text);
 
         // clear device list
         btDevicesArrayList.clear();
@@ -175,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      * Changes the scan button text.
      */
     public void stopScan() {
-        btnScan.setText("Scan Again");
+        btnScan.setText(R.string.scan_again);
         btleScanner.stop();
     }
 }

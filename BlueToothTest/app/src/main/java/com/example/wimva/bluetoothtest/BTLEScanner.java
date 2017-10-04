@@ -1,12 +1,17 @@
 package com.example.wimva.bluetoothtest;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 class BTLEScanner {
 
     /* ---------------------------------------------------------- */
@@ -15,8 +20,9 @@ class BTLEScanner {
 
     private MainActivity ma;
 
-    // adapter to get bluetooth devices
-    private BluetoothAdapter bluetoothAdapter;
+    // scanner to get bluetooth devices
+    private BluetoothLeScanner scanner;
+    private BluetoothAdapter adapter;
     // boolean to indicate if adapter is scanning
     private boolean scanning;
     // instance to handle threading
@@ -28,16 +34,17 @@ class BTLEScanner {
     private int signalStrength;
 
     // callback when scanned
-    private BluetoothAdapter.LeScanCallback leScanCallback =
-            new BluetoothAdapter.LeScanCallback() {
+    private ScanCallback scanCallback =
+            new ScanCallback() {
                 @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
-                    final int newRSSI = rssi;
+                public void onScanResult(final int callbackType, final ScanResult result) {
+                    final int rssi = result.getRssi();
+
                     if (rssi > signalStrength) {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                ma.addDevice(device, newRSSI);
+                                ma.addDevice(result.getDevice(), rssi);
                             }
                         });
                     }
@@ -48,13 +55,12 @@ class BTLEScanner {
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    public BTLEScanner(MainActivity mainActivity, long scanPeriod, int signalStrength) {
+    BTLEScanner(MainActivity mainActivity, long scanPeriod, int signalStrength) {
         // create instances of fields
         ma = mainActivity;
 
-        final BluetoothManager bluetoothManager =
-                (BluetoothManager) ma.getSystemService(Context.BLUETOOTH_SERVICE);
-        bluetoothAdapter = bluetoothManager.getAdapter();
+        adapter = ((BluetoothManager) ma.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        scanner = adapter.getBluetoothLeScanner();
         handler = new Handler();
 
         this.scanPeriod = scanPeriod;
@@ -65,22 +71,21 @@ class BTLEScanner {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
-    public boolean isScanning() {
+    boolean isScanning() {
         return scanning;
     }
 
-    public void start() {
+    void start() {
         // checks if the bluetooth is turned on and starts the scan
-        if (!Utils.checkBluetooth(bluetoothAdapter)) {
+        if (!Utils.checkBluetooth(adapter)) {
             Utils.requestUserBluetooth(ma);
             ma.stopScan();
-        }
-        else {
+        } else {
             scanLeDevice(true);
         }
     }
 
-    public void stop() {
+    void stop() {
         scanLeDevice(false);
     }
 
@@ -99,19 +104,19 @@ class BTLEScanner {
                     Utils.toast(ma.getApplicationContext(), "Stopping BLE scan...");
 
                     scanning = false;
-                    bluetoothAdapter.stopLeScan(leScanCallback);
+
+                    scanner.stopScan(scanCallback);
 
                     ma.stopScan();
                 }
             }, scanPeriod);
 
             scanning = true;
-            bluetoothAdapter.startLeScan(leScanCallback);
-//            bluetoothAdapter.startLeScan(uuids, leScanCallback);
-        }
-        else if (!enable){
+            scanner.startScan(scanCallback);
+//            scanner.startLeScan(uuids, leScanCallback);
+        } else if (!enable) {
             scanning = false;
-            bluetoothAdapter.stopLeScan(leScanCallback);
+            scanner.stopScan(scanCallback);
         }
     }
 

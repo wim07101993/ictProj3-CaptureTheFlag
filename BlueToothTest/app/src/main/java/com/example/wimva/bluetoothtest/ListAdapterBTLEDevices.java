@@ -2,6 +2,7 @@ package com.example.wimva.bluetoothtest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    public ListAdapterBTLEDevices(Activity activity, int resource, ArrayList<BTLEDevice> objects) {
+    ListAdapterBTLEDevices(Activity activity, int resource, ArrayList<BTLEDevice> objects) {
         super(activity.getApplicationContext(), resource, objects);
 
         // set fields
@@ -41,8 +42,9 @@ class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         // if the view is null, get it from the activity
         if (convertView == null) {
             convertView = ((LayoutInflater) activity
