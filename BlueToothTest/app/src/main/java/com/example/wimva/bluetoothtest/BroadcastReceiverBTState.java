@@ -5,12 +5,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class BroadcastReceiverBTState extends BroadcastReceiver {
-    Context activityContext;
+class BroadcastReceiverBTState extends BroadcastReceiver {
+
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
+    private Context activityContext;
+
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
 
     public BroadcastReceiverBTState(Context activityContext) {
         this.activityContext = activityContext;
     }
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -35,4 +48,5 @@ public class BroadcastReceiverBTState extends BroadcastReceiver {
             }
         }
     }
+
 }

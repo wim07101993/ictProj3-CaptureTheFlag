@@ -7,7 +7,12 @@ import android.content.Context;
 import android.os.Handler;
 
 
-public class BTLEScanner {
+class BTLEScanner {
+
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
     private MainActivity ma;
 
     // adapter to get bluetooth devices
@@ -39,6 +44,10 @@ public class BTLEScanner {
                 }
             };
 
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
+
     public BTLEScanner(MainActivity mainActivity, long scanPeriod, int signalStrength) {
         // create instances of fields
         ma = mainActivity;
@@ -51,6 +60,10 @@ public class BTLEScanner {
         this.scanPeriod = scanPeriod;
         this.signalStrength = signalStrength;
     }
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
 
     public boolean isScanning() {
         return scanning;

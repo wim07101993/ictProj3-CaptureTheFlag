@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
     private final static String TAG = MainActivity.class.getSimpleName();
 
     public static final int REQUEST_ENABLE_BT = 1;
@@ -34,6 +39,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BroadcastReceiverBTState btStateUpdateReceiver;
     // instance to scan for btle devices
     private BTLEScanner btleScanner;
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

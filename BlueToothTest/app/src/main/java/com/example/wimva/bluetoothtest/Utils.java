@@ -8,6 +8,11 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 public class Utils {
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
+
     public static boolean checkBluetooth(BluetoothAdapter bluetoothAdapter) {
         return bluetoothAdapter == null || !bluetoothAdapter.isEnabled();
     }

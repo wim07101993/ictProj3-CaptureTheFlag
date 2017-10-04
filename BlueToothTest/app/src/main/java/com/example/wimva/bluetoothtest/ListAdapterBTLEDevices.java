@@ -11,14 +11,22 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
-    // activity to get convertView from if needed
-    Activity activity;
 
-    int layoutResourceID;
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
+    // activity to get convertView from if needed
+    private Activity activity;
+
+    private int layoutResourceID;
 
     // list of bluetooth devices
-    ArrayList<BTLEDevice> devices;
+    private ArrayList<BTLEDevice> devices;
 
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
 
     public ListAdapterBTLEDevices(Activity activity, int resource, ArrayList<BTLEDevice> objects) {
         super(activity.getApplicationContext(), resource, objects);
@@ -28,6 +36,10 @@ class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
         layoutResourceID = resource;
         devices = objects;
     }
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
