@@ -12,7 +12,7 @@
 >* [ ] sprint 6
 
 
-## leerlingen
+## Student
 
 >* Georges Grajchen
 >* Jo Claes 
@@ -20,4 +20,4 @@
 >* Nick Castermans 
 >* Hakan Sanli 
 >* Sven Liekens
->* Wim Vanlaer 
+>* Wim Van Laer 
