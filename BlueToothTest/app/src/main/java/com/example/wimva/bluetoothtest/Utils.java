@@ -14,7 +14,7 @@ class Utils {
     /* ----------------------------------------------------------- */
 
     static boolean checkBluetooth(BluetoothAdapter bluetoothAdapter) {
-        return bluetoothAdapter == null || !bluetoothAdapter.isEnabled();
+        return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
     }
 
     static void requestUserBluetooth(Activity activity) {
