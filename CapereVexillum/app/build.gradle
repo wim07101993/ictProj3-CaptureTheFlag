@@ -4,8 +4,8 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
-        applicationId "com.example.wimva.bluetoothtest"
-        minSdkVersion 21
+        applicationId "comwim07101993ictproj3_capturetheflag.github.caperevexillum"
+        minSdkVersion 22
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"

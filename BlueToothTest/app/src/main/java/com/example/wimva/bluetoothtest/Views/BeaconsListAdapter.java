@@ -1,4 +1,4 @@
-package com.example.wimva.bluetoothtest;
+package com.example.wimva.bluetoothtest.Views;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.wimva.bluetoothtest.Models.Beacon;
+import com.example.wimva.bluetoothtest.R;
+
 import java.util.ArrayList;
 
-class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
+public class BeaconsListAdapter extends ArrayAdapter<Beacon> {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -23,13 +26,13 @@ class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
     private int layoutResourceID;
 
     // list of bluetooth devices
-    private ArrayList<BTLEDevice> devices;
+    private ArrayList<Beacon> devices;
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    ListAdapterBTLEDevices(Activity activity, int resource, ArrayList<BTLEDevice> objects) {
+    public BeaconsListAdapter(Activity activity, int resource, ArrayList<Beacon> objects) {
         super(activity.getApplicationContext(), resource, objects);
 
         // set fields
@@ -54,12 +57,12 @@ class ListAdapterBTLEDevices extends ArrayAdapter<BTLEDevice> {
         }
 
         // get the needed device
-        BTLEDevice device = devices.get(position);
+        Beacon device = devices.get(position);
 
         // create textviews
         fillTextView(convertView, R.id.tv_name, device.getName(), "No Name");
         fillTextView(convertView, R.id.tv_macaddr, device.getAddress(), "No Address");
-        fillTextView(convertView, R.id.tv_rssi, "RSSI: " + Integer.toString(device.getRSSI()), "No RSSI");
+        fillTextView(convertView, R.id.tv_rssi, "RSSI: " + Integer.toString(device.getRssi()), "No RSSI");
 
         return convertView;
     }

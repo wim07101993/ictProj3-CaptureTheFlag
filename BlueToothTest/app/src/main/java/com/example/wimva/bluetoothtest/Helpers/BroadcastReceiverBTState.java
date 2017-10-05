@@ -1,11 +1,11 @@
-package com.example.wimva.bluetoothtest;
+package com.example.wimva.bluetoothtest.Helpers;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-class BroadcastReceiverBTState extends BroadcastReceiver {
+public class BroadcastReceiverBTState extends BroadcastReceiver {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
