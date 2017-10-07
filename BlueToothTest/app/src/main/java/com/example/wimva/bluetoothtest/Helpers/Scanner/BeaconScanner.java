@@ -34,20 +34,21 @@ public class BeaconScanner {
             new ScanCallback() {
                 @Override
                 public void onScanResult(final int callbackType, final ScanResult result) {
-                    if (!Beacon.isBeacon(result)) {
-                        return;
-                    }
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (OnScanListener l : eventListeners) {
-                                l.onBeaconFound(new Beacon(result));
+                    final Beacon scannedBeacon = Beacon.createBeaconFromScanResult(result);
+                    if (scannedBeacon != null) {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (OnScanListener l : eventListeners) {
+                                    l.onBeaconFound(scannedBeacon);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             };
+
+
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */

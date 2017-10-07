@@ -60,9 +60,8 @@ public class BeaconsListAdapter extends ArrayAdapter<Beacon> {
         Beacon device = devices.get(position);
 
         // create textviews
-        fillTextView(convertView, R.id.tv_name, device.getName(), "No Name");
         fillTextView(convertView, R.id.tv_macaddr, device.getAddress(), "No Address");
-        fillTextView(convertView, R.id.tv_rssi, "RSSI: " + Integer.toString(device.getRssi()), "No RSSI");
+        fillTextView(convertView, R.id.tv_rssi, "Signal strength: " + Double.toString(device.getRelativeRssi()), "No strength");
 
         return convertView;
     }

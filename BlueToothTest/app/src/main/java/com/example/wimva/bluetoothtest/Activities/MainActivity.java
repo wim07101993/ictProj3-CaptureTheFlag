@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // list of all devices to show in view
     private ArrayList<Beacon> btDevicesArrayList;
     // adapter to show list of bt devices in view
+    private Beacon ClosestBeacon;
     private BeaconsListAdapter adapter;
 
     private Button btnScan;
@@ -260,20 +261,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onBeaconFound(Beacon beacon) {
         String address = beacon.getAddress();
-        int rssi = beacon.getRssi();
+        int power = beacon.getPower();
 
         // if hashmap doesn't contain beacon, add it
         // else update the signal strength
         if (!btDevicesHashMap.containsKey(address)) {
-            if (rssi > signalThreshold) {
+            if (power > signalThreshold) {
                 btDevicesHashMap.put(address, beacon);
                 btDevicesArrayList.add(beacon);
             } else {
                 btDevicesHashMap.remove(address);
                 btDevicesArrayList.remove(address);
             }
-        } else if (rssi > signalThreshold) {
+        } else if (power > signalThreshold) {
             btDevicesHashMap.get(address).setRssi(beacon.getRssi());
+            btDevicesHashMap.get(address).setPower(beacon.getPower());
         }
 
         // update view
