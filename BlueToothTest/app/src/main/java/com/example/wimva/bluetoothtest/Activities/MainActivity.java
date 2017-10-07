@@ -26,6 +26,8 @@ import com.example.wimva.bluetoothtest.Helpers.Utils;
 import com.example.wimva.bluetoothtest.Models.Beacon;
 import com.example.wimva.bluetoothtest.R;
 
+import java.util.Calendar;
+
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener, OnScanListener {
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final static String TAG = MainActivity.class.getSimpleName();
 
     public static final int REQUEST_ENABLE_BT = 1;
+    private static final int TIME_UNTIL_NOT_FOUND = 2000;
 
     private Beacon closestBeacon;
 
@@ -231,9 +234,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        if (newBeaconSignalStrength < signalThreshold &&
-                (closestBeacon == null || newBeaconSignalStrength > closestBeacon.getRelativeRssi())) {
-            setClosestBeacon(beacon);
+        if (newBeaconSignalStrength < signalThreshold) {
+            if (closestBeacon == null) {
+                setClosestBeacon(beacon);
+            }
+
+            //if the beacon is not detected for a certain time, it is considered not found.
+            double timeDiff = Calendar.getInstance().getTime().getTime() - closestBeacon.getLastFoundAt().getTime();
+            if (timeDiff > TIME_UNTIL_NOT_FOUND || newBeaconSignalStrength > closestBeacon.getRelativeRssi()) {
+                setClosestBeacon(beacon);
+            }
         }
     }
 }
