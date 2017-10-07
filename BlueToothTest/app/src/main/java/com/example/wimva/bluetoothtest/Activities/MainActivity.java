@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // sensitivity text field and seek bar
         skbSensitivity = (SeekBar) findViewById(R.id.skbSensitivity);
         skbSensitivity.setOnSeekBarChangeListener(this);
-        skbSensitivity.setProgress(signalThreshold);
+        signalThreshold = skbSensitivity.getProgress();
 
         txtSensitivity = (TextView) findViewById(R.id.txtSensitivity);
         txtSensitivity.setText(Integer.toString(-skbSensitivity.getProgress()));
