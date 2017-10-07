@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         signalThreshold = skbSensitivity.getProgress();
 
         txtSensitivity = (TextView) findViewById(R.id.txtSensitivity);
-        txtSensitivity.setText(Integer.toString(-skbSensitivity.getProgress()));
+        txtSensitivity.setText(Integer.toString(skbSensitivity.getProgress()));
 
         // beacon details
         txtAddress = (TextView) findViewById(R.id.txtAddress);
