@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,9 +25,6 @@ import com.example.wimva.bluetoothtest.Helpers.Scanner.OnScanListener;
 import com.example.wimva.bluetoothtest.Helpers.Utils;
 import com.example.wimva.bluetoothtest.Models.Beacon;
 import com.example.wimva.bluetoothtest.R;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
@@ -224,8 +220,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBeaconFound(Beacon beacon) {
+        double newBeaconSignalStrength = beacon.getRelativeRssi();
+
         if (closestBeacon != null && beacon.getAddress().equals(closestBeacon.getAddress())) {
-            if (beacon.getRelativeRssi() > signalThreshold) {
+            if (newBeaconSignalStrength > signalThreshold) {
                 setClosestBeacon(null);
             } else {
                 setClosestBeacon(beacon);
@@ -233,11 +231,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        if (beacon.getRelativeRssi() > signalThreshold) {
-            return;
-        }
-
-        if (closestBeacon == null || beacon.getRelativeRssi() > closestBeacon.getRelativeRssi()) {
+        if (newBeaconSignalStrength < signalThreshold &&
+                (closestBeacon == null || newBeaconSignalStrength > closestBeacon.getRelativeRssi())) {
             setClosestBeacon(beacon);
         }
     }
