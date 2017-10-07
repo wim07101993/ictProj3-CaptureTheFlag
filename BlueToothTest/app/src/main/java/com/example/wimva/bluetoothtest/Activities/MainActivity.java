@@ -17,8 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -28,11 +26,7 @@ import com.example.wimva.bluetoothtest.Helpers.Scanner.OnScanListener;
 import com.example.wimva.bluetoothtest.Helpers.Utils;
 import com.example.wimva.bluetoothtest.Models.Beacon;
 import com.example.wimva.bluetoothtest.R;
-import com.example.wimva.bluetoothtest.Views.BeaconsListAdapter;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,26 +43,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static final int REQUEST_ENABLE_BT = 1;
 
-    // hash map to store all found bt devices and be able to search quickly trough them
-    private HashMap<String, Beacon> btDevicesHashMap;
-    // list of all devices to show in view
-    private ArrayList<Beacon> btDevicesArrayList;
-    // adapter to show list of bt devices in view
-    private Beacon ClosestBeacon;
-    private BeaconsListAdapter adapter;
+    private Beacon closestBeacon;
 
-    private Button btnScan;
     private SeekBar skbSensitivity;
     private TextView txtSensitivity;
 
-    private Handler handler = new Handler();
+    private Button btnScan;
+
+    private TextView txtAddress;
+    private TextView txtSignalStrength;
 
     // instance to detect when the bluetooth state changes (on/off)
     private BroadcastReceiverBTState btStateUpdateReceiver;
     // instance to scan for btle devices
     private BeaconScanner beaconBeaconScanner;
 
-    private int signalThreshold = -75;
+    private int signalThreshold;
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -78,12 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // set button text
         btnScan.setText(R.string.stop_scan);
 
-        // clear device list
-        btDevicesArrayList.clear();
-        btDevicesHashMap.clear();
-
-        // update view
-        adapter.notifyDataSetChanged();
+        setClosestBeacon(null);
 
         // start the scanner
         beaconBeaconScanner.start();
@@ -112,51 +97,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initializeComponents() {
-        btDevicesHashMap = new HashMap<>();
-        btDevicesArrayList = new ArrayList<>();
-
-        adapter = new BeaconsListAdapter(this, R.layout.btle_device_list_item, btDevicesArrayList);
-
         // scan button
-        btnScan = (Button) findViewById(R.id.btn_scan);
+        btnScan = (Button) findViewById(R.id.btnScan);
         btnScan.setOnClickListener(this);
 
         // sensitivity text field and seek bar
-        skbSensitivity = (SeekBar) findViewById(R.id.skb_sensitivity);
+        skbSensitivity = (SeekBar) findViewById(R.id.skbSensitivity);
         skbSensitivity.setOnSeekBarChangeListener(this);
-        txtSensitivity = (TextView) findViewById(R.id.txt_sensitivity);
+        signalThreshold = skbSensitivity.getProgress();
+
+        txtSensitivity = (TextView) findViewById(R.id.txtSensitivity);
         txtSensitivity.setText(Integer.toString(-skbSensitivity.getProgress()));
 
-        // list-view to show all device in
-        ListView listView = new ListView(this);
-        listView.setAdapter(adapter);
-
-        // add list-view to view
-        ((ScrollView) findViewById(R.id.scrollView)).addView(listView);
+        // beacon details
+        txtAddress = (TextView) findViewById(R.id.txtAddress);
+        txtSignalStrength = (TextView) findViewById(R.id.txtSignalStrength);
     }
 
-    private void scheduleCleanUpUnFoundBeacons() {
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                int countBefore = btDevicesArrayList.size();
+    /* ------------------------- SETTERS ------------------------- */
 
-                for (Beacon b : btDevicesArrayList) {
-                    long lastFoundAt = b.getLastFoundAt().getTime();
-                    long now = Calendar.getInstance().getTime().getTime();
-                    long timeDiff = Math.abs(lastFoundAt - now);
+    private void setClosestBeacon(Beacon beacon) {
+        closestBeacon = beacon;
 
-                    if (timeDiff > 900){
-                        btDevicesHashMap.remove(b.getAddress());
-                        btDevicesArrayList.remove(b);
-                    }
-                }
-
-                if (countBefore > btDevicesArrayList.size()){
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        }, 0, 1000);
+        if (closestBeacon != null) {
+            txtAddress.setText(closestBeacon.getAddress());
+            txtSignalStrength.setText(Double.toString(Utils.round(closestBeacon.getRelativeRssi(), 2)));
+        } else {
+            txtAddress.setText("");
+            txtSignalStrength.setText("");
+        }
     }
 
     /* ------------------------- ACTIVITY ------------------------- */
@@ -177,8 +146,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         BluetoothAdapter btAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         beaconBeaconScanner = new BeaconScanner(btAdapter, skbSensitivity.getProgress());
         beaconBeaconScanner.setScanEventListener(this);
-
-        //scheduleCleanUpUnFoundBeacons();
     }
 
     @Override
@@ -216,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         // if the button is clicked => start of stop scanning
-        if (v.getId() == R.id.btn_scan) {
+        if (v.getId() == R.id.btnScan) {
             if (!beaconBeaconScanner.isScanning()) {
                 startScan();
             } else {
@@ -229,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        txtSensitivity.setText(Integer.toString(-skbSensitivity.getProgress()));
+        txtSensitivity.setText(Integer.toString(skbSensitivity.getProgress()));
     }
 
     @Override
@@ -239,11 +206,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        signalThreshold = -seekBar.getProgress();
-        btDevicesHashMap.clear();
-        btDevicesArrayList.clear();
-
-        adapter.notifyDataSetChanged();
+        signalThreshold = seekBar.getProgress();
+        setClosestBeacon(null);
     }
 
     /* ------------------------- SCAN CHANGE ------------------------- */
@@ -260,25 +224,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBeaconFound(Beacon beacon) {
-        String address = beacon.getAddress();
-        int power = beacon.getPower();
-
-        // if hashmap doesn't contain beacon, add it
-        // else update the signal strength
-        if (!btDevicesHashMap.containsKey(address)) {
-            if (power > signalThreshold) {
-                btDevicesHashMap.put(address, beacon);
-                btDevicesArrayList.add(beacon);
+        if (closestBeacon != null && beacon.getAddress().equals(closestBeacon.getAddress())) {
+            if (beacon.getRelativeRssi() > signalThreshold) {
+                setClosestBeacon(null);
             } else {
-                btDevicesHashMap.remove(address);
-                btDevicesArrayList.remove(address);
+                setClosestBeacon(beacon);
             }
-        } else if (power > signalThreshold) {
-            btDevicesHashMap.get(address).setRssi(beacon.getRssi());
-            btDevicesHashMap.get(address).setPower(beacon.getPower());
+            return;
         }
 
-        // update view
-        adapter.notifyDataSetChanged();
+        if (beacon.getRelativeRssi() > signalThreshold) {
+            return;
+        }
+
+        if (closestBeacon == null || beacon.getRelativeRssi() > closestBeacon.getRelativeRssi()) {
+            setClosestBeacon(beacon);
+        }
     }
 }
