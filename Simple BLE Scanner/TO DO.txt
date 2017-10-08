@@ -1,0 +1,2 @@
+- Meer data uit BLE device halen (bv major en minor aka battery level)
+- Device uit lijst verwijderen wanneer het uit range gaat

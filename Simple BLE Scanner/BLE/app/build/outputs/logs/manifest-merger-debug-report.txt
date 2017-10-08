@@ -1,0 +1,99 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:2:1-24:12
+	package
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:3:5-23
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+uses-permission#android.permission.BLUETOOTH
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:5:5-68
+	android:name
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:5:22-65
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:6:5-74
+	android:name
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:6:22-71
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:7:5-81
+	android:name
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:7:22-78
+application
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:8:5-22:19
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Sven\.android\build-cache\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Sven\.android\build-cache\f78ff1abc2e34cc66ae0b2387c3c461605498097\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Sven\.android\build-cache\e37c04f480af370ee337a3a63a3a08d62a389dc0\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Sven\.android\build-cache\d09136a4cec017ae60c83b6f542d75d945e726c1\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Sven\.android\build-cache\c89a41d3e0302a66b852893d4ae079bde962bd73\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Sven\.android\build-cache\d679e074ad09d19d9a88d25a643deabc5a592bf1\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Sven\.android\build-cache\f17c098b110f3c64eef1ebdff7ccb0ab8cb96f52\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Sven\.android\build-cache\4eff4885d2b9bf266ca59d09783f8c5c439d2d04\output\AndroidManifest.xml:26:5-20
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Sven\.android\build-cache\dfff72e2af37c1ca80a239084cf0f3f188fd66a6\output\AndroidManifest.xml:29:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Sven\.android\build-cache\4250e9ce1d0a3ccffc023f34fff26d4c5be19bf6\output\AndroidManifest.xml:9:5-20
+	android:label
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:11:9-41
+	android:supportsRtl
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:13:9-35
+	android:roundIcon
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:12:9-54
+	android:allowBackup
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:9:9-35
+	android:icon
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:10:9-43
+	android:theme
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:14:9-40
+activity#sven.ble.MainActivity
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:15:9-21:20
+	android:name
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:15:19-47
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:16:13-20:29
+action#android.intent.action.MAIN
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:17:17-69
+	android:name
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:17:25-66
+category#android.intent.category.LAUNCHER
+ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:19:17-77
+	android:name
+		ADDED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml:19:27-74
+uses-sdk
+INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Sven\.android\build-cache\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\output\AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Sven\.android\build-cache\f78ff1abc2e34cc66ae0b2387c3c461605498097\output\AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Sven\.android\build-cache\e37c04f480af370ee337a3a63a3a08d62a389dc0\output\AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Sven\.android\build-cache\d09136a4cec017ae60c83b6f542d75d945e726c1\output\AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Sven\.android\build-cache\c89a41d3e0302a66b852893d4ae079bde962bd73\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Sven\.android\build-cache\d679e074ad09d19d9a88d25a643deabc5a592bf1\output\AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Sven\.android\build-cache\f17c098b110f3c64eef1ebdff7ccb0ab8cb96f52\output\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Sven\.android\build-cache\4eff4885d2b9bf266ca59d09783f8c5c439d2d04\output\AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Sven\.android\build-cache\dfff72e2af37c1ca80a239084cf0f3f188fd66a6\output\AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Sven\.android\build-cache\4250e9ce1d0a3ccffc023f34fff26d4c5be19bf6\output\AndroidManifest.xml:5:5-7:41
+	tools:overrideLibrary
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Sven\.android\build-cache\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\output\AndroidManifest.xml:23:9-75
+	android:targetSdkVersion
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+		INJECTED from D:\Stack\School\MobileApps2\Projects\BLE\app\src\main\AndroidManifest.xml
+meta-data#android.support.VERSION
+ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Sven\.android\build-cache\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-v4:25.3.1] C:\Users\Sven\.android\build-cache\f78ff1abc2e34cc66ae0b2387c3c461605498097\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-fragment:25.3.1] C:\Users\Sven\.android\build-cache\e37c04f480af370ee337a3a63a3a08d62a389dc0\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-media-compat:25.3.1] C:\Users\Sven\.android\build-cache\d09136a4cec017ae60c83b6f542d75d945e726c1\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-ui:25.3.1] C:\Users\Sven\.android\build-cache\c89a41d3e0302a66b852893d4ae079bde962bd73\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:support-core-utils:25.3.1] C:\Users\Sven\.android\build-cache\d679e074ad09d19d9a88d25a643deabc5a592bf1\output\AndroidManifest.xml:25:5-27:34
+MERGED from [com.android.support:animated-vector-drawable:25.3.1] C:\Users\Sven\.android\build-cache\f17c098b110f3c64eef1ebdff7ccb0ab8cb96f52\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-vector-drawable:25.3.1] C:\Users\Sven\.android\build-cache\4eff4885d2b9bf266ca59d09783f8c5c439d2d04\output\AndroidManifest.xml:22:5-24:34
+MERGED from [com.android.support:support-compat:25.3.1] C:\Users\Sven\.android\build-cache\dfff72e2af37c1ca80a239084cf0f3f188fd66a6\output\AndroidManifest.xml:25:5-27:34
+	android:value
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Sven\.android\build-cache\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\output\AndroidManifest.xml:27:9-31
+	android:name
+		ADDED from [com.android.support:appcompat-v7:25.3.1] C:\Users\Sven\.android\build-cache\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\output\AndroidManifest.xml:26:9-47
