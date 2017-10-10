@@ -1,7 +1,15 @@
 [
     {
+        "merged": "C:\\git\\ictProj3-CaptureTheFlag\\Simple BLE Scanner\\BLE\\app\\build\\intermediates\\res\\merged\\debug\\color-v11\\abc_background_cache_hint_selector_material_light.xml",
+        "source": "C:\\Users\\Sven\\.android\\build-cache\\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\\output\\res\\color-v11\\abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
         "merged": "D:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\res\\merged\\debug\\color-v11\\abc_background_cache_hint_selector_material_light.xml",
         "source": "C:\\Users\\Sven\\.android\\build-cache\\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\\output\\res\\color-v11\\abc_background_cache_hint_selector_material_light.xml"
+    },
+    {
+        "merged": "C:\\git\\ictProj3-CaptureTheFlag\\Simple BLE Scanner\\BLE\\app\\build\\intermediates\\res\\merged\\debug\\color-v11\\abc_background_cache_hint_selector_material_dark.xml",
+        "source": "C:\\Users\\Sven\\.android\\build-cache\\f38a5cb62227db45010a71ab9c81e5f1ddd8d4a8\\output\\res\\color-v11\\abc_background_cache_hint_selector_material_dark.xml"
     },
     {
         "merged": "D:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\res\\merged\\debug\\color-v11\\abc_background_cache_hint_selector_material_dark.xml",
