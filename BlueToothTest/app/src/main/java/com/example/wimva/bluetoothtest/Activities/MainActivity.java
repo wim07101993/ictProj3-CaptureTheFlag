@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,14 +18,16 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.wimva.bluetoothtest.Helpers.BroadcastReceiverBTState;
 import com.example.wimva.bluetoothtest.Helpers.Scanner.BeaconScanner;
 import com.example.wimva.bluetoothtest.Helpers.Scanner.OnScanListener;
 import com.example.wimva.bluetoothtest.Helpers.Utils;
 import com.example.wimva.bluetoothtest.Models.Beacon;
 import com.example.wimva.bluetoothtest.R;
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
+/**
+ * Activity for the main activity.
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener, OnScanListener {
 
@@ -34,14 +35,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    @SuppressWarnings("unused")
+    // Name of the class used for logging messages
     private final static String TAG = MainActivity.class.getSimpleName();
 
+    // request code for bluetooth
     public static final int REQUEST_ENABLE_BT = 1;
-    private static final int TIME_UNTIL_NOT_FOUND = 2000;
 
+    // closest found beacon
     private Beacon closestBeacon;
 
+    // UI elements
     private SeekBar skbSensitivity;
     private TextView txtSensitivity;
 
@@ -49,11 +52,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView txtAddress;
     private TextView txtSignalStrength;
+
     // Minimum distance is about 1m => this equals to signal threshold 1
     private int signalThreshold = 1;
 
-    // instance to detect when the bluetooth state changes (on/off)
-    private BroadcastReceiverBTState btStateUpdateReceiver;
     // instance to scan for btle devices
     private BeaconScanner beaconBeaconScanner;
 
@@ -61,38 +63,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
+    /**
+     * Sets the button text, resets the found beacon and starts the scanner
+     */
     private void startScan() {
         // set button text
         btnScan.setText(R.string.stop_scan);
 
+        // reset closest beacon
         setClosestBeacon(null);
 
         // start the scanner
         beaconBeaconScanner.start();
     }
 
+    /**
+     * Sets the button text and stops the scanner
+     */
     private void stopScan() {
+        // set button text
         btnScan.setText(R.string.scan_again);
+
+        // stop timer
         beaconBeaconScanner.stop();
     }
 
+    /**
+     * Checks if BT LE is supported. If not, the app is closed after showing a message.
+     */
     private void checkIfBLEIsSupported() {
+        // check if BT LE is supported
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            // show toast
             Utils.toast(getApplicationContext(), "BLE not supported");
+            // end app
             finish();
         }
     }
 
+    /**
+     * Asks for the needed permissions
+     */
     private void askPermissions() {
+        // create BT intent
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(enableBtIntent, MainActivity.REQUEST_ENABLE_BT);
+        // starts the activity depending on the result
+        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 
+        // check for needed permissions and if they are granted, move on
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Logging
             Log.w(TAG, "Location access not granted!");
+            // If not granted ask for permission
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 42);
         }
     }
 
+    /**
+     * Initializes the UI
+     */
     private void initializeComponents() {
         // scan button
         btnScan = (Button) findViewById(R.id.btnScan);
@@ -113,6 +142,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /* ------------------------- SETTERS ------------------------- */
 
+    /**
+     * Sets the closest beacon and updates UI.
+     * @param beacon
+     */
     private synchronized void setClosestBeacon(Beacon beacon) {
         closestBeacon = beacon;
 
@@ -127,40 +160,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     /* ------------------------- ACTIVITY ------------------------- */
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        checkIfBLEIsSupported();
+        // ask for needed permissions
         askPermissions();
-
+        // check BTLE support
+        checkIfBLEIsSupported();
+        // Init UI
         initializeComponents();
 
-        btStateUpdateReceiver = new BroadcastReceiverBTState(getApplicationContext());
-
+        // get the bluetooth adapter
         BluetoothAdapter btAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
-        beaconBeaconScanner = new BeaconScanner(btAdapter, skbSensitivity.getProgress());
+        // create new scanner
+        beaconBeaconScanner = new BeaconScanner(btAdapter);
+        // listen to changes in scanner
         beaconBeaconScanner.setScanEventListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(btStateUpdateReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        // stop scanning
         stopScan();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(btStateUpdateReceiver);
+        // stop scanning
         stopScan();
     }
 
@@ -170,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (requestCode == REQUEST_ENABLE_BT) {
             // Make sure the request was successful
             if (resultCode == RESULT_CANCELED) {
+                // show toast
                 Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
             }
         }
@@ -181,9 +217,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         // if the button is clicked => start of stop scanning
         if (v.getId() == R.id.btnScan) {
+            // check if sanner is scanning
             if (!beaconBeaconScanner.isScanning()) {
+                // if is not scanning => start scanning
                 startScan();
             } else {
+                // if is scanning => stop scanning
                 stopScan();
             }
         }
