@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextView txtAddress;
     private TextView txtSignalStrength;
-    private int signalThreshold = 5;
+    // Minimum distance is about 1m => this equals to signal threshold 1
+    private int signalThreshold = 1;
 
     // instance to detect when the bluetooth state changes (on/off)
     private BroadcastReceiverBTState btStateUpdateReceiver;
@@ -219,20 +220,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onBeaconFound(Beacon beacon) {
+    public synchronized void onBeaconFound(Beacon beacon) {
         double newBeaconSignalStrength = beacon.getRelativeRssi();
 
-        if (closestBeacon != null && beacon.getAddress().equals(closestBeacon.getAddress())) {
-            if (newBeaconSignalStrength > signalThreshold) {
-                setClosestBeacon(null);
-            } else {
-                setClosestBeacon(beacon);
-            }
-            return;
-        }
+        // if signal strength is higher than threshold and new beacon equals old beacon
+        // => update beacon
+        if (newBeaconSignalStrength < signalThreshold
+                && closestBeacon != null
+                && closestBeacon.getAddress().equals(beacon.getAddress())) {
+            setClosestBeacon(beacon);
 
-        if (newBeaconSignalStrength < signalThreshold) {
-            Log.w(TAG, "Closest beacon changed. New closest beacon: " + beacon.getAddress());
+            // if signal is greater than threshold and there is no closest beacon
+            // => use new found beacon
+        } else if (newBeaconSignalStrength < signalThreshold && closestBeacon == null) {
+            setClosestBeacon(beacon);
+
+            // if the new signal strength is greater than the old one
+            // => set closest beacon to new beacon
+        } else if (closestBeacon != null &&
+                newBeaconSignalStrength < closestBeacon.getRelativeRssi()) {
+            Log.w(TAG, "New closest beacon: " + beacon.getAddress());
             setClosestBeacon(beacon);
         }
     }
