@@ -9,8 +9,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -27,10 +25,6 @@ import com.example.wimva.bluetoothtest.Helpers.Scanner.OnScanListener;
 import com.example.wimva.bluetoothtest.Helpers.Utils;
 import com.example.wimva.bluetoothtest.Models.Beacon;
 import com.example.wimva.bluetoothtest.R;
-
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
@@ -116,33 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         txtSignalStrength = (TextView) findViewById(R.id.txtSignalStrength);
     }
 
-    private void scheduleCleanupBeacons() {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                removeClosestBeaconIfNotFound();
-            }
-        }, 0, TIME_UNTIL_NOT_FOUND / 2);
-    }
-
-    private void removeClosestBeaconIfNotFound() {
-        if (closestBeacon == null) {
-            return;
-        }
-
-        final double timeDiff = Calendar.getInstance().getTime().getTime() - closestBeacon.getLastFoundAt().getTime();
-
-        if (timeDiff > TIME_UNTIL_NOT_FOUND) {
-            Log.w(TAG, "Removing " + closestBeacon.getAddress() + " because it is not longer found");
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    setClosestBeacon(null);
-                }
-            });
-        }
-    }
-
     /* ------------------------- SETTERS ------------------------- */
 
     private synchronized void setClosestBeacon(Beacon beacon) {
@@ -175,8 +142,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         BluetoothAdapter btAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         beaconBeaconScanner = new BeaconScanner(btAdapter, skbSensitivity.getProgress());
         beaconBeaconScanner.setScanEventListener(this);
-
-        scheduleCleanupBeacons();
     }
 
     @Override
@@ -268,16 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (newBeaconSignalStrength < signalThreshold) {
             Log.w(TAG, "Closest beacon changed. New closest beacon: " + beacon.getAddress());
-
-            if (closestBeacon == null) {
-                setClosestBeacon(beacon);
-            }
-
-            //if the beacon is not detected for a certain time, it is considered not found.
-            double timeDiff = Calendar.getInstance().getTime().getTime() - closestBeacon.getLastFoundAt().getTime();
-            if (timeDiff > TIME_UNTIL_NOT_FOUND || newBeaconSignalStrength > closestBeacon.getRelativeRssi()) {
-                setClosestBeacon(beacon);
-            }
+            setClosestBeacon(beacon);
         }
     }
 }
