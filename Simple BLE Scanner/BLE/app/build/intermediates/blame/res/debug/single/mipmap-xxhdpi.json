@@ -1,10 +1,18 @@
 [
     {
+        "merged": "C:\\git\\ictProj3-CaptureTheFlag\\Simple BLE Scanner\\BLE\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi\\ic_launcher.png",
+        "source": "C:\\git\\ictProj3-CaptureTheFlag\\Simple BLE Scanner\\BLE\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
         "merged": "D:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi\\ic_launcher_round.png",
         "source": "D:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
     },
     {
         "merged": "D:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi\\ic_launcher.png",
         "source": "D:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\git\\ictProj3-CaptureTheFlag\\Simple BLE Scanner\\BLE\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi\\ic_launcher_round.png",
+        "source": "C:\\git\\ictProj3-CaptureTheFlag\\Simple BLE Scanner\\BLE\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
     }
 ]
