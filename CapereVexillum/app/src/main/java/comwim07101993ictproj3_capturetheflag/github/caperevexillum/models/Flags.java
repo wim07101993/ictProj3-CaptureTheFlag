@@ -11,15 +11,19 @@ public class Flags {
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    //Property that keeps track of all the flags
+    /**
+     * Property that keeps track of all the flags
+     */
     private Vector<Flag> registeredFlags = new Vector<Flag>();
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    //Constructor creates an instance of Flags
-    //no properties need to be set
+    /**
+     * Constructor creates an instance of Flags
+     * no properties need to be set
+     */
     private Flags(){
         //Nothing to do here
     }
@@ -28,13 +32,22 @@ public class Flags {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
-    //Method adds new flags to the registeredFlags vector
+    /**
+     * Method adds new flags to the registeredFlags vector
+     *
+     * @param flag the flag to add
+     */
     public void addFlag(Flag flag){
         registeredFlags.add(flag);
     }
 
-    //Method scans for an existing flag in the vector registeredFlags
-    //based on the registered beaconMAC of a flag
+    /**
+     * Method scans for an existing flag in the vector registeredFlags
+     * based on the registered beaconMAC of a flag
+     *
+     * @param beacon beacon to search the flag of
+     * @return whether the flag exists or not
+     */
     public boolean findFlag(Beacon beacon){
         //The beaconMAC the function is looking for
         String beaconMAC = beacon.getAddress();
@@ -54,14 +67,18 @@ public class Flags {
 
     /* ------------------------- GETTERS ------------------------- */
 
-    //Returns the registeredFlags vector
+    /**
+     * @return the registeredFlags vector
+     */
     public Vector<Flag> getRegisteredFlags() {
         return registeredFlags;
     }
 
     /* ------------------------- SETTERS ------------------------- */
 
-    //Sets the registeredFlags vector's content
+    /**
+     * @param registeredFlags the registeredFlags vector's content
+     */
     public void setRegisteredFlags(Vector<Flag> registeredFlags) {
         this.registeredFlags = registeredFlags;
     }

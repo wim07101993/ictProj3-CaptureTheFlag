@@ -1,46 +1,52 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
-import android.content.Context;
-import android.os.CountDownTimer;
-
 import java.util.Timer;
 import java.util.TimerTask;
-
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.MainActivity;
 
 /**
  * Created by Michiel on 12/10/2017.
  */
-
 public class Flag {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    //Property that keeps track of this Flag's beacon's MAC address
+    /**
+     * Property that keeps track of this Flag's beacon's MAC address
+     */
     private String beaconMAC;
 
-    //Property that keeps track of whether this Flag is in cooldown or not
+    /**
+     * Property that keeps track of whether this Flag is in cooldown or not
+     */
     private boolean cooldown;
 
     Timer timer;
     TimerTask UpdateTimer;
 
-    //Team identifier no team
+    /**
+     * Team identifier no team
+     */
     private static final String NO_TEAM = "no team";
 
-    //Property that keeps track of this specific Flag's Team alignment
+    /**
+     * Property that keeps track of this specific Flag's Team alignment
+     */
     private String team;
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    //Constructor creates an instance of Flag
-    //setting the beaconMAC to the beacon's MAC,
-    //setting the cooldown on false and the team alignment to no team
-    private Flag(Beacon beacon, Timer coolDownTimer){
+    /**
+     * Constructor creates an instance of Flag
+     * setting the beaconMAC to the beacon's MAC,
+     * setting the cooldown on false and the team alignment to no team
+     *
+     * @param beacon beacon that represents the flag
+     */
+    private Flag(Beacon beacon) {
         //Sets the Flag's beaconMAC to the beacon's MAC address
         beaconMAC = beacon.getAddress();
         //Sets the Flag's cooldown to false
@@ -53,8 +59,10 @@ public class Flag {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
-    //Method enables cooldown for this Flag
-    public void coolDownTimer(int timeInMillis, final MainActivity parent){
+    /**
+     * Method enables cooldown for this Flag
+     */
+    public void coolDownTimer() {
         //Create an instance of a Timer object
         timer = new Timer();
         //Set the task the Timer executes
@@ -69,11 +77,16 @@ public class Flag {
             }
         };
     }
-    //Method changes this Flag's team alignment
-    //and activates cooldown for this Flag
+
+    /**
+     * Method changes this Flag's team alignment
+     * and activates cooldown for this Flag
+     *
+     * @param teamIdentifier team that captured the flag
+     */
     public void CaptureAndCooldown(String teamIdentifier) {
         //Checks whether this flag is not already in cooldown
-        if(cooldown == false) {
+        if (!cooldown) {
             //Sets this Flag's team alignment to the team that captured it
             team = teamIdentifier;
             //Sets this Flag to cooldown
@@ -87,34 +100,46 @@ public class Flag {
 
     /* ------------------------- GETTERS ------------------------- */
 
-    //Returns the Flag's beaconMAC
+    /**
+     * @return the Flag's beaconMAC
+     */
     public String getBeaconMAC() {
         return beaconMAC;
     }
 
-    //Returns the cooldown boolean
+    /**
+     * @return whether this Flag is in cooldown or not
+     */
     public boolean getCooldown() {
         return cooldown;
     }
 
-    //Returns the Flag's team alignment
+    /**
+     * @return the Flag's team alignment
+     */
     public String getTeam() {
         return team;
     }
 
     /* ------------------------- SETTERS ------------------------- */
 
-    //Sets the Flag's beaconMAC
+    /**
+     * @param beacon the Flag's beaconMAC
+     */
     public void setBeaconMAC(Beacon beacon) {
         this.beaconMAC = beacon.getAddress();
     }
 
-    //Sets the Flag's cooldown
+    /**
+     * @param cooldown the Flag's cooldown
+     */
     public void setCooldown(boolean cooldown) {
         this.cooldown = cooldown;
     }
 
-    //Sets the Flag's team alignment
+    /**
+     * @param team the Flag's team alignment
+     */
     public void setTeam(String team) {
         this.team = team;
     }

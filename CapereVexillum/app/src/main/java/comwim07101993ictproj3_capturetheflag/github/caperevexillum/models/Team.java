@@ -11,26 +11,40 @@ public class Team {
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    //Team identifier team green
+    /**
+     * Team identifier team green
+     */
     public static String TEAM_GREEN="green";
-    //Team identifier team orange
+    /**
+     * Team identifier team orange
+     */
     public static String TEAM_ORANGE ="orange";
 
-    //Property that keeps track of this Team's specific alignment
+    /**
+     * Property that keeps track of this Team's specific alignment
+     */
     private String teamIdentifier;
 
-    //Property that keeps track of the players in this Team
+    /**
+     * Property that keeps track of the players in this Team
+     */
     private Vector<User> Users = new Vector<User>();
 
-    //Property that keeps track of this Team's score
+    /**
+     * Property that keeps track of this Team's score
+     */
     private int score;
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    //Constructor creates an instance of Team
-    //setting the teamIdentifier and score
+    /**
+     * Constructor creates an instance of Team
+     * setting the teamIdentifier and score
+     *
+     * @param teamIdentifier identifier of the team
+     */
     private Team(String teamIdentifier){
         //Sets the teamIdentifier to what should be either green or orange
         this.teamIdentifier = teamIdentifier;
@@ -42,31 +56,43 @@ public class Team {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
-    //Method adds new players to the Users vector
+    /**
+     * Method adds new players to the Users vector
+     *
+     * @param newUser
+     */
     public void addUser(User newUser){
         Users.add(newUser);
     }
 
     /* ------------------------- GETTERS ------------------------- */
 
-    //Returns the Users vector
+    /**
+     * @return the Users vector
+     */
     public Vector<User> getUsers() {
         return Users;
     }
 
-    //Returns the Team's score
+    /**
+     * @return the Team's score
+     */
     public int getScore() {
         return score;
     }
 
     /* ------------------------- SETTERS ------------------------- */
 
-    //Sets the Users vector's content
+    /**
+     * @param users the Users vector's content
+     */
     public void setUsers(Vector<User> users) {
         Users = users;
     }
 
-    //Sets the Team's score
+    /**
+     * @param score the Team's score
+     */
     public void setScore(int score) {
         this.score = score;
     }
