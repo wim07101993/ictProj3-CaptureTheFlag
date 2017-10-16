@@ -1,4 +1,4 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -8,9 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
+
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * Activity for the main activity.
  */
 public class MainActivity extends AppCompatActivity {
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="comwim07101993ictproj3_capturetheflag.github.caperevexillum.MainActivity">
+    tools:context="comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.MainActivity">
 
 
     <android.support.constraint.ConstraintLayout
