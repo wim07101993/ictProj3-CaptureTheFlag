@@ -1,19 +1,26 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner;
@@ -23,6 +30,9 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.OnSc
  * Activity for the main activity.
  */
 public class MainActivity extends AppCompatActivity implements OnScanListener{
+
+    private final static String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_ENABLE_BT = 1;
 
     private View mContentView;
     private GameTimer gameTimer;
@@ -36,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements OnScanListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // ask for needed permissions
+        
+        // check BTLE support
+        checkIfBLEIsSupported();
+
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         gameTimer = new GameTimer(timerTextView,30);
         mContentView = findViewById(R.id.content);
@@ -49,8 +65,55 @@ public class MainActivity extends AppCompatActivity implements OnScanListener{
         beaconScanner.setScanEventListener(this);
         beaconScanner.start();
 
+        showQuestion(false);
+
         makeAppFullScreen();
     }
+
+    // ----- bluetooth stuff ------
+    /**
+     * Checks if BT LE is supported. If not, the app is closed after showing a message.
+     */
+    private void checkIfBLEIsSupported() {
+        // check if BT LE is supported
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            // show toast
+            Utils.toast(getApplicationContext(), "BLE not supported");
+            // end app
+            finish();
+        }
+    }
+
+    /**
+     * Asks for the needed permissions
+     */
+    private void askPermissions() {
+        // create BT intent
+        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        // starts the activity depending on the result
+        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+        // check for needed permissions and if they are granted, move on
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Logging
+            Log.w(TAG, "Location access not granted!");
+            // If not granted ask for permission
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 42);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == REQUEST_ENABLE_BT) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_CANCELED) {
+                // show toast
+                Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
+            }
+        }
+    }
+    // -------------
     public void showQuestion(boolean showQuestion){
         if(showQuestion){
         mainLayout.setVisibility(View.INVISIBLE);
