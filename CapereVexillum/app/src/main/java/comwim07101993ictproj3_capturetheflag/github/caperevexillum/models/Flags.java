@@ -24,7 +24,7 @@ public class Flags {
      * Constructor creates an instance of Flags
      * no properties need to be set
      */
-    private Flags(){
+    public Flags(){
         //Nothing to do here
     }
 
@@ -50,12 +50,13 @@ public class Flags {
      */
     public boolean findFlag(Beacon beacon){
         //The beaconMAC the function is looking for
+
         String beaconMAC = beacon.getAddress();
         //Iterates over every flag registered in the registeredFlags vector
         for (Flag flag : registeredFlags){
             //Checks if the currently iterated flag's beaconMAC matches
             // the beaconMAC the function is looking for
-            if (flag.getBeaconMAC() == beaconMAC){
+            if (flag.getBeaconMAC().equals(beaconMAC)){
                 //If the beaconMAC's match the function returns true
                 return true;
             }

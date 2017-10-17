@@ -23,6 +23,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.Qui
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.OnScanListener;
 
@@ -42,16 +43,17 @@ public class MainActivity extends AppCompatActivity implements OnScanListener{
     private QuizFragment quizFragment;
     private BeaconScanner beaconScanner;
     private BluetoothAdapter bluetoothAdapter;
+    public Flags flags;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // ask for needed permissions
-        
+        flags = new Flags();
         // check BTLE support
         checkIfBLEIsSupported();
-
+        askPermissions();
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         gameTimer = new GameTimer(timerTextView,30);
         mContentView = findViewById(R.id.content);
@@ -154,6 +156,11 @@ public class MainActivity extends AppCompatActivity implements OnScanListener{
 
     @Override
     public void onBeaconFound(Beacon beacon) {
-        showQuestion(true);
+
+            if(!flags.findFlag(beacon)){
+                quizFragment.setCurrentBeacon(beacon);
+                showQuestion(true);
+            }
+
     }
 }

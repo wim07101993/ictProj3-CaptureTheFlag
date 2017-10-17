@@ -46,7 +46,7 @@ public class Flag {
      *
      * @param beacon beacon that represents the flag
      */
-    private Flag(Beacon beacon) {
+    public Flag(Beacon beacon) {
         //Sets the Flag's beaconMAC to the beacon's MAC address
         beaconMAC = beacon.getAddress();
         //Sets the Flag's cooldown to false

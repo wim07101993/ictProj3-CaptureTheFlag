@@ -19,6 +19,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.MainActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.DbHandler;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +40,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private Quiz vraagEnAntwoord;
     private Boolean answeredCorrect;
     private MainActivity mainActivity;
+    private Beacon currentBeacon;
     //layout settings
     LinearLayout linearLayout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -45,7 +48,9 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     public QuizFragment() {
 
     }
-
+    public void setCurrentBeacon(Beacon beacon){
+        currentBeacon = beacon;
+    }
     public void addActivity(MainActivity mainActivity) {
         this.mainActivity= mainActivity;
     }
@@ -113,6 +118,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
             }
             else{
                 //Quiz capture and cooldown
+
                 overnemenSucces();
             }
 
@@ -137,6 +143,8 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     //zet de variabele terug tegoei
     public void overnemenSucces(){
         Toast.makeText(mainActivity.getApplicationContext(),"U heeft de vlag succesvol overgenomen!", Toast.LENGTH_SHORT).show();
+        Flag flag = new Flag(currentBeacon);
+        mainActivity.flags.addFlag(flag);
         count=0;
         mainActivity.showQuestion(false);
 
