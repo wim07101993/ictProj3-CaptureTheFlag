@@ -76,7 +76,7 @@ public class Beacon {
         boolean isBeacon = false;
 
         // some strange algorithm to determine whether the result is a beacon
-        // (for questions ask Steffen Vandegaer)
+        // (for QuizFragment ask Steffen Vandegaer)
         for (startByte = 2; startByte <= 5; startByte++) {
             if (((int) bytesScanRecord[startByte + 2] & 0xff) == 0x02 && //Identifies an iBeacon
                     ((int) bytesScanRecord[startByte + 3] & 0xff) == 0x15) { //Identifies correct data length
@@ -136,7 +136,7 @@ public class Beacon {
         }
 
         // some strange algorithm part 2
-        // (for questions ask Steffen Vandegaer)
+        // (for QuizFragment ask Steffen Vandegaer)
         double ratio = rssi * 1.0 / power;
         if (ratio < 1) {
             return Math.pow(ratio, 10);
