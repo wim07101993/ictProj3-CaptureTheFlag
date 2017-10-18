@@ -32,22 +32,26 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.OnSc
 /**
  * Activity for the main activity.
  */
-public class MainActivity extends AppCompatActivity implements OnScanListener, OnGameTimerFinishedListener{
+public class MainActivity extends AppCompatActivity implements OnScanListener, OnGameTimerFinishedListener {
 
     private final static String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1;
 
     private View mContentView;
     private GameTimer gameTimer;
-    private TextView timerTextView ;
+    private TextView timerTextView;
     private RelativeLayout quizLayout;
     private ConstraintLayout mainLayout;
     private QuizFragment quizFragment;
+
     private BeaconScanner beaconScanner;
     private BluetoothAdapter bluetoothAdapter;
+    private static double SIGNAL_THRESHOLD = 2;
+
     public Flags flags;
     public Beacon currentBeacon;
-    public String myTeam=Team.TEAM_ORANGE;
+    public String myTeam = Team.TEAM_ORANGE;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -58,12 +62,12 @@ public class MainActivity extends AppCompatActivity implements OnScanListener, O
         checkIfBLEIsSupported();
         askPermissions();
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
-        gameTimer = new GameTimer(timerTextView,5);
+        gameTimer = new GameTimer(timerTextView, 5);
         gameTimer.addListener(this);
         mContentView = findViewById(R.id.content);
         quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
         mainLayout = (ConstraintLayout) findViewById(R.id.content);
-        quizFragment = (QuizFragment)getFragmentManager().findFragmentById(R.id.quizFragment);
+        quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
         quizFragment.addActivity(this);
 
         bluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnScanListener, O
     }
 
     // ----- bluetooth stuff ------
+
     /**
      * Checks if BT LE is supported. If not, the app is closed after showing a message.
      */
@@ -119,13 +124,14 @@ public class MainActivity extends AppCompatActivity implements OnScanListener, O
             }
         }
     }
-    // -------------
-    public void showQuestion(boolean showQuestion){
-        if(showQuestion){
-        mainLayout.setVisibility(View.INVISIBLE);
-        quizLayout.setVisibility(View.VISIBLE);
 
-        }else{
+    // -------------
+    public void showQuestion(boolean showQuestion) {
+        if (showQuestion) {
+            mainLayout.setVisibility(View.INVISIBLE);
+            quizLayout.setVisibility(View.VISIBLE);
+
+        } else {
             mainLayout.setVisibility(View.VISIBLE);
             quizLayout.setVisibility(View.INVISIBLE);
 
@@ -162,26 +168,28 @@ public class MainActivity extends AppCompatActivity implements OnScanListener, O
 
     @Override
     public void onBeaconFound(Beacon beacon) {
-            if( quizLayout.getVisibility()  == View.VISIBLE)
+        double beaconSignalStrength = beacon.getRelativeRssi();
+
+        if(beaconSignalStrength < SIGNAL_THRESHOLD){
+            if (quizLayout.getVisibility() == View.VISIBLE)
                 return;
 
-            if (!(currentBeacon==null)){
-                if(currentBeacon.getAddress().equals(beacon.getAddress()))
+            if (!(currentBeacon == null)) {
+                if (currentBeacon.getAddress().equals(beacon.getAddress()))
                     return;
             }
 
-                if (!flags.findFlag(beacon, myTeam)) {
-                    currentBeacon = beacon;
-                    quizFragment.setCurrentBeacon(beacon);
-                    showQuestion(true);
-                }
-
-
+            if (!flags.findFlag(beacon, myTeam)) {
+                currentBeacon = beacon;
+                quizFragment.setCurrentBeacon(beacon);
+                showQuestion(true);
+            }
+        }
     }
 
     @Override
     public void OnGameTimerFinished() {
-        Utils.toast(getApplicationContext(), "Game Finished, you have captured "+flags.getRegisteredFlags().size() + " flags");
+        Utils.toast(getApplicationContext(), "Game Finished, you have captured " + flags.getRegisteredFlags().size() + " flags");
         timerTextView.setText("Finished");
 
     }
