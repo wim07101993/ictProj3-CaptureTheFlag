@@ -20,7 +20,7 @@ public class Flag {
     /**
      * Property that keeps track of whether this Flag is in cooldown or not
      */
-    private int cooldownTime=10;
+    private int cooldownTime=30;
     private Date cooldownTimer;
 
     private boolean timerFixer = false;
