@@ -48,18 +48,39 @@ public class Flags {
      * @param beacon beacon to search the flag of
      * @return whether the flag exists or not
      */
-    public boolean findFlag(Beacon beacon){
+    public boolean findFlag(Beacon beacon, String team){
         //The beaconMAC the function is looking for
 
         String beaconMAC = beacon.getAddress();
+        int index = 0;
         //Iterates over every flag registered in the registeredFlags vector
         for (Flag flag : registeredFlags){
+            index++;
             //Checks if the currently iterated flag's beaconMAC matches
             // the beaconMAC the function is looking for
             if (flag.getBeaconMAC().equals(beaconMAC)){
                 //If the beaconMAC's match the function returns true
-                return true;
+                if(flag.team.equals(team))
+                    return true;
+                else{
+                    if (!flag.getCooldown())
+                    {
+
+                        return true;
+
+                    }else
+                    {
+                        if (flag.getTeam().equals(Team.NO_TEAM)){
+                            registeredFlags.remove(index-1);
+                        }
+                        return false;
+                    }
+
+
+                }
+
             }
+
         }
         //If the function found no existing flag with a
         //matching beaconMAC the function returns false

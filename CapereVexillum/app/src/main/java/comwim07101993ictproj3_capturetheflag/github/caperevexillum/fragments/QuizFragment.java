@@ -21,6 +21,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,7 +64,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         linearLayout =  (LinearLayout) view.findViewById(R.id.buttonsLayout);;
 
         vraag = (TextView)  view.findViewById(R.id.vraagTextView);
-        vraag.setText("test123");
+
         //Eerste vraag afhalen
         vraagEnAntwoord = db_handler.getVraagEnAntwoord(count);
 
@@ -124,7 +125,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
         }else{
             eindeQuiz();
-            mainActivity.showQuestion(false);
+
             return false;
         }
         return true;
@@ -134,16 +135,19 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     //het toont een nieuwe vraag en zet de antwoorden erbij
     public  void eindeQuiz(){
         count = 0;
-       // Toast.makeText(getApplicationContext(), "Fout antwoord, Quiz is gedaan en vlag gaat op cooldown.", Toast.LENGTH_SHORT).show();
-        vraagEnAntwoord = db_handler.getVraagEnAntwoord(count);
-        createButtons();
+        Toast.makeText(mainActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
+        Flag flag = new Flag(currentBeacon);
+        flag.CaptureAndCooldown(Team.NO_TEAM);
+        mainActivity.flags.addFlag(flag);
+        mainActivity.showQuestion(false);
     }
 
     //geeft een melding dat de vragen juist waren en de vlag overgenomen is
     //zet de variabele terug tegoei
     public void overnemenSucces(){
-        Toast.makeText(mainActivity.getApplicationContext(),"U heeft de vlag succesvol overgenomen!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mainActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
+        flag.CaptureAndCooldown(mainActivity.myTeam);
         mainActivity.flags.addFlag(flag);
         count=0;
         mainActivity.showQuestion(false);

@@ -28,7 +28,7 @@ public class GameTimer {
     private Date dateTimeOver;
     private String stringTimeOver;
     TextView textViewTime;
-
+    OnGameTimerFinishedListener onGameTimerFinishedListener;
     /***
      *
      * @param textViewTime Give a textview that wich will have the timer as text
@@ -40,13 +40,19 @@ public class GameTimer {
         DateEndTime.setMinutes(DateEndTime.getMinutes()+timeInMinutes);
         dateCcurrentTime = Calendar.getInstance().getTime();
         this.textViewTime = textViewTime;
+
         UpdateTimer = new TimerTask() {
             @Override
             public void run() {
                 dateCcurrentTime = Calendar.getInstance().getTime();
                 longTimeOver = DateEndTime.getTime() - dateCcurrentTime.getTime();
                 dateTimeOver =new Date(longTimeOver);
-                mHandler.obtainMessage(1).sendToTarget();
+                if(longTimeOver>0){
+                    timerHandler.obtainMessage(1).sendToTarget();
+                }else {
+                    finishHandler.obtainMessage(1).sendToTarget();
+                }
+
 
 
 
@@ -56,7 +62,18 @@ public class GameTimer {
         timer.scheduleAtFixedRate(UpdateTimer,0,1000);
 
     }
-    Handler mHandler = new Handler(){
+    public void addListener(OnGameTimerFinishedListener onGameTimerFinishedListener){
+        this.onGameTimerFinishedListener =onGameTimerFinishedListener;
+    }
+    Handler finishHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            onGameTimerFinishedListener.OnGameTimerFinished();
+            timer.cancel();
+            timer.purge();
+        }
+    };
+    Handler timerHandler = new Handler(){
 
         @Override
         public void handleMessage(Message msg) {

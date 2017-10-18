@@ -22,15 +22,17 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.OnScanListener;
 
 /**
  * Activity for the main activity.
  */
-public class MainActivity extends AppCompatActivity implements OnScanListener{
+public class MainActivity extends AppCompatActivity implements OnScanListener, OnGameTimerFinishedListener{
 
     private final static String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1;
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity implements OnScanListener{
     private BeaconScanner beaconScanner;
     private BluetoothAdapter bluetoothAdapter;
     public Flags flags;
-    @Override
+    public Beacon currentBeacon;
+    public String myTeam=Team.TEAM_ORANGE;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -55,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnScanListener{
         checkIfBLEIsSupported();
         askPermissions();
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
-        gameTimer = new GameTimer(timerTextView,30);
+        gameTimer = new GameTimer(timerTextView,5);
+        gameTimer.addListener(this);
         mContentView = findViewById(R.id.content);
         quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
         mainLayout = (ConstraintLayout) findViewById(R.id.content);
@@ -120,11 +124,13 @@ public class MainActivity extends AppCompatActivity implements OnScanListener{
         if(showQuestion){
         mainLayout.setVisibility(View.INVISIBLE);
         quizLayout.setVisibility(View.VISIBLE);
-            beaconScanner.stop();
+
         }else{
             mainLayout.setVisibility(View.VISIBLE);
             quizLayout.setVisibility(View.INVISIBLE);
-            beaconScanner.start();
+
+            currentBeacon = null;
+
         }
     }
 
@@ -156,11 +162,27 @@ public class MainActivity extends AppCompatActivity implements OnScanListener{
 
     @Override
     public void onBeaconFound(Beacon beacon) {
+            if( quizLayout.getVisibility()  == View.VISIBLE)
+                return;
 
-            if(!flags.findFlag(beacon)){
-                quizFragment.setCurrentBeacon(beacon);
-                showQuestion(true);
+            if (!(currentBeacon==null)){
+                if(currentBeacon.getAddress().equals(beacon.getAddress()))
+                    return;
             }
+
+                if (!flags.findFlag(beacon, myTeam)) {
+                    currentBeacon = beacon;
+                    quizFragment.setCurrentBeacon(beacon);
+                    showQuestion(true);
+                }
+
+
+    }
+
+    @Override
+    public void OnGameTimerFinished() {
+        Utils.toast(getApplicationContext(), "Game Finished, you have captured "+flags.getRegisteredFlags().size() + " flags");
+        timerTextView.setText("Finished");
 
     }
 }

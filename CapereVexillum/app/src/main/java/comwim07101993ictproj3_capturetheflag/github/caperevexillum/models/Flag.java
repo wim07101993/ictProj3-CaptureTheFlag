@@ -1,7 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Michiel on 12/10/2017.
@@ -20,11 +20,10 @@ public class Flag {
     /**
      * Property that keeps track of whether this Flag is in cooldown or not
      */
-    private boolean cooldown;
+    private int cooldownTime=10;
+    private Date cooldownTimer;
 
-    Timer timer;
-    TimerTask UpdateTimer;
-
+    private boolean timerFixer = false;
     /**
      * Team identifier no team
      */
@@ -33,7 +32,7 @@ public class Flag {
     /**
      * Property that keeps track of this specific Flag's Team alignment
      */
-    private String team;
+    public String team;
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
@@ -50,9 +49,12 @@ public class Flag {
         //Sets the Flag's beaconMAC to the beacon's MAC address
         beaconMAC = beacon.getAddress();
         //Sets the Flag's cooldown to false
-        cooldown = false;
+
         //Sets the Team alignment to no team
         team = NO_TEAM;
+        cooldownTimer = Calendar.getInstance().getTime();
+        cooldownTimer.setMinutes(cooldownTimer.getMinutes()+cooldownTime);
+
     }
 
     /* ----------------------------------------------------------- */
@@ -62,21 +64,7 @@ public class Flag {
     /**
      * Method enables cooldown for this Flag
      */
-    public void coolDownTimer() {
-        //Create an instance of a Timer object
-        timer = new Timer();
-        //Set the task the Timer executes
-        //after a set amount of time (thirty seconds)
-        UpdateTimer = new TimerTask() {
-            @Override
-            public void run() {
-                //Set this Flag's cooldown property to false
-                cooldown = false;
-                //Cancel the timer
-                timer.cancel();
-            }
-        };
-    }
+
 
     /**
      * Method changes this Flag's team alignment
@@ -85,16 +73,17 @@ public class Flag {
      * @param teamIdentifier team that captured the flag
      */
     public void CaptureAndCooldown(String teamIdentifier) {
-        //Checks whether this flag is not already in cooldown
-        if (!cooldown) {
+
             //Sets this Flag's team alignment to the team that captured it
             team = teamIdentifier;
             //Sets this Flag to cooldown
-            cooldown = true;
-            //Start the Timer to end the cooldown in thirty seconds
-            timer.scheduleAtFixedRate(UpdateTimer, 30000, 1000);
+        Calendar coolDownCal = Calendar.getInstance();
+        coolDownCal.add(Calendar.SECOND,cooldownTime);
+        cooldownTimer = coolDownCal.getTime();
 
-        }
+
+
+
     }
 
 
@@ -111,7 +100,11 @@ public class Flag {
      * @return whether this Flag is in cooldown or not
      */
     public boolean getCooldown() {
-        return cooldown;
+        Date nowTime = Calendar.getInstance().getTime();
+
+        long cooldown = cooldownTimer.getTime();
+        long now = nowTime.getTime();
+        return (now > cooldown);
     }
 
     /**
@@ -130,12 +123,7 @@ public class Flag {
         this.beaconMAC = beacon.getAddress();
     }
 
-    /**
-     * @param cooldown the Flag's cooldown
-     */
-    public void setCooldown(boolean cooldown) {
-        this.cooldown = cooldown;
-    }
+
 
     /**
      * @param team the Flag's team alignment

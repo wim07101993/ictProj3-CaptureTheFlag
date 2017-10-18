@@ -19,7 +19,10 @@ public class Team {
      * Team identifier team orange
      */
     public static String TEAM_ORANGE ="orange";
-
+    /**
+     * Team identifier no team
+     */
+    public static String NO_TEAM = "no team";
     /**
      * Property that keeps track of this Team's specific alignment
      */
