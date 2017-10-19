@@ -53,10 +53,6 @@ public class GameTimer {
                     finishHandler.obtainMessage(1).sendToTarget();
                 }
 
-
-
-
-
             }
         };
         timer.scheduleAtFixedRate(UpdateTimer,0,1000);
