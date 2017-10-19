@@ -3,6 +3,8 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 import java.util.Calendar;
 import java.util.Date;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.StateManager;
+
 /**
  * Created by Michiel on 12/10/2017.
  */
