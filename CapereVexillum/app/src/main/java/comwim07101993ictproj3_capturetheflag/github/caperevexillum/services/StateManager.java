@@ -11,24 +11,67 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
  */
 
 public class StateManager {
-    private Date eindTijd;
+
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
+    private static StateManager instance = new StateManager();
+
+    private Date endTime;
     private Vector<Team> teams = new Vector<Team>();
     private Flags flags = new Flags();
-    private boolean quizStarter=false;
-    private  final static int TEAM_VALUE=0;
 
-    public void set(int key, Object value) {
+    private boolean quizStarter = false;
 
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
 
+    /* ------------------------- GETTERS ------------------------- */
 
-        switch (key){
-            case 1:
-                quizStarter = (boolean)value;
-                break;
-
+    public Object get(StateManagerKey key) {
+        switch (key) {
+            case END_TIME:
+                return endTime;
+            case TEAMS:
+                return teams;
+            case FLAGS:
+                return flags;
+            case QUIZ_STARTER:
+                return quizStarter;
+            default:
+                throw new IllegalArgumentException("Key not know");
         }
-
     }
 
+    public static StateManager getInstance() {
+        return instance;
+    }
 
+    /* ------------------------- SETTERS ------------------------- */
+
+    public void set(StateManagerKey key, Object value) throws IllegalArgumentException {
+        try {
+            switch (key) {
+                case END_TIME:
+                    endTime = (Date) value;
+                    break;
+                case TEAMS:
+                    teams = (Vector<Team>) value;
+                    break;
+                case FLAGS:
+                    flags = (Flags) value;
+                    break;
+                case QUIZ_STARTER:
+                    quizStarter = (boolean) value;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Key not know");
+            }
+        } catch (ClassCastException ex) {
+            throw new IllegalArgumentException(
+                    "The argument 'value' could not be casted to the needed type.");
+        }
+    }
 }
