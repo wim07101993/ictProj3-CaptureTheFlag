@@ -1,4 +1,4 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.StateManager;
 
 import java.util.Date;
 import java.util.Vector;
@@ -30,6 +30,10 @@ public class StateManager {
 
     /* ------------------------- GETTERS ------------------------- */
 
+    public static StateManager getInstance() {
+        return instance;
+    }
+
     public Object get(StateManagerKey key) {
         switch (key) {
             case END_TIME:
@@ -45,8 +49,8 @@ public class StateManager {
         }
     }
 
-    public static StateManager getInstance() {
-        return instance;
+    public void Save() {
+
     }
 
     /* ------------------------- SETTERS ------------------------- */
