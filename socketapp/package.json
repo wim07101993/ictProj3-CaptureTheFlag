@@ -1,0 +1,11 @@
+{
+  "name": "capere-vexillum",
+  "version": "1.0.0",
+  "description": "socket app for capere vexilum",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
