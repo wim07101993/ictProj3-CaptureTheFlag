@@ -9,6 +9,7 @@ import android.os.Handler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 
@@ -34,7 +35,7 @@ public class BeaconScanner {
     /* ---------------------------------------------------------- */
 
     // List of listeners for changes
-    private List<OnScanListener> eventListeners = new ArrayList<>();
+    private List<OnScanListener> eventListeners = new Vector<>();
 
     // scanner to get bluetooth devices
     private BluetoothLeScanner scanner;
