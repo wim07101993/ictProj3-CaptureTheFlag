@@ -3,7 +3,7 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.Sta
 import java.util.List;
 
 /**
- * Created by wimva on 20/10/2017.
+ * Created by Wim Van Laer on 20/10/2017.
  *
  * The OnStateChangedListener is used to listen to changes in the StateManager. To listen to the
  * changes, you need to implement this interface and use the method addStateChangedListener to add
