@@ -106,7 +106,9 @@ public class Flag {
         long now = nowTime.getTime();
         return (now > cooldown);
     }
-
+    public Date getCooldownTime() {
+        return  cooldownTimer;
+    }
     /**
      * @return the Flag's team alignment
      */

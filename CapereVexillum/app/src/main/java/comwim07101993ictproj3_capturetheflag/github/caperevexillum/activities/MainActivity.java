@@ -18,6 +18,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
@@ -51,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements OnScanListener, O
     public Flags flags;
     public Beacon currentBeacon;
     public String myTeam = Team.TEAM_ORANGE;
-
+    private long cooldownLeft=0;
+    private boolean beaconWithCooldown=false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -176,14 +180,34 @@ public class MainActivity extends AppCompatActivity implements OnScanListener, O
 
             if (!(currentBeacon == null)) {
                 if (currentBeacon.getAddress().equals(beacon.getAddress()))
-                    return;
+                {
+
+                }
+
+            }
+            Object flagResult =flags.findFlag(beacon, myTeam);
+            if((flagResult.getClass().equals(Boolean.class))){
+                boolean result = (Boolean)flagResult;
+                if(!result)
+                {
+
+                    beaconWithCooldown = false;
+                    currentBeacon = beacon;
+                    quizFragment.setCurrentBeacon(beacon);
+                    showQuestion(true);
+                }
+            }else{
+
+                Date dateCooldownLeft = (Date)flagResult;
+                Date now = Calendar.getInstance().getTime();
+                cooldownLeft = dateCooldownLeft.getTime()-now.getTime();
+                beaconWithCooldown=(cooldownLeft>1010);
+
+
+
             }
 
-            if (!flags.findFlag(beacon, myTeam)) {
-                currentBeacon = beacon;
-                quizFragment.setCurrentBeacon(beacon);
-                showQuestion(true);
-            }
+
         }
     }
 

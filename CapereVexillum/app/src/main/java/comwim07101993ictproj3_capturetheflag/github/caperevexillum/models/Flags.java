@@ -48,7 +48,7 @@ public class Flags {
      * @param beacon beacon to search the flag of
      * @return whether the flag exists or not
      */
-    public boolean findFlag(Beacon beacon, String team){
+    public Object findFlag(Beacon beacon, String team){
         //The beaconMAC the function is looking for
 
         String beaconMAC = beacon.getAddress();
@@ -66,7 +66,7 @@ public class Flags {
                     if (!flag.getCooldown())
                     {
 
-                        return true;
+                        return flag.getCooldownTime();
 
                     }else
                     {
