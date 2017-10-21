@@ -1,4 +1,4 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.StateManager;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.StateManager;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
 /**
  * Created by Wim Van Laer on 20/10/2017.

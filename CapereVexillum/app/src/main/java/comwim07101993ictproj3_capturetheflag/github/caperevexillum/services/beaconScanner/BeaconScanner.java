@@ -1,4 +1,4 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner;
 
 
 import android.bluetooth.BluetoothAdapter;
