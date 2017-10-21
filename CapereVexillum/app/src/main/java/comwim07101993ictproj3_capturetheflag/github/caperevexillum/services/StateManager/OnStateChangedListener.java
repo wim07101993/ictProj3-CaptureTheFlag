@@ -9,19 +9,19 @@ import java.util.List;
  * changes, you need to implement this interface and use the method addStateChangedListener to add
  * the class that implements this interface to the list of listeners.
  *
- * When something changes in the StateManager, the method StateChanged is invoked. It hold as
+ * When something changes in the StateManager, the method stateChanged is invoked. It hold as
  * parameters the changed keys and the state manager in which the change happened.
  */
 
 public interface OnStateChangedListener<TKey> {
 
     /**
-     * StateChanged is the method that gets invoked when a state changes in the state manager. To
+     * stateChanged is the method that gets invoked when a state changes in the state manager. To
      * subscribe to these changes, you need to add the class that needs to listen to the listeners-
      * list with the addStateChangedListener method of the state manager.
      *
      * @param changedKeys is the list of keys which values changed.
      * @param manager is the manager in which the changes happened.
      */
-    public void StateChanged(List<TKey> changedKeys, IStateManager manager);
+    public void stateChanged(List<TKey> changedKeys, IStateManager manager);
 }

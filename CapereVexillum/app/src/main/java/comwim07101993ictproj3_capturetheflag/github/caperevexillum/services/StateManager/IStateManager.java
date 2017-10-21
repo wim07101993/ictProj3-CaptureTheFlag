@@ -5,6 +5,8 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.Sta
  *
  * The IStateManager is an interface for a state manager. If you want an abstract with most of the
  * methods implemented you can use the AbstractStateManager.
+ *
+ * TKey is the type of the keys to identify the different states.
  */
 
 public interface IStateManager<TKey> {
@@ -48,7 +50,7 @@ public interface IStateManager<TKey> {
     void save();
 
     /**
-     * load is supposed to load a state from a database.
+     * load is supposed to load the previous state from a database.
      */
     void load();
 }
