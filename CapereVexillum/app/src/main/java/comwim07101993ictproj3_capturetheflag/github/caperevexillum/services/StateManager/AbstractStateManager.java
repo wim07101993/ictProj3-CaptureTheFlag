@@ -53,9 +53,9 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
      */
     protected List<OnStateChangedListener> stateChangedListeners = new Vector<>();
 
-    /* ----------------------------------------------------------- */
+    /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
-    /* ----------------------------------------------------------- */
+    /* --------------------------------------------------------------- */
 
     /**
      * AbstractStateManger is the constructor for the abstract class AbstractStateManager.

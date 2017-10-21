@@ -1,9 +1,9 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 
 /**
- * Created by wimva on 6/10/2017.
+ * Created by Wim Van Laer on 6/10/2017.
  * <p>
  * Interface to detect scanner changes.
  */

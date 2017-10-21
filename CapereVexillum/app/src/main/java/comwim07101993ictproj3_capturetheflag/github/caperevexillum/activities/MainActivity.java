@@ -26,8 +26,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gamet
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.OnScanListener;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner.BeaconScanner;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner.OnScanListener;
 
 /**
  * Activity for the main activity.

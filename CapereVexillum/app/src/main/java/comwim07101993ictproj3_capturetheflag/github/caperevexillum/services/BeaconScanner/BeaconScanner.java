@@ -1,4 +1,4 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.BeaconScanner;
 
 
 import android.bluetooth.BluetoothAdapter;
@@ -7,7 +7,6 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.os.Handler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -15,7 +14,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon
 
 
 /**
- * Created by wimva on 6/10/2017.
+ * Created by Wim Van Laer on 6/10/2017.
  * <p>
  * BeaconScanner uses bluetooth to scan for beacons.
  * <p>
