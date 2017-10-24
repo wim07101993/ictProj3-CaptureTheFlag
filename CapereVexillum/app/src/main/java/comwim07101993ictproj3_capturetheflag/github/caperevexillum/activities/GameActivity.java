@@ -35,9 +35,9 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beac
 /**
  * Activity for the main activity.
  */
-public class MainActivity extends AppCompatActivity implements OnScanListener, OnGameTimerFinishedListener {
+public class GameActivity extends AppCompatActivity implements OnScanListener, OnGameTimerFinishedListener {
 
-    private final static String TAG = MainActivity.class.getSimpleName();
+    private final static String TAG = GameActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1;
 
     private View mContentView;
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnScanListener, O
     public Beacon currentBeacon;
     public String myTeam = Team.TEAM_ORANGE;
     private long cooldownLeft=0;
+
     private boolean beaconWithCooldown=false;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

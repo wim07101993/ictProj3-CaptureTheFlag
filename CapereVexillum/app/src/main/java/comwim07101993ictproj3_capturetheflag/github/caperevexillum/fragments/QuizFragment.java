@@ -16,7 +16,7 @@ import android.widget.LinearLayout.LayoutParams;
 import java.util.ArrayList;
 import java.util.List;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.MainActivity;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.DbHandler;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
@@ -40,7 +40,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private Integer count;
     private Quiz vraagEnAntwoord;
     private Boolean answeredCorrect;
-    private MainActivity mainActivity;
+    private GameActivity gameActivity;
     private Beacon currentBeacon;
     //layout settings
     LinearLayout linearLayout;
@@ -52,8 +52,8 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     public void setCurrentBeacon(Beacon beacon){
         currentBeacon = beacon;
     }
-    public void addActivity(MainActivity mainActivity) {
-        this.mainActivity= mainActivity;
+    public void addActivity(GameActivity gameActivity) {
+        this.gameActivity = gameActivity;
     }
     public void setup(){
         //locale waarde
@@ -135,22 +135,22 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     //het toont een nieuwe vraag en zet de antwoorden erbij
     public  void eindeQuiz(){
         count = 0;
-        Toast.makeText(mainActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
+        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(Team.NO_TEAM);
-        mainActivity.flags.addFlag(flag);
-        mainActivity.showQuestion(false);
+        gameActivity.flags.addFlag(flag);
+        gameActivity.showQuestion(false);
     }
 
     //geeft een melding dat de vragen juist waren en de vlag overgenomen is
     //zet de variabele terug tegoei
     public void overnemenSucces(){
-        Toast.makeText(mainActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
+        Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(mainActivity.myTeam);
-        mainActivity.flags.addFlag(flag);
+        flag.CaptureAndCooldown(gameActivity.myTeam);
+        gameActivity.flags.addFlag(flag);
         count=0;
-        mainActivity.showQuestion(false);
+        gameActivity.showQuestion(false);
 
     }
     @Override
