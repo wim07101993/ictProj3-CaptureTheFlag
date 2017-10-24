@@ -126,6 +126,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
             if (resultCode == RESULT_CANCELED) {
                 // show toast
                 Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
+            }else {
+                beaconScanner.start();
             }
         }
     }
