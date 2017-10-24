@@ -105,7 +105,7 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
      *
      * @param keys are the keys of the states that have been changed.
      */
-    private void notifyListeners(List<TKey> keys) {
+    public void notifyListeners(List<TKey> keys) {
         // loop over all listeners
         for (OnStateChangedListener l : stateChangedListeners) {
             // invoke stateChangedMethod

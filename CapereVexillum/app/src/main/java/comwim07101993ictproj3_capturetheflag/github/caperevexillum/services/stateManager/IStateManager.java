@@ -1,5 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
+import java.util.List;
+
 /**
  * Created by Wim Van Laer on 20/10/2017.
  *
@@ -27,6 +29,14 @@ public interface IStateManager<TKey> {
      * @param listener is the OnStateChangedListener to remove from the list of listeners.
      */
     void removeStateChangedListener(OnStateChangedListener listener);
+
+    /**
+     * notifyListeners is supposed to notify all listeners from the stateChangedListeners that some
+     * states have been changed.
+     *
+     * @param keys are the keys of the states that have been changed.
+     */
+    void notifyListeners(List<TKey> keys);
 
     /**
      * get is supposed to return the state behind of TKey key.
