@@ -7,3 +7,5 @@
 /build
 /captures
 .externalNativeBuild
+/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/activities/DebugActivity.java
+/app/src/main/res/layout/activity_debug.xml
