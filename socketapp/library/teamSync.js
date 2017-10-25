@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     sync : function(socket, teams){
         var showcaseFunction = this.showcaseFunction();
         console.log("teamsync");

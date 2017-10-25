@@ -1,10 +1,8 @@
-module.exports = {
+export default {
     sync: function(socket, flags){
         var test = this.showcaseFunction();
         console.log("flagsyncy");
-        socket.emit("updateFlags",JSON.stringify(flags));
-        
-
+        socket.emit(test);
     },
     showcaseFunction: function(){
         return "test"

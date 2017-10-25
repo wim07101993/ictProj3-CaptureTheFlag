@@ -8,10 +8,10 @@ const io = require('socket.io')(server, {
   pingTimeout: 5000,
   cookie: false
 });
+import timeClass from "./library/timesync";
+import flagsClass from "./library/flagsSync";
+import teamClass from "./library/teamSync";
 
-var timeClass= require("./timeSync");
-var flagsClass =require("./flagsSync");
-var timeClass =require("./timeSync");
 
 var flags;
 var teams;
@@ -28,5 +28,5 @@ io.on('connection', function(socket){
 
 
 
-console.log("start listening");
+console.log("listening")
 server.listen(3000);
