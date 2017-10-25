@@ -1,5 +1,6 @@
 export default {
-    sync: function(socket){
-        console.log("timesync","hier komt data");
+    sync: function(io,socket,time){
+        io.emit("start",time);
+        
     }
 }

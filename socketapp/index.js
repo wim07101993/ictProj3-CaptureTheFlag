@@ -15,14 +15,14 @@ import teamClass from "./library/teamSync";
 
 var flags;
 var teams;
-var time;
 io.on('connection', function(socket){
     console.log("connected");
     
     socket.emit("test","test");
-    io.on("askTime",(socket) => time.sync(socket,time));
-    io.on("askFlags",(socket)=> flags.sync(socket,flags));
-    io.on("askTeam",(socket) => teams.sync(socket,teams))
+  
+    io.on("start",(endTime) => time.sync(io,endTime));
+    io.on("askFlags",()=> flags.sync(socket,flags));
+    io.on("askTeam",() => teams.sync(socket,teams))
 
 });
 
