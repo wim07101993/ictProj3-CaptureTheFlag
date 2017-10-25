@@ -23,5 +23,5 @@ public interface OnStateChangedListener<TKey> {
      * @param changedKeys is the list of keys which values changed.
      * @param manager is the manager in which the changes happened.
      */
-    public void stateChanged(List<TKey> changedKeys, IStateManager manager);
+    void stateChanged(List<TKey> changedKeys, IStateManager manager);
 }

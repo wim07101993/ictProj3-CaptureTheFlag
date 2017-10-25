@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 
 import java.util.List;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
+
 /**
  * Created by Wim Van Laer on 20/10/2017.
  * <p>
