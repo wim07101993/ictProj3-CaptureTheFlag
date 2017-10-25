@@ -1,12 +1,12 @@
-/CapereVexillum/*.iml
-/CapereVexillum/.gradle
-/CapereVexillum/local.properties
-/CapereVexillum/.idea/workspace.xml
-/CapereVexillum/.idea/libraries
-/CapereVexillum/.DS_Store
-/CapereVexillum/build
-/CapereVexillum/captures
-/CapereVexillum/.externalNativeBuild
-/CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/activities/DebugActivity.java
-/CapereVexillum/app/src/main/res/layout/activity_debug.xml
+CapereVexillum/*.iml
+CapereVexillum/.gradle
+CapereVexillum/local.properties
+CapereVexillum/.idea/workspace.xml
+CapereVexillum/.idea/libraries
+CapereVexillum/.DS_Store
+CapereVexillum/build
+CapereVexillum/captures
+CapereVexillum/.externalNativeBuild
+CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/activities/DebugActivity.java
+CapereVexillum/app/src/main/res/layout/activity_debug.xml
 
