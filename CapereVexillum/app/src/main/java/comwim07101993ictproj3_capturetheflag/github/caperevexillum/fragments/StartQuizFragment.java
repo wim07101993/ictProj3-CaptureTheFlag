@@ -15,32 +15,68 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 
 import static comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey.QUIZ_STARTER;
 
+/**
+ * Gives an fragment where you can choose to begin the quiz or not
+ * this is connected to the statemanager
+ *
+ */
 public class StartQuizFragment extends Fragment implements View.OnClickListener{
 
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
+    // List for listeners for changes
     private OnFragmentInteractionListener mListener;
+
+    // Instance buttons
     private Button YesButton;
     private Button NoButton;
+
+    // Instance statemanager
     private GameActivity gameActivity;
     private StateManager stateManager;
+
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
 
     public StartQuizFragment() {
         // Required empty public constructor
     }
 
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
+
+
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // declarate the statemanager
         gameActivity = (GameActivity) getActivity();
         stateManager = gameActivity.getStateManager();
 
+
+        // declarate the buttons on the fragment
         YesButton = (Button) getView().findViewById(R.id.YesButton);
         NoButton = (Button) getView().findViewById(R.id.NoButton);
 
+        // set the listener for the buttons
         YesButton.setOnClickListener(this);
         NoButton.setOnClickListener(this);
     }
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,6 +84,9 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
         return inflater.inflate(R.layout.fragment_start_quiz, container, false);
     }
 
+    /**
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -59,12 +98,19 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
+    /**
+     * @param view
+     *
+     * looks which button is clicked
+     * set the state on the statemanager
+     */
     @Override
     public void onClick(View view) {
         if (view == YesButton) {
