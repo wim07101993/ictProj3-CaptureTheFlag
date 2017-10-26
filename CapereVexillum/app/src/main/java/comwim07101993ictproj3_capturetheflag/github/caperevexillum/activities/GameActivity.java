@@ -281,4 +281,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     public StateManager getStateManager() {
         return stateManager;
     }
+
+    public long getCooldownLeft() {
+        return cooldownLeft;
+    }
 }
