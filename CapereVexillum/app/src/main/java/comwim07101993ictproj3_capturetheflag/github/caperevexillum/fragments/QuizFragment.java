@@ -39,7 +39,6 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private Integer aantalVragen;
     private Integer count;
     private Quiz vraagEnAntwoord;
-    private Boolean answeredCorrect;
     private GameActivity gameActivity;
     private Beacon currentBeacon;
     //layout settings
@@ -100,7 +99,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
 
-        answeredCorrect = checkAnswerQuestion( (Button)view);
+        checkAnswerQuestion( (Button)view);
 
     }
 
