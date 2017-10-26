@@ -17,11 +17,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/vraagTextView"
+            app:layout_constraintTop_toBottomOf="@+id/QuestionTextView"
             tools:layout_editor_absoluteX="8dp"></LinearLayout>
 
         <TextView
-            android:id="@+id/vraagTextView"
+            android:id="@+id/QuestionTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 

@@ -61,14 +61,10 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
         gameActivity = (GameActivity) getActivity();
         stateManager = gameActivity.getStateManager();
 
-<<<<<<< Updated upstream
+
+        // declarate the buttons on the fragment
         YesButton = (Button) getView().findViewById(R.id.YesButton);
         NoButton = (Button) getView().findViewById(R.id.NoButton);
-=======
-        // declarate the buttons on the fragment
-        YesButton = (Button) getView().findViewById(R.id.JaButton);
-        NoButton = (Button) getView().findViewById(R.id.NeenButton);
->>>>>>> Stashed changes
 
         // set the listener for the buttons
         YesButton.setOnClickListener(this);

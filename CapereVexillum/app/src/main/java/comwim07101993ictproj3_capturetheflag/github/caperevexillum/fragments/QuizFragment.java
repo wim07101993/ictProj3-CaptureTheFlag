@@ -87,7 +87,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         nQuestions = 3;
         linearLayout =  (LinearLayout) view.findViewById(R.id.buttonsLayout);;
 
-        question = (TextView)  view.findViewById(R.id.vraagTextView);
+        question = (TextView)  view.findViewById(R.id.QuestionTextView);
 
         //Eerste question afhalen
         questionAndAnswer = db_handler.getVraagEnAntwoord(count);
