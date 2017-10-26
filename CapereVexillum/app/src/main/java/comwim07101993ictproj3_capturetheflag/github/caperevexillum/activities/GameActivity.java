@@ -41,43 +41,56 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
     /* ---------------------------------------------------------- */
 
     private final static String TAG = GameActivity.class.getSimpleName();
-    private static final int REQUEST_ENABLE_BT = 1;
 
-    private View mContentView;
     private GameTimer gameTimer;
+    private StateManager stateManager;
+
+    /* ------------------------- View elements ------------------------- */
+
     private TextView timerTextView;
+    private View mContentView;
     private RelativeLayout quizLayout;
     private ConstraintLayout mainLayout;
+
     private QuizFragment quizFragment;
 
-    private BeaconScanner beaconScanner;
-    private BluetoothAdapter bluetoothAdapter;
-    private static double SIGNAL_THRESHOLD = 2;
+    /* ------------------------- Beacon scanner ------------------------- */
 
-    public Flags flags;
+    private static final int REQUEST_ENABLE_BT = 1;
+    private static double SIGNAL_THRESHOLD = 2;
+    private BeaconScanner beaconScanner;
+
+    private BluetoothAdapter bluetoothAdapter;
     public Beacon currentBeacon;
-    public String myTeam = Team.TEAM_ORANGE;
     private long cooldownLeft = 0;
 
     private boolean beaconWithCooldown = false;
 
+    /* ------------------------- Teams ------------------------- */
 
-    /* --------------------------------------------------------------- */
-    /* ------------------------- CONSTRUCTOR ------------------------- */
-    /* --------------------------------------------------------------- */
+    public String myTeam = Team.TEAM_ORANGE;
 
+    public Flags flags;
+
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // ask for needed permissions
-        flags = new Flags();
-        // check BTLE support
         checkIfBLEIsSupported();
         askPermissions();
+
+        flags = new Flags();
+
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         gameTimer = new GameTimer(timerTextView, 5);
         gameTimer.addListener(this);
+
         mContentView = findViewById(R.id.content);
         quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
         mainLayout = (ConstraintLayout) findViewById(R.id.content);
@@ -98,8 +111,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
-
-    // ----- bluetooth stuff ------
 
     /**
      * Checks if BT LE is supported. If not, the app is closed after showing a message.
@@ -132,18 +143,19 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == REQUEST_ENABLE_BT) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_CANCELED) {
-                // show toast
-                Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
-            } else {
-                beaconScanner.start();
-            }
+    private void makeAppFullScreen() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
         }
+
+        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
     public void showQuestion(boolean showQuestion) {
@@ -160,20 +172,21 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
         }
     }
 
-    private void makeAppFullScreen() {
-        // Hide UI first
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == REQUEST_ENABLE_BT) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_CANCELED) {
+                // show toast
+                Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
+            } else {
+                beaconScanner.start();
+            }
         }
-
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
+
+    /* ------------------------- OnScanListener ------------------------- */
 
     @Override
     public void onScanStopped() {
@@ -193,7 +206,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
 
             if (!(currentBeacon == null) &&
                     currentBeacon.getAddress().equals(beacon.getAddress())) {
-                    return;
+                return;
             }
 
             Object flagResult = flags.findFlag(beacon, myTeam);
@@ -213,6 +226,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
             }
         }
     }
+
+    /* ------------------------- OnGameTimerFinishedListener ------------------------- */
 
     @Override
     public void OnGameTimerFinished() {
