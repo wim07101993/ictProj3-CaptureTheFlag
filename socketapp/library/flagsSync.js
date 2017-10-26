@@ -1,13 +1,12 @@
 import flag from "../db/flags"
 export default {
     flags:[],
-    sync: function(socket){
-        this.staticData();
-        console.log("flagsync");
-        socket.emit("syncflag",JSON.stringify(this.flags));
+    askFlags: function(socket){
+        socket.emit("answerFlags",JSON.stringify(this.flags));
     },
-    staticData(){
-        flags.push(new flag("234:1234:1234","orange","15"));
-    }
-
+    updateFlagss: function(io, socket, flag){
+        let responeFlag = JSON.parse(flag);
+        flags.push(new flag(flag.beaconMAC , flag.cooldownTime , flag.team));
+        io.emit("answerFlags",JSON.stringify(this.flags));
+    },
 }
