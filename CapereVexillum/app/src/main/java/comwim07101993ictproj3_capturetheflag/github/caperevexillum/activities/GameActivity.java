@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
@@ -30,11 +31,16 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.BeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.OnScanListener;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.IStateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.OnStateChangedListener;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
  * Activity for the main activity.
  */
-public class GameActivity extends AppCompatActivity implements OnScanListener, OnGameTimerFinishedListener {
+public class GameActivity extends AppCompatActivity implements OnScanListener,
+        OnGameTimerFinishedListener, OnStateChangedListener<StateManagerKey> {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -107,10 +113,25 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
         makeAppFullScreen();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
-    /* ----------------------------------------------------------- */
-    /* ------------------------- METHODS ------------------------- */
-    /* ----------------------------------------------------------- */
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
     /**
      * Checks if BT LE is supported. If not, the app is closed after showing a message.
@@ -235,4 +256,12 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
         timerTextView.setText("Finished");
 
     }
+
+    /* ------------------------- OnStateChangedListener ------------------------- */
+
+    @Override
+    public void stateChanged(List<StateManagerKey> changedKeys, IStateManager manager) {
+
+    }
+
 }
