@@ -7,12 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 
-public class StartQuizFragment extends Fragment {
+import static comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey.QUIZ_STARTER;
+
+public class StartQuizFragment extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
+    private Button YesButton;
+    private Button NoButton;
+    private GameActivity gameActivity;
+    private StateManager stateManager;
 
     public StartQuizFragment() {
         // Required empty public constructor
@@ -21,6 +30,15 @@ public class StartQuizFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        gameActivity = (GameActivity) getActivity();
+        stateManager = gameActivity.getStateManager();
+
+        YesButton = (Button) getView().findViewById(R.id.JaButton);
+        NoButton = (Button) getView().findViewById(R.id.NeenButton);
+
+        YesButton.setOnClickListener(this);
+        NoButton.setOnClickListener(this);
     }
 
     @Override
@@ -47,6 +65,16 @@ public class StartQuizFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view == YesButton) {
+            stateManager.set(QUIZ_STARTER, true);
+        }
+        else if (view == NoButton) {
+            stateManager.set(QUIZ_STARTER, false);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -58,6 +86,6 @@ public class StartQuizFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        
+
     }
 }
