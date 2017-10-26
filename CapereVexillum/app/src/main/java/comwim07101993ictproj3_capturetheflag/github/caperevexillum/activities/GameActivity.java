@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
@@ -27,6 +29,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.BeaconScanner;
@@ -67,71 +70,18 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private BeaconScanner beaconScanner;
 
     private BluetoothAdapter bluetoothAdapter;
-    public Beacon currentBeacon;
+    private Beacon currentBeacon;
     private long cooldownLeft = 0;
 
     private boolean beaconWithCooldown = false;
 
     /* ------------------------- Teams ------------------------- */
 
-    public String myTeam = Team.TEAM_ORANGE;
-
-    public Flags flags;
-
+    private String myTeam = Team.TEAM_ORANGE;
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        checkIfBLEIsSupported();
-        askPermissions();
-
-        flags = new Flags();
-
-        timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
-        gameTimer = new GameTimer(timerTextView, 5);
-        gameTimer.addListener(this);
-
-        mContentView = findViewById(R.id.content);
-        quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
-        mainLayout = (ConstraintLayout) findViewById(R.id.content);
-        quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
-        quizFragment.addActivity(this);
-
-        bluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
-        beaconScanner = new BeaconScanner(bluetoothAdapter);
-        beaconScanner.setScanEventListener(this);
-        beaconScanner.start();
-
-        showQuestion(false);
-
-        makeAppFullScreen();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     /**
      * Checks if BT LE is supported. If not, the app is closed after showing a message.
@@ -210,6 +160,63 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     /* ------------------------- OnScanListener ------------------------- */
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        checkIfBLEIsSupported();
+        askPermissions();
+
+        stateManager = new StateManager(
+                PreferenceManager.getDefaultSharedPreferences(this),
+                "GameActivityState"
+        );
+
+        stateManager.set(StateManagerKey.FLAGS, new Flags());
+
+        timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
+        gameTimer = new GameTimer(timerTextView, 5);
+        gameTimer.addListener(this);
+
+        mContentView = findViewById(R.id.content);
+        quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
+        mainLayout = (ConstraintLayout) findViewById(R.id.content);
+        quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
+        quizFragment.addActivity(this);
+
+        bluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+        beaconScanner = new BeaconScanner(bluetoothAdapter);
+        beaconScanner.setScanEventListener(this);
+        beaconScanner.start();
+
+        showQuestion(false);
+
+        makeAppFullScreen();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    /* ------------------------- OnScanListener ------------------------- */
+
+    @Override
     public void onScanStopped() {
     }
 
@@ -229,7 +236,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                     currentBeacon.getAddress().equals(beacon.getAddress())) {
             }
 
-            Object flagResult = flags.findFlag(beacon, myTeam);
+            Object flagResult = ((Flags)stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, myTeam);
             if ((flagResult.getClass().equals(Boolean.class))) {
                 boolean result = (Boolean) flagResult;
                 if (!result) {
@@ -251,7 +258,9 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     public void OnGameTimerFinished() {
-        Utils.toast(getApplicationContext(), "Game Finished, you have captured " + flags.getRegisteredFlags().size() + " flags");
+        Utils.toast(getApplicationContext(), "Game Finished, you have captured "
+                + ((Flags)stateManager.get(StateManagerKey.FLAGS)).getRegisteredFlags().size() +
+                " flags");
         timerTextView.setText("Finished");
 
     }
@@ -263,4 +272,13 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     }
 
+    /* ------------------------- Getters ------------------------- */
+
+    public String getMyTeam() {
+        return myTeam;
+    }
+
+    public StateManager getStateManager() {
+        return stateManager;
+    }
 }

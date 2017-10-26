@@ -21,7 +21,10 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +54,8 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
+    private StateManager stateManager;
+
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
@@ -71,6 +76,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
+        this.stateManager = gameActivity.getStateManager();
     }
 
     public void setup(){
@@ -146,7 +152,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(Team.NO_TEAM);
-        gameActivity.flags.addFlag(flag);
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
         gameActivity.showQuestion(false);
     }
 
@@ -155,8 +161,8 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     public void overnemenSucces(){
         Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(gameActivity.myTeam);
-        gameActivity.flags.addFlag(flag);
+        flag.CaptureAndCooldown(gameActivity.getMyTeam());
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
         count=0;
         gameActivity.showQuestion(false);
 
