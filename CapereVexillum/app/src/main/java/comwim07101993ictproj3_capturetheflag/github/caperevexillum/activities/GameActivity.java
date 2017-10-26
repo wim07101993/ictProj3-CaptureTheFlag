@@ -227,7 +227,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
             if (!(currentBeacon == null) &&
                     currentBeacon.getAddress().equals(beacon.getAddress())) {
-                return;
             }
 
             Object flagResult = flags.findFlag(beacon, myTeam);
