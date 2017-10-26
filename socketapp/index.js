@@ -21,10 +21,14 @@ io.on('connection', function(socket){
     socket.on("start",(endTime) => time.sync(io,endTime));
 
     socket.on("askFlags",()=> flagsClass.askFlags(socket));
-    socket.on("addFlags",(flag)=> flagsClass.addFlags(io, socket, flag));
-    socket.on("updateFlags",(flag)=> flagsClass.updateFlags(io, socket, flag));
+    socket.on("addFlag",(flag)=> flagsClass.addFlag(io, socket, flag));
+    socket.on("updateFlag",(flag)=> flagsClass.updateFlag(io, socket, flag));
 
+    teamClass.staticTeam();
+    teamClass.staticTeam();
     socket.on("askTeams",() => teamClass.askTeams(socket));
+    socket.on("addPlayer", (team, player) => teamClass.addPlayer(team, player));
+    socket.on("addTeam", (team) => teamClass.addTeam(team));
 });
 
 
