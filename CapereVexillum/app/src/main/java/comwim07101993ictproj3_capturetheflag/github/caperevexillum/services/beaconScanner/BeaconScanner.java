@@ -72,7 +72,6 @@ public class BeaconScanner {
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-
     /**
      * Constructor to construct a BeaconScanner instance.
      *

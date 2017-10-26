@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -37,6 +36,10 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beac
  */
 public class GameActivity extends AppCompatActivity implements OnScanListener, OnGameTimerFinishedListener {
 
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
     private final static String TAG = GameActivity.class.getSimpleName();
     private static final int REQUEST_ENABLE_BT = 1;
 
@@ -54,9 +57,15 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
     public Flags flags;
     public Beacon currentBeacon;
     public String myTeam = Team.TEAM_ORANGE;
-    private long cooldownLeft=0;
+    private long cooldownLeft = 0;
 
-    private boolean beaconWithCooldown=false;
+    private boolean beaconWithCooldown = false;
+
+
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -84,6 +93,11 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
 
         makeAppFullScreen();
     }
+
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
 
     // ----- bluetooth stuff ------
 
@@ -126,13 +140,12 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
             if (resultCode == RESULT_CANCELED) {
                 // show toast
                 Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
-            }else {
+            } else {
                 beaconScanner.start();
             }
         }
     }
 
-    // -------------
     public void showQuestion(boolean showQuestion) {
         if (showQuestion) {
             mainLayout.setVisibility(View.INVISIBLE);
@@ -146,7 +159,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
 
         }
     }
-
 
     private void makeAppFullScreen() {
         // Hide UI first
@@ -165,52 +177,40 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, O
 
     @Override
     public void onScanStopped() {
-
     }
 
     @Override
     public void onScanStarted() {
-
     }
 
     @Override
     public void onBeaconFound(Beacon beacon) {
         double beaconSignalStrength = beacon.getRelativeRssi();
 
-        if(beaconSignalStrength < SIGNAL_THRESHOLD){
+        if (beaconSignalStrength < SIGNAL_THRESHOLD) {
             if (quizLayout.getVisibility() == View.VISIBLE)
                 return;
 
-            if (!(currentBeacon == null)) {
-                if (currentBeacon.getAddress().equals(beacon.getAddress()))
-                {
-
-                }
-
+            if (!(currentBeacon == null) &&
+                    currentBeacon.getAddress().equals(beacon.getAddress())) {
+                    return;
             }
-            Object flagResult =flags.findFlag(beacon, myTeam);
-            if((flagResult.getClass().equals(Boolean.class))){
-                boolean result = (Boolean)flagResult;
-                if(!result)
-                {
 
+            Object flagResult = flags.findFlag(beacon, myTeam);
+            if ((flagResult.getClass().equals(Boolean.class))) {
+                boolean result = (Boolean) flagResult;
+                if (!result) {
                     beaconWithCooldown = false;
                     currentBeacon = beacon;
                     quizFragment.setCurrentBeacon(beacon);
                     showQuestion(true);
                 }
-            }else{
-
-                Date dateCooldownLeft = (Date)flagResult;
+            } else {
+                Date dateCooldownLeft = (Date) flagResult;
                 Date now = Calendar.getInstance().getTime();
-                cooldownLeft = dateCooldownLeft.getTime()-now.getTime();
-                beaconWithCooldown=(cooldownLeft>1010);
-
-
-
+                cooldownLeft = dateCooldownLeft.getTime() - now.getTime();
+                beaconWithCooldown = (cooldownLeft > 1010);
             }
-
-
         }
     }
 
