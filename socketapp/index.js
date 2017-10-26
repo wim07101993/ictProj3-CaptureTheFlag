@@ -19,8 +19,11 @@ io.on('connection', function(socket){
     socket.emit("test","test");
   
     socket.on("start",(endTime) => time.sync(io,endTime));
+
     socket.on("askFlags",()=> flagsClass.askFlags(socket));
+    socket.on("addFlags",(flag)=> flagsClass.addFlags(io, socket, flag));
     socket.on("updateFlags",(flag)=> flagsClass.updateFlags(io, socket, flag));
+
     socket.on("askTeams",() => teamClass.askTeams(socket));
 });
 
