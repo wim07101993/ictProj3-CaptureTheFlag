@@ -33,7 +33,7 @@ public class CooldownTimerFragment extends Fragment {
         GameActivity gameActivity = (GameActivity) getActivity();
         textView=(TextView)view.findViewById(R.id.cooldownTimerTextView);
 
-        textView.setText(gameActivity.cooldownLeft+" time left");
+        textView.setText(gameActivity.getCooldownLeft()+" time left");
 
     }
 
