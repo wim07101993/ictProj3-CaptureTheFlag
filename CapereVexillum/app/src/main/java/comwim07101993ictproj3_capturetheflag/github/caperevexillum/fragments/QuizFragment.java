@@ -57,15 +57,6 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private StateManager stateManager;
 
 
-    /* --------------------------------------------------------------- */
-    /* ------------------------- CONSTRUCTOR ------------------------- */
-    /* --------------------------------------------------------------- */
-
-    public QuizFragment() {
-
-    }
-
-
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
@@ -87,7 +78,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         nQuestions = 3;
         linearLayout = view.findViewById(R.id.buttonsLayout);;
 
-        question = view.findViewById(R.id.questionTextView);
+        question = (TextView) view.findViewById(R.id.questionTextView);
 
         //Eerste question afhalen
         questionAndAnswer = db_handler.getVraagEnAntwoord(count);
@@ -161,7 +152,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     public void capturedFlag(){
         Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(gameActivity.getMyTeam());
+        flag.CaptureAndCooldown((String)stateManager.get(StateManagerKey.MY_TEAM));
         ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
         count=0;
         gameActivity.showQuestion(false);

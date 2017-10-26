@@ -23,7 +23,11 @@ public enum StateManagerKey {
      */
     BLUETOOTH,
     /**
-     * CURRENT_BEACON is the beacon that is currently found by the app.
+     * CURRENT_BEACON is the state that holds the beacon that is currently found by the app.
      */
     CURRENT_BEACON,
+    /**
+     * MY_TEAM is the state that holds in which team the owner of the app is.
+     */
+    MY_TEAM,
 }

@@ -21,7 +21,7 @@
             tools:layout_editor_absoluteX="8dp"></LinearLayout>
 
         <TextView
-            android:id="@+id/QuestionTextView"
+            android:id="@+id/questionTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 

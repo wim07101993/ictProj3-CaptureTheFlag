@@ -21,7 +21,6 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.prefs.Preferences;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
@@ -29,9 +28,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.BeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.OnScanListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.IStateManager;
@@ -76,7 +73,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     /* ------------------------- Teams ------------------------- */
 
-    private String myTeam = Team.TEAM_ORANGE;
+    //private String myTeam = Team.TEAM_ORANGE;
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -235,7 +232,9 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                     currentBeacon.getAddress().equals(beacon.getAddress())) {
             }
 
-            Object flagResult = ((Flags)stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, myTeam);
+            Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS))
+                    .findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM));
+
             if ((flagResult.getClass().equals(Boolean.class))) {
                 boolean result = (Boolean) flagResult;
                 if (!result) {
@@ -259,7 +258,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     @Override
     public void OnGameTimerFinished() {
         Utils.toast(getApplicationContext(), "Game Finished, you have captured "
-                + ((Flags)stateManager.get(StateManagerKey.FLAGS)).getRegisteredFlags().size() +
+                + ((Flags) stateManager.get(StateManagerKey.FLAGS)).getRegisteredFlags().size() +
                 " flags");
         timerTextView.setText("Finished");
 
@@ -273,10 +272,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     }
 
     /* ------------------------- Getters ------------------------- */
-
-    public String getMyTeam() {
-        return myTeam;
-    }
 
     public StateManager getStateManager() {
         return stateManager;
