@@ -28,6 +28,11 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
  */
 public class QuizFragment extends Fragment implements View.OnClickListener {
 
+
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
     //variabele van de klasse db_handler
     private DbHandler db_handler;
     private View view;
@@ -45,15 +50,29 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     LinearLayout linearLayout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+
+
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
+
     public QuizFragment() {
 
     }
+
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
+
     public void setCurrentBeacon(Beacon beacon){
         currentBeacon = beacon;
     }
+
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
     }
+
     public void setup(){
         //locale waarde
         db_handler = new DbHandler();
@@ -90,16 +109,6 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
             buttons.add(button);
             linearLayout.addView(button);
         }
-
-    }
-
-
-
-    //kijkt of het antwoord juist is
-    @Override
-    public void onClick(View view) {
-
-        checkAnswerQuestion( (Button)view);
 
     }
 
@@ -152,6 +161,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         gameActivity.showQuestion(false);
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -159,6 +169,16 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_quiz,container,false);
         setup();
         return view;
+    }
+
+    /* ------------------------- OnClickListener ------------------------- */
+
+    //kijkt of het antwoord juist is
+    @Override
+    public void onClick(View view) {
+
+        checkAnswerQuestion( (Button)view);
+
     }
 }
 
