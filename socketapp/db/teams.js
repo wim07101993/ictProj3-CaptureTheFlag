@@ -1,4 +1,4 @@
-export class team {
+export class Team {
     teamname = "";
     score = "";
     players = [];

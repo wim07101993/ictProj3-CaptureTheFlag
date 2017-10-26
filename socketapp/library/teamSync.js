@@ -1,15 +1,15 @@
-import team from '../db/teams';
+import Team from '../db/teams';
 
 export default {
-    teams = [],
+    teams : [],
 
-    sync : function(socket){
-        var showcaseFunction = this.showcaseFunction();
-        console.log("teamsync");
-        socket.emit(showcaseFunction);
+    askTeams(socket){
+        this.staticTeam();
+        socket.emit("teamsResponse", JSON.stringify(teams));
+        console.log("askTeams");    
     },
-    
-    showcaseFunction: function(){
-        return "showcaseFunction"
+
+    staticTeam(){
+        this.teams.push(new Team("testTeam", 5, ["john","sam", "dirk"]));
     }
 }
