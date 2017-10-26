@@ -18,8 +18,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="200dp"
-            android:text="Wilt u aan de quiz beginnen?"
-            android:textSize="24dp"
+            android:text="@string/do_you_want_to_start_the_quiz"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -33,18 +33,18 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <Button
-                android:id="@+id/JaButton"
+                android:id="@+id/YesButton"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:text="Ja"
+                android:text="@string/yes"
                 tools:layout_editor_absoluteX="40dp"
                 tools:layout_editor_absoluteY="301dp" />
 
             <Button
-                android:id="@+id/NeenButton"
+                android:id="@+id/NoButton"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:text="Neen"
+                android:text="@string/no"
                 tools:layout_editor_absoluteX="244dp"
                 tools:layout_editor_absoluteY="301dp" />
         </android.support.v7.widget.LinearLayoutCompat>
