@@ -43,10 +43,10 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private List<Button> buttons;
 
     //variabele declareren (main)
-    private TextView vraag;
-    private Integer aantalVragen;
+    private TextView question;
+    private Integer nQuestions;
     private Integer count;
-    private Quiz vraagEnAntwoord;
+    private Quiz questionAndAnswer;
     private GameActivity gameActivity;
     private Beacon currentBeacon;
     //layout settings
@@ -84,13 +84,13 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         db_handler = new DbHandler();
         count = 0;
         buttons = new ArrayList<>();
-        aantalVragen = 3;
+        nQuestions = 3;
         linearLayout =  (LinearLayout) view.findViewById(R.id.buttonsLayout);;
 
-        vraag = (TextView)  view.findViewById(R.id.vraagTextView);
+        question = (TextView)  view.findViewById(R.id.vraagTextView);
 
-        //Eerste vraag afhalen
-        vraagEnAntwoord = db_handler.getVraagEnAntwoord(count);
+        //Eerste question afhalen
+        questionAndAnswer = db_handler.getVraagEnAntwoord(count);
 
         //buttons toevoegen aan layout
         createButtons();
@@ -98,12 +98,12 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     //buttons dynamish aanmaken aan de hand van aantal antwoorden
     private void createButtons(){
-        vraag.setText(vraagEnAntwoord.getVraag());
+        question.setText(questionAndAnswer.getVraag());
         linearLayout.removeAllViews();
 
-        for(int i = 0; i<vraagEnAntwoord.getAantalAntwoorden()-1;i++ ){
+        for(int i = 0; i< questionAndAnswer.getAantalAntwoorden()-1; i++ ){
             Button button = new Button(getActivity());
-            button.setText(vraagEnAntwoord.getAntwoord(i));
+            button.setText(questionAndAnswer.getAntwoord(i));
             button.setTextSize(14);
             button.setGravity(Gravity.CENTER);
             button.setId(i);
@@ -121,13 +121,13 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     //kijkt of de antwoorden juist zijn en returnt true or false
     boolean checkAnswerQuestion(Button button){
 
-        //als de vraag juist is toon dan de volgende
+        //als de question juist is toon dan de volgende
         //of als alle vragen zijn geweest ga naar de functie overnemenSucces
         //anders ga naar de functie einde quiz
-        if(button.getText()== vraagEnAntwoord.getJuisteAntwoord()){
+        if(button.getText()== questionAndAnswer.getJuisteAntwoord()){
             count++;
-            if (aantalVragen-1 >= count){
-                vraagEnAntwoord = db_handler.getVraagEnAntwoord(count);
+            if (nQuestions -1 >= count){
+                questionAndAnswer = db_handler.getVraagEnAntwoord(count);
 
                 createButtons();
             }
@@ -146,7 +146,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     }
 
     //zet variabele terug normaal en toont een melding dat het antwoord fout was
-    //het toont een nieuwe vraag en zet de antwoorden erbij
+    //het toont een nieuwe question en zet de antwoorden erbij
     public  void eindeQuiz(){
         count = 0;
         Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
