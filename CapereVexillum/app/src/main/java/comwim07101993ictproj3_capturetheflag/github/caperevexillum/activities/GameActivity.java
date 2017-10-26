@@ -269,7 +269,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     public void stateChanged(List<StateManagerKey> changedKeys, IStateManager manager) {
-
+        // TODO WIM: StartQuizFragment state changed
     }
 
     /* ------------------------- Getters ------------------------- */
