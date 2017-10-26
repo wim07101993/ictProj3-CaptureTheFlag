@@ -28,18 +28,18 @@ public class ScoreFragment extends Fragment{
     /* ---------------------------------------------------------- */
 
 
-    private TextView aantalFlagsRoodView;
-    private TextView aantalFlagsGroenView;
-    private ProgressBar scoreVerhoudingProgressbar;
+    private TextView amountFlagsRedView;
+    private TextView amountFlagsGreenView;
+    private ProgressBar scoreBalanceProgressbar;
     private StateManager stateManager;
     private View view;
     private GameActivity gameActivity;
 
-    private int aantalFlagsGroen;
-    private int aantalFlagsRood;
-    private int scoreGroen;
-    private int scoreRood;
-    private int scoreVerhouding;
+    private int amountFlagsGreen;
+    private int amoountFlagsRed;
+    private int scoreGreen;
+    private int scoreRed;
+    private int scoreBalance;
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
@@ -69,32 +69,32 @@ public class ScoreFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_score, container, false);
+        amountFlagsRedView = (TextView) view.findViewById(R.id.aantalFlagsRood);
+        amountFlagsGreenView = (TextView) view.findViewById(R.id.aantalFlagsGroen);
+        scoreBalanceProgressbar = (ProgressBar) view.findViewById(R.id.scoreVerhoudingProgressBar);
 
-        aantalFlagsRoodView = (TextView) view.findViewById(R.id.aantalFlagsRood);
-        aantalFlagsGroenView = (TextView) view.findViewById(R.id.aantalFlagsGroen);
-        scoreVerhoudingProgressbar = (ProgressBar) view.findViewById(R.id.scoreVerhoudingProgressBar);
-
-        return inflater.inflate(R.layout.fragment_score, container, false);
+        return view;
     }
 
     private void fillProgressBar(){
-        scoreVerhouding= scoreGroen/(scoreGroen+scoreRood)*100;
-        scoreVerhoudingProgressbar.setProgress(scoreVerhouding);
+        scoreBalance= scoreGreen/(scoreGreen+scoreRed)*100;
+        scoreBalanceProgressbar.setProgress(scoreBalance);
 
     }
-    private void setAantalFlags(){
-        aantalFlagsRoodView.setText(aantalFlagsRood);
-        aantalFlagsGroenView.setText(aantalFlagsGroen);
+    private void setAmountFlags(){
+        amountFlagsRedView.setText(amoountFlagsRed);
+        amountFlagsGreenView.setText(amountFlagsGreen);
     }
 
 
 
     public void dummyData(){
-        aantalFlagsRoodView.setText("5");
-        aantalFlagsGroenView.setText("7");
+        amountFlagsRedView.setText("5");
+        amountFlagsRedView.setText("7");
 
-        scoreGroen = 300;
-        scoreRood = 700;
+        scoreGreen = 300;
+        scoreRed = 700;
     }
 
     /*
