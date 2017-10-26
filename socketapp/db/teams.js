@@ -1,4 +1,4 @@
-export class Team {
+export default class Team {
     teamname = "";
     score = "";
     players = [];
@@ -9,8 +9,8 @@ export class Team {
         this.players = players;
     }
 
-    addPlayer(player){
-        this.players.push(player);
+    addPlayer(playe){
+        this.players.push(playe);
     }
 
 }

@@ -5,11 +5,12 @@ export default {
 
     askTeams(socket){
         this.staticTeam();
-        socket.emit("teamsResponse", JSON.stringify(teams));
+        socket.emit("teamsResponse", JSON.stringify(this.teams));
         console.log("askTeams");    
     },
 
     staticTeam(){
-        this.teams.push(new Team("testTeam", 5, ["john","sam", "dirk"]));
+        let team = new Team("testTeam", 5, ["john","sam", "dirk"]);
+        this.teams.push(team);
     }
 }

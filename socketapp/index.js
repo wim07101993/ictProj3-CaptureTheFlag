@@ -20,10 +20,10 @@ io.on('connection', function(socket){
   
     io.on("start",(endTime) => time.sync(io,endTime));
     io.on("askFlags",()=> flags.sync(socket));
-    io.on("askTeams",() => teamClass.askTeams(socket));
+    socket.on("askTeams",() => teamClass.askTeams(socket));
 });
 
 
 
 console.log("listening")
-server.listen(2224);
+server.listen(4040);
