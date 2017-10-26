@@ -8,12 +8,10 @@ const io = require('socket.io')(server, {
   pingTimeout: 5000,
   cookie: false
 });
-import timeClass from "./library/timesync";
-import flagsClass from "./library/flagsSync";
-import teamClass from "./library/teamSync";
+import timeClass from "./library/timesync"
+import flagsClass from "./library/flagsSync"
+import teamClass from "./library/teamSync"
 
-
-var flags;
 var teams;
 io.on('connection', function(socket){
     console.log("connected");
@@ -21,7 +19,7 @@ io.on('connection', function(socket){
     socket.emit("test","test");
   
     io.on("start",(endTime) => time.sync(io,endTime));
-    io.on("askFlags",()=> flags.sync(socket,flags));
+    io.on("askFlags",()=> flags.sync(socket));
     io.on("askTeam",() => teams.sync(socket,teams))
 
 });
