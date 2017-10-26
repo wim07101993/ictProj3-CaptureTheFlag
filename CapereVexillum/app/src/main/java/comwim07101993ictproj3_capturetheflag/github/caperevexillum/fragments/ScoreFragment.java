@@ -4,60 +4,64 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ScoreFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ScoreFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class ScoreFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class ScoreFragment extends Fragment{
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
 
-    private OnFragmentInteractionListener mListener;
+
+    private TextView aantalFlagsRoodView;
+    private TextView aantalFlagsGroenView;
+    private ProgressBar scoreVerhoudingProgressbar;
+    private StateManager stateManager;
+    private View view;
+    private GameActivity gameActivity;
+
+    private int aantalFlagsGroen;
+    private int aantalFlagsRood;
+    private int scoreGroen;
+    private int scoreRood;
+    private int scoreVerhouding;
+
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
 
     public ScoreFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ScoreFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ScoreFragment newInstance(String param1, String param2) {
-        ScoreFragment fragment = new ScoreFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
+
+    public void addActivity(GameActivity gameActivity) {
+        this.gameActivity = gameActivity;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -65,16 +69,35 @@ public class ScoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        aantalFlagsRoodView = (TextView) view.findViewById(R.id.aantalFlagsRood);
+        aantalFlagsGroenView = (TextView) view.findViewById(R.id.aantalFlagsGroen);
+        scoreVerhoudingProgressbar = (ProgressBar) view.findViewById(R.id.scoreVerhoudingProgressBar);
+
         return inflater.inflate(R.layout.fragment_score, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    private void fillProgressBar(){
+        scoreVerhouding= scoreGroen/(scoreGroen+scoreRood)*100;
+        scoreVerhoudingProgressbar.setProgress(scoreVerhouding);
+
+    }
+    private void setAantalFlags(){
+        aantalFlagsRoodView.setText(aantalFlagsRood);
+        aantalFlagsGroenView.setText(aantalFlagsGroen);
     }
 
+
+
+    public void dummyData(){
+        aantalFlagsRoodView.setText("5");
+        aantalFlagsGroenView.setText("7");
+
+        scoreGroen = 300;
+        scoreRood = 700;
+    }
+
+    /*
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -101,9 +124,9 @@ public class ScoreFragment extends Fragment {
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
-     */
+     *
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
+    }*/
 }
