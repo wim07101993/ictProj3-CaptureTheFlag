@@ -21,5 +21,9 @@ public enum StateManagerKey {
     /**
      * BLUETOOTH is the state that holds whether the bluetooth is turned on or of.
      */
-    BLUETOOTH
+    BLUETOOTH,
+    /**
+     * CURRENT_BEACON is the beacon that is currently found by the app.
+     */
+    CURRENT_BEACON,
 }

@@ -76,7 +76,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
-        this.stateManager = gameActivity.getStateManager();
+        stateManager = gameActivity.getStateManager();
     }
 
     public void setup(){
@@ -85,9 +85,9 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         count = 0;
         buttons = new ArrayList<>();
         nQuestions = 3;
-        linearLayout =  (LinearLayout) view.findViewById(R.id.buttonsLayout);;
+        linearLayout = view.findViewById(R.id.buttonsLayout);;
 
-        question = (TextView)  view.findViewById(R.id.vraagTextView);
+        question = view.findViewById(R.id.vraagTextView);
 
         //Eerste question afhalen
         questionAndAnswer = db_handler.getVraagEnAntwoord(count);
@@ -122,7 +122,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     boolean checkAnswerQuestion(Button button){
 
         //als de question juist is toon dan de volgende
-        //of als alle vragen zijn geweest ga naar de functie overnemenSucces
+        //of als alle vragen zijn geweest ga naar de functie capturedFlag
         //anders ga naar de functie einde quiz
         if(button.getText()== questionAndAnswer.getJuisteAntwoord()){
             count++;
@@ -134,11 +134,11 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
             else{
                 //Quiz capture and cooldown
 
-                overnemenSucces();
+                capturedFlag();
             }
 
         }else{
-            eindeQuiz();
+            endQuiz();
 
             return false;
         }
@@ -147,7 +147,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     //zet variabele terug normaal en toont een melding dat het antwoord fout was
     //het toont een nieuwe question en zet de antwoorden erbij
-    public  void eindeQuiz(){
+    public  void endQuiz(){
         count = 0;
         Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
@@ -158,7 +158,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     //geeft een melding dat de vragen juist waren en de vlag overgenomen is
     //zet de variabele terug tegoei
-    public void overnemenSucces(){
+    public void capturedFlag(){
         Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(gameActivity.getMyTeam());

@@ -68,11 +68,10 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private static final int REQUEST_ENABLE_BT = 1;
     private static double SIGNAL_THRESHOLD = 2;
     private BeaconScanner beaconScanner;
-
     private BluetoothAdapter bluetoothAdapter;
-    private Beacon currentBeacon;
-    private long cooldownLeft = 0;
 
+    // TODO HAKAN: Polish code
+    private long cooldownLeft = 0;
     private boolean beaconWithCooldown = false;
 
     /* ------------------------- Teams ------------------------- */
@@ -138,8 +137,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
             mainLayout.setVisibility(View.VISIBLE);
             quizLayout.setVisibility(View.INVISIBLE);
 
-            currentBeacon = null;
-
+            stateManager.set(StateManagerKey.CURRENT_BEACON, null);
         }
     }
 
@@ -232,7 +230,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
             if (quizLayout.getVisibility() == View.VISIBLE)
                 return;
 
-            if (!(currentBeacon == null) &&
+            Beacon currentBeacon = (Beacon) stateManager.get(StateManagerKey.CURRENT_BEACON);
+            if (!(stateManager.get(StateManagerKey.CURRENT_BEACON) == null) &&
                     currentBeacon.getAddress().equals(beacon.getAddress())) {
             }
 
@@ -241,13 +240,14 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                 boolean result = (Boolean) flagResult;
                 if (!result) {
                     beaconWithCooldown = false;
-                    currentBeacon = beacon;
+                    stateManager.set(StateManagerKey.CURRENT_BEACON, beacon);
                     quizFragment.setCurrentBeacon(beacon);
                     showQuestion(true);
                 }
             } else {
                 Date dateCooldownLeft = (Date) flagResult;
                 Date now = Calendar.getInstance().getTime();
+                // TODO HAKAN: Polish code
                 cooldownLeft = dateCooldownLeft.getTime() - now.getTime();
                 beaconWithCooldown = (cooldownLeft > 1010);
             }
