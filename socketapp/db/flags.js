@@ -1,4 +1,4 @@
-export default class flag{
+export default class Flag{
     mac="";
     team="";
     cooldown="";

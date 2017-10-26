@@ -5,7 +5,7 @@ export default {
 
     askTeams(socket){
         this.staticTeam();
-        socket.emit("teamsResponse", JSON.stringify(this.teams));
+        socket.emit("response", JSON.stringify(this.teams));
         console.log("askTeams");    
     },
 
