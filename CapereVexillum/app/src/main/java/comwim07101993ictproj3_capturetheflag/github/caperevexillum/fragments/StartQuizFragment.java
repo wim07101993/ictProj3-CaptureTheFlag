@@ -115,6 +115,7 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         if (view == YesButton) {
             stateManager.set(QUIZ_STARTER, true);
+            ((GameActivity)getActivity()).showQuestion(true);
         }
         else if (view == NoButton) {
             stateManager.set(QUIZ_STARTER, false);
