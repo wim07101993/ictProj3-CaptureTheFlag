@@ -6,6 +6,7 @@ export default {
     },
     updateFlagss: function(io, socket, flag){
         let responeFlag = JSON.parse(flag);
+        console.log(JSON.stringify(flag));
         flags.push(new flag(flag.beaconMAC , flag.cooldownTime , flag.team));
         io.emit("answerFlags",JSON.stringify(this.flags));
     },
