@@ -115,9 +115,11 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
     }
 
     /**
-     * save saves the current state with the sharedPreferences.
+     * save is supposed to save the current state to a database.
+     *
+     * @return boolean to indicate whether the state has been saved or not.
      */
-    public synchronized void save() {
+    public synchronized boolean save() {
         // Create new Gson for converting json.
         Gson gson = new Gson();
         // get the editor from the saved values
@@ -126,12 +128,15 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
         editor.putString(sharedPreferencesName, gson.toJson(currentState));
         // apply changes.
         editor.apply();
+        return true;
     }
 
     /**
-     * load loads the previous state form the sharedPreferences.
+     * load loads the previous state from a database.
+     *
+     * @return boolean to indicate whether an old state has been restored.
      */
-    public synchronized void load() {
+    public synchronized boolean load() {
         // TODO Wim: does toJson(null) throw error?
         // get the value from the saved values
         String json = savedValues.getString(sharedPreferencesName, null);
@@ -139,14 +144,17 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
         // if value equals null => create new map
         if (json == null) {
             currentState = new HashMap<>();
-        } else {
-            Gson gson = new Gson();
-            // Create type to convert json to.
-            Type t = new TypeToken<Map<TKey, Object>>() {
-            }.getType();
-            // set current state to the converted json.
-            currentState = gson.fromJson(json, t);
+            return false;
         }
+
+        Gson gson = new Gson();
+        // Create type to convert json to.
+        Type t = new TypeToken<Map<TKey, Object>>() {
+        }.getType();
+        // set current state to the converted json.
+        currentState = gson.fromJson(json, t);
+
+        return true;
     }
 
     /* ------------------------- GETTERS ------------------------- */

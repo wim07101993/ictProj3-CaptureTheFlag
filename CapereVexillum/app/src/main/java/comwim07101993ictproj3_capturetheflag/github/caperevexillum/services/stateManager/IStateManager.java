@@ -56,11 +56,15 @@ public interface IStateManager<TKey> {
 
     /**
      * save is supposed to save the current state to a database.
+     *
+     * @return boolean to indicate whether the state has been saved or not.
      */
-    void save();
+    boolean save();
 
     /**
      * load is supposed to load the previous state from a database.
+     *
+     * @return boolean to indicate whether an old state has been restored.
      */
-    void load();
+    boolean load();
 }

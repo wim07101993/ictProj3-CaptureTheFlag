@@ -152,7 +152,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
     }
 
-    /* ------------------------- OnScanListener ------------------------- */
+    /* ------------------------- Lifecycle methods ------------------------- */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +167,9 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                 "GameActivityState"
         );
 
-        stateManager.set(StateManagerKey.FLAGS, new Flags());
+        if (!stateManager.load()){
+            stateManager.set(StateManagerKey.FLAGS, new Flags());
+        }
 
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         gameTimer = new GameTimer(timerTextView, 5);
@@ -191,16 +193,19 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     protected void onStart() {
+        stateManager.load();
         super.onStart();
     }
 
     @Override
     protected void onResume() {
+        stateManager.load();
         super.onResume();
     }
 
     @Override
     protected void onPause() {
+        stateManager.save();
         super.onPause();
     }
 
@@ -269,6 +274,9 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     @Override
     public void stateChanged(List<StateManagerKey> changedKeys, IStateManager manager) {
         // TODO WIM: StartQuizFragment state changed
+        if (changedKeys.contains(StateManagerKey.QUIZ_STARTER)){
+
+        }
     }
 
     /* ------------------------- Getters ------------------------- */
