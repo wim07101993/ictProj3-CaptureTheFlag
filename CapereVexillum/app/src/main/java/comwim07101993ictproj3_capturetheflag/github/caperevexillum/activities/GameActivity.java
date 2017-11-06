@@ -274,8 +274,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     @Override
     public void stateChanged(List<StateManagerKey> changedKeys, IStateManager manager) {
         // TODO WIM: StartQuizFragment state changed
-        if (changedKeys.contains(StateManagerKey.QUIZ_STARTER)){
-
+        if (changedKeys.contains(StateManagerKey.CURRENT_BEACON)){
+            
         }
     }
 
