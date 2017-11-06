@@ -29,6 +29,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gamet
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.BeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.OnScanListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.IStateManager;
@@ -138,6 +139,16 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
     }
 
+    private void checkIfNecessaryKeysExist() {
+        if (stateManager.get(StateManagerKey.FLAGS) == null) {
+            stateManager.set(StateManagerKey.FLAGS, new Flags());
+        }
+        if (stateManager.get(StateManagerKey.MY_TEAM) == null) {
+            stateManager.set(StateManagerKey.MY_TEAM, Team.TEAM_ORANGE);
+        }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
@@ -167,9 +178,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                 "GameActivityState"
         );
 
-        if (!stateManager.load()){
-            stateManager.set(StateManagerKey.FLAGS, new Flags());
-        }
+        checkIfNecessaryKeysExist();
 
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         gameTimer = new GameTimer(timerTextView, 5);
@@ -194,12 +203,12 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     @Override
     protected void onStart() {
         stateManager.load();
+        checkIfNecessaryKeysExist();
         super.onStart();
     }
 
     @Override
     protected void onResume() {
-        stateManager.load();
         super.onResume();
     }
 
