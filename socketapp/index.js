@@ -25,10 +25,9 @@ io.on('connection', function(socket){
     socket.on("updateFlag",(flag)=> flagsClass.updateFlag(io, socket, flag));
 
     teamClass.staticTeam();
-    teamClass.staticTeam();
     socket.on("askTeams",() => teamClass.askTeams(socket));
-    socket.on("addPlayer", (team, player) => teamClass.addPlayer(team, player));
-    socket.on("addTeam", (team) => teamClass.addTeam(team));
+    socket.on("addPlayer", (team, player) => teamClass.addPlayer(io, team, player));
+    socket.on("addTeam", (team) => teamClass.addTeam(io, team));
 });
 
 
