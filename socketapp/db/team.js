@@ -9,8 +9,8 @@ export default class Team {
         this.players = players;
     }
 
-    addPlayer(players){
-        this.players.push(players);
+    addPlayer(player){
+        this.players.push(player);
     }
 
 }

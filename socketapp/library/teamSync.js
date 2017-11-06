@@ -1,4 +1,4 @@
-import Team from '../db/teams';
+import Team from '../db/team';
 
 export default {
     teams : [],
@@ -12,20 +12,22 @@ export default {
 
         let teamsWithSameName = this.teams.filter(function(t){return t.teamName == inputTeam.teamName});
 
-        if(teamsWithSameName == null){
+        if(teamsWithSameName.length == 0){
             this.teams.push(inputTeam);
             io.emit("addedTeam", JSON.stringify(this.teams));
         }
     },
 
-    addPlayer(io, team, player){
-        let inputTeam = JSON.parse(team);
-        let selectedTeamIndex = this.teams.findIndex(t => t.teamName == inputTeam.teamName);
-        
-        if(selectedTeamIndex != null){
-            let teamToAddPlayerTo = this.teams[selectedTeamIndex];
-            teamToAddPlayerTo.addPlayer(player);
-            io.emit("addedPlayer", JSON.stringify(teamToAddPlayerTo));
+    addPlayer(io, teamName, player){
+        let selectedTeamIndex = this.teams.findIndex(function(t){ return t.teamName == teamName});
+
+        if(selectedTeamIndex != -1){
+            let inputTeam = this.teams[selectedTeamIndex];
+            
+            let team = new Team(inputTeam.teamName, inputTeam.score, inputTeam.players);
+
+            team.addPlayer(player);
+            io.emit("addedPlayer", JSON.stringify(inputTeam));
         }
     },
     
