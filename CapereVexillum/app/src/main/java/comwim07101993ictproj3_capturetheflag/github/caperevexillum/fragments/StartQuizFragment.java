@@ -124,6 +124,11 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
         else if (view == NoButton) {
             stateManager.set(QUIZ_STARTER, false);
         }
+        Done();
+    }
+
+    public void Done() {
+        this.onDetach();
     }
 
     /**

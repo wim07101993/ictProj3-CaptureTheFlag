@@ -284,12 +284,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     @Override
     public void stateChanged(List<StateManagerKey> changedKeys, IStateManager manager) {
         if (changedKeys.contains(StateManagerKey.CURRENT_BEACON)){
-            //TODO Nick: get Activity
             Intent intent = new Intent(this, StartQuizActivity.class);
-            startActivity(intent);
-        }
-        if (changedKeys.contains(StateManagerKey.QUIZ_STARTER)) {
-            //TODO Nick: close Activity
+            startActivityForResult(intent, 0);
         }
     }
 
