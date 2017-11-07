@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CapereVexillum.iml" filepath="$PROJECT_DIR$/CapereVexillum.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/CapereVexillum-app.iml" filepath="$PROJECT_DIR$/app/CapereVexillum-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ictProj3-CaptureTheFlag-CapereVexillum.iml" filepath="$PROJECT_DIR$/ictProj3-CaptureTheFlag-CapereVexillum.iml" />
     </modules>
   </component>
 </project>
