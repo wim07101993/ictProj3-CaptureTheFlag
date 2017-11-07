@@ -45,25 +45,27 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
 
     @Override
     public synchronized boolean load() {
-        // get the value from the saved values
-        String json = savedValues.getString(sharedPreferencesName, null);
-
-        // if value equals null => create new map
-        if (json == null) {
-            currentState = new HashMap<>();
-            return false;
-        }
-
-        Gson gson = new Gson();
-        // Create type to convert json to.
-        Type t = new TypeToken<Map<StateManagerKey, Object>>() {
-        }.getType();
-
-        // set current state to the converted json.
-        Map<StateManagerKey, Object> currentStateWithStringKeys = gson.fromJson(json, t);
-        currentState = currentStateWithStringKeys;
-
-        return true;
+        // TODO Wim: fix load function
+        return false;
+//        // get the value from the saved values
+//        String json = savedValues.getString(sharedPreferencesName, null);
+//
+//        // if value equals null => create new map
+//        if (json == null) {
+//            currentState = new HashMap<>();
+//            return false;
+//        }
+//
+//        Gson gson = new Gson();
+//        // Create type to convert json to.
+//        Type t = new TypeToken<Map<StateManagerKey, Object>>() {
+//        }.getType();
+//
+//        // set current state to the converted json.
+//        Map<StateManagerKey, Object> currentStateWithStringKeys = gson.fromJson(json, t);
+//        currentState = currentStateWithStringKeys;
+//
+//        return true;
     }
 
     /* ------------------------- GETTERS ------------------------- */
