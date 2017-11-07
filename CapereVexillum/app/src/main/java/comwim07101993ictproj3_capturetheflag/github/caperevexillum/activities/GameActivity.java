@@ -284,7 +284,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     public void stateChanged(List<StateManagerKey> changedKeys, IStateManager manager) {
         // TODO WIM: StartQuizFragment state changed
         if (changedKeys.contains(StateManagerKey.CURRENT_BEACON)){
-            
+            //TODO WIM: get Activity
         }
     }
 
