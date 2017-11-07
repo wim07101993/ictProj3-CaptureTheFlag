@@ -12,7 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <fragment
+            android:id="@+id/scoreFragment"
+            android:name="comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.ScoreFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
+            />
         <TextView
             android:id="@+id/txtWelcome"
             android:layout_width="wrap_content"
@@ -83,6 +89,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
-
 
 </FrameLayout>
