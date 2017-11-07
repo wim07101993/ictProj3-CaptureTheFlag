@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
+
 import static android.content.SharedPreferences.Editor;
 
 /**
@@ -137,7 +139,6 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
      * @return boolean to indicate whether an old state has been restored.
      */
     public synchronized boolean load() {
-        // TODO Wim: does toJson(null) throw error?
         // get the value from the saved values
         String json = savedValues.getString(sharedPreferencesName, null);
 
@@ -152,7 +153,7 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
         Type t = new TypeToken<Map<TKey, Object>>() {
         }.getType();
         // set current state to the converted json.
-        currentState = gson.fromJson(json, t);
+        this.currentState = gson.fromJson(json, t);
 
         return true;
     }

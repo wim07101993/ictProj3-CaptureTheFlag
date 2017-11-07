@@ -2,7 +2,13 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
@@ -36,6 +42,29 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
+
+    @Override
+    public synchronized boolean load() {
+        // get the value from the saved values
+        String json = savedValues.getString(sharedPreferencesName, null);
+
+        // if value equals null => create new map
+        if (json == null) {
+            currentState = new HashMap<>();
+            return false;
+        }
+
+        Gson gson = new Gson();
+        // Create type to convert json to.
+        Type t = new TypeToken<Map<StateManagerKey, Object>>() {
+        }.getType();
+
+        // set current state to the converted json.
+        Map<StateManagerKey, Object> currentStateWithStringKeys = gson.fromJson(json, t);
+        currentState = currentStateWithStringKeys;
+
+        return true;
+    }
 
     /* ------------------------- GETTERS ------------------------- */
 

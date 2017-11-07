@@ -144,7 +144,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(Team.NO_TEAM);
         ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
-        gameActivity.showQuestion(false);
+        gameActivity.showQuiz(false);
     }
 
     //geeft een melding dat de vragen juist waren en de vlag overgenomen is
@@ -155,7 +155,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         flag.CaptureAndCooldown((String)stateManager.get(StateManagerKey.MY_TEAM));
         ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
         count=0;
-        gameActivity.showQuestion(false);
+        gameActivity.showQuiz(false);
 
     }
 

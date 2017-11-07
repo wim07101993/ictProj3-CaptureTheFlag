@@ -126,7 +126,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
-    public void showQuestion(boolean showQuestion) {
+    public void showQuiz(boolean showQuestion) {
         if (showQuestion) {
             mainLayout.setVisibility(View.INVISIBLE);
             quizLayout.setVisibility(View.VISIBLE);
@@ -138,6 +138,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
             stateManager.set(StateManagerKey.CURRENT_BEACON, null);
         }
     }
+
+
 
     private void checkIfNecessaryKeysExist() {
         if (stateManager.get(StateManagerKey.FLAGS) == null) {
@@ -195,7 +197,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         beaconScanner.setScanEventListener(this);
         beaconScanner.start();
 
-        showQuestion(false);
+        showQuiz(false);
 
         makeAppFullScreen();
     }
@@ -255,7 +257,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                     beaconWithCooldown = false;
                     stateManager.set(StateManagerKey.CURRENT_BEACON, beacon);
                     quizFragment.setCurrentBeacon(beacon);
-                    showQuestion(true);
+                    showQuiz(true);
                 }
             } else {
                 Date dateCooldownLeft = (Date) flagResult;
