@@ -1,6 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.os.Vibrator;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.StartQuizActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 
 import static comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey.QUIZ_STARTER;
@@ -122,6 +124,11 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
         else if (view == NoButton) {
             stateManager.set(QUIZ_STARTER, false);
         }
+        Done();
+    }
+
+    public void Done() {
+        this.onDetach();
     }
 
     /**
