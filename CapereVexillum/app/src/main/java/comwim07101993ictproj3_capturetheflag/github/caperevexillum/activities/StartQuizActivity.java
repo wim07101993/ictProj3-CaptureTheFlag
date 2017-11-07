@@ -4,8 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.StartQuizFragment;
 
-public class StartQuizActivity extends AppCompatActivity {
+public class StartQuizActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

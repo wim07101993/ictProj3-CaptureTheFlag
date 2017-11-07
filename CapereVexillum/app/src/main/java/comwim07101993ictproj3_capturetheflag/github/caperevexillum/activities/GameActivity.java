@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.Closeable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -284,7 +285,10 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     public void stateChanged(List<StateManagerKey> changedKeys, IStateManager manager) {
         // TODO WIM: StartQuizFragment state changed
         if (changedKeys.contains(StateManagerKey.CURRENT_BEACON)){
-            //TODO WIM: get Activity
+            //TODO Nick: get Activity
+        }
+        if (changedKeys.contains(StateManagerKey.QUIZ_STARTER)) {
+            //TODO Nick: close Activity
         }
     }
 
