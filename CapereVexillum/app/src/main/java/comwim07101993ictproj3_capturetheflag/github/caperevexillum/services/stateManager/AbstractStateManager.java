@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,6 +115,18 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
             //noinspection unchecked
             l.stateChanged(keys, this);
         }
+    }
+
+    /**
+     * notifyListeners is supposed to notify all listeners from the stateChangedListeners that some
+     * state has been changed.
+     *
+     * @param key is the key of the state that has been changed.
+     */
+    public void notifyListeners(TKey key) {
+        List<TKey> keys = new ArrayList<>();
+        keys.add(key);
+        notifyListeners(keys);
     }
 
     /**
