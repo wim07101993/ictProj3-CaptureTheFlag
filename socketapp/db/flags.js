@@ -1,11 +1,16 @@
 export default class Flag{
-    mac="";
-    team="";
-    cooldown="";
-    constructor(mac,team,cooldown){
-        this.mac = mac;
+    beaconMAC="";
+    cooldownTime="";
+    cooldownTimer="";
+    team=""; 
+    timerFixer="";
+    constructor(beaconMAC,cooldownTime,cooldownTimer,team,timerFixer){
+        this.beaconMAC = beaconMAC;
+        this.cooldownTime = cooldownTime;
+        this.cooldownTimer = cooldownTimer;
         this.team = team;
-        this.cooldown = cooldown;
+        this.timerFixer = timerFixer;
+    
     }
     
 }

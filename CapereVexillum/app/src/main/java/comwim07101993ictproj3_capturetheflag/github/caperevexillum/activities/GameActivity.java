@@ -1,12 +1,15 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.Manifest;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -18,18 +21,30 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONObject;
+
 import java.io.Closeable;
+import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.CooldownTimerFragment;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.ScoreFragment;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.cooldowntimer.CooldownTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.IFlagSync;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.BeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.OnScanListener;
@@ -42,11 +57,13 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
  * Activity for the main activity.
  */
 public class GameActivity extends AppCompatActivity implements OnScanListener,
-        OnGameTimerFinishedListener, OnStateChangedListener<StateManagerKey> {
+        OnGameTimerFinishedListener, OnStateChangedListener<StateManagerKey>, IFlagSync {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
+
+    private final String serverURL="http://192.168.0.201:4040";
 
     private final static String TAG = GameActivity.class.getSimpleName();
 
@@ -59,20 +76,26 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private View mContentView;
     private RelativeLayout quizLayout;
     private ConstraintLayout mainLayout;
-
+    private CooldownTimerFragment cooldownFragment;
     private QuizFragment quizFragment;
-
+    public CooldownTimerFragment cooldownUpdatable;
+    private boolean startActivityOpen=false;
     /* ------------------------- Beacon scanner ------------------------- */
-
+    private  static final int START_QUIZ_ACTIVITY= 70;
     private static final int REQUEST_ENABLE_BT = 1;
     private static double SIGNAL_THRESHOLD = 2;
     private BeaconScanner beaconScanner;
     private BluetoothAdapter bluetoothAdapter;
 
-    // TODO HAKAN: Polish code
+    private Socket socket;
     private long cooldownLeft = 0;
     private boolean beaconWithCooldown = false;
-
+    private  boolean host=false;
+    private boolean gameStarted=false;
+    private int gameDurtationInMinutes=5;
+    public float timerValue;
+    public  OnGameTimerFinishedListener onGameTimerFinishedListener;
+    ScoreFragment scoreFragment ;
     /* ------------------------- Teams ------------------------- */
 
     //private String myTeam = Team.TEAM_ORANGE;
@@ -80,6 +103,34 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
+
+    //this code gets triggered when the server assigns you as  the host
+
+    Emitter.Listener becomeHost= new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            host=true;
+            socket.emit("start",gameDurtationInMinutes);
+        }
+    };
+    Emitter.Listener startTimer= new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            gameStarted=true;
+            String request = (String ) args[0];
+            float time = Float.parseFloat(request);
+            timerValue = time;
+            startTimeHandler.obtainMessage(1).sendToTarget();
+
+        }
+    };
+    Handler startTimeHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            gameTimer = new GameTimer(timerTextView,timerValue,socket);
+            gameTimer.addListener(onGameTimerFinishedListener);
+        }
+    };
 
     /**
      * Checks if BT LE is supported. If not, the app is closed after showing a message.
@@ -128,6 +179,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     }
 
     public void showQuiz(boolean showQuestion) {
+        startActivityOpen=false;
         if (showQuestion) {
             mainLayout.setVisibility(View.INVISIBLE);
             quizLayout.setVisibility(View.VISIBLE);
@@ -164,6 +216,12 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                 beaconScanner.start();
             }
         }
+        if(requestCode==START_QUIZ_ACTIVITY){
+            if(resultCode==1){
+                showQuiz(true);
+            }
+
+        }
     }
 
     /* ------------------------- Lifecycle methods ------------------------- */
@@ -175,29 +233,41 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
         checkIfBLEIsSupported();
         askPermissions();
-
+        onGameTimerFinishedListener = this;
         stateManager = new StateManager(
                 PreferenceManager.getDefaultSharedPreferences(this),
                 "GameActivityState"
         );
+        try {
+            socket = IO.socket(serverURL);
+            socket.connect();
+        } catch (URISyntaxException e) {
 
+        }
+        socket.on("host",becomeHost);
+        socket.on("start",startTimer);
         checkIfNecessaryKeysExist();
-
+        Flags flags =(Flags) stateManager.get(StateManagerKey.FLAGS);
+        flags.addSocket(socket);
+        flags.setSyncFlagListener(this);
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
-        gameTimer = new GameTimer(timerTextView, 5);
-        gameTimer.addListener(this);
+        //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
+
 
         mContentView = findViewById(R.id.content);
         quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
         mainLayout = (ConstraintLayout) findViewById(R.id.content);
         quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
         quizFragment.addActivity(this);
-
+        scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
         bluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         beaconScanner = new BeaconScanner(bluetoothAdapter);
         beaconScanner.setScanEventListener(this);
         beaconScanner.start();
-
+        cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.hide(cooldownFragment);
+        ft.commit();
         showQuiz(false);
 
         makeAppFullScreen();
@@ -217,7 +287,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     protected void onPause() {
-        stateManager.save();
+        //stateManager.save();
         super.onPause();
     }
 
@@ -238,38 +308,70 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     public void onBeaconFound(Beacon beacon) {
+        if(!gameStarted)
+            return;
         double beaconSignalStrength = beacon.getRelativeRssi();
 
         if (beaconSignalStrength < SIGNAL_THRESHOLD) {
             if (quizLayout.getVisibility() == View.VISIBLE)
                 return;
 
-            Beacon currentBeacon = (Beacon) stateManager.get(StateManagerKey.CURRENT_BEACON);
-            if (!(stateManager.get(StateManagerKey.CURRENT_BEACON) == null) &&
-                    currentBeacon.getAddress().equals(beacon.getAddress())) {
-            }
+            //Beacon currentBeacon = (Beacon) stateManager.get(StateManagerKey.CURRENT_BEACON);
+
 
             Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS))
                     .findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM));
 
             if ((flagResult.getClass().equals(Boolean.class))) {
+                stopCooldown();
                 boolean result = (Boolean) flagResult;
                 if (!result) {
+                    //new beacon found or beacon of enemey team found
                     beaconWithCooldown = false;
                     stateManager.set(StateManagerKey.CURRENT_BEACON, beacon);
                     quizFragment.setCurrentBeacon(beacon);
-                    showQuiz(true);
+                    if(!startActivityOpen){
+                        Intent intent = new Intent(this, StartQuizActivity.class);
+                        startActivityForResult(intent,START_QUIZ_ACTIVITY);
+
+                        startActivityOpen = true;
+                    }
+
+                    //showQuiz(true);
                 }
             } else {
-                Date dateCooldownLeft = (Date) flagResult;
-                Date now = Calendar.getInstance().getTime();
-                // TODO HAKAN: Polish code
-                cooldownLeft = dateCooldownLeft.getTime() - now.getTime();
-                beaconWithCooldown = (cooldownLeft > 1010);
+                //cooldown
+                coolDownFlag((Date)flagResult,beacon);
             }
         }
     }
+    public void stopCooldown(){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.hide(cooldownFragment);
+        ft.commit();
+    }
+    public void coolDownFlag(Date flagResult,Beacon beacon){
+        Date dateCooldownLeft = flagResult;
+        Date now = Calendar.getInstance().getTime();
+        // TODO HAKAN: Polish code
+        cooldownLeft = dateCooldownLeft.getTime() - now.getTime();
 
+        beaconWithCooldown = (cooldownLeft > 1010);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if(!beaconWithCooldown){
+            ft.hide(cooldownFragment);
+
+           // ((Flags) stateManager.get(StateManagerKey.FLAGS)).removeBeacon(beacon);
+        }else{
+
+            if(cooldownUpdatable!=null){
+                cooldownUpdatable.update((float)(cooldownLeft/1000));
+            }
+           ft.show(cooldownFragment);
+        }
+        ft.commit();
+
+    }
     /* ------------------------- OnGameTimerFinishedListener ------------------------- */
 
     @Override
@@ -278,6 +380,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                 + ((Flags) stateManager.get(StateManagerKey.FLAGS)).getRegisteredFlags().size() +
                 " flags");
         timerTextView.setText("Finished");
+        gameStarted=false;
 
     }
 
@@ -286,8 +389,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     @Override
     public void stateChanged(List<StateManagerKey> changedKeys, IStateManager manager) {
         if (changedKeys.contains(StateManagerKey.CURRENT_BEACON)){
-            Intent intent = new Intent(this, StartQuizActivity.class);
-            startActivityForResult(intent, 0);
+
         }
     }
 
@@ -299,5 +401,12 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     public long getCooldownLeft() {
         return cooldownLeft;
+    }
+
+    @Override
+    public void syncFlags() {
+        int redFlags=((Flags) stateManager.get(StateManagerKey.FLAGS)).getFlagByTeam(Team.TEAM_ORANGE);
+        int greenFlags =((Flags) stateManager.get(StateManagerKey.FLAGS)).getFlagByTeam(Team.TEAM_GREEN);
+        scoreFragment.setScores(redFlags,greenFlags);
     }
 }

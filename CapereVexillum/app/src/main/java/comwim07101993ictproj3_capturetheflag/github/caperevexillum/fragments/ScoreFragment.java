@@ -1,7 +1,8 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ScoreFragment extends Fragment{
+public class ScoreFragment extends Fragment {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -72,6 +73,16 @@ public class ScoreFragment extends Fragment{
         super.onCreate(savedInstanceState);
     }
 
+    public void setScores(int redScore,int greenScore){
+        scoreRed = (double)redScore+0.01;
+        scoreGreen = (double)greenScore+0.01;
+        amountFlagsRedView.setText(((int)scoreRed)+"");
+        amountFlagsGreenView.setText(((int)scoreGreen)+"");
+
+
+        scoreBalanceProgressbar.setMax((int)(scoreGreen+scoreRed));
+        scoreBalanceProgressbar.setProgress((int)scoreRed);
+    }
     private void setViewValues(){
         try {
             if (stateManager !=null){
@@ -114,3 +125,4 @@ public class ScoreFragment extends Fragment{
     }
 
 }
+
