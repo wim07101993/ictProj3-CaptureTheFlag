@@ -75,4 +75,10 @@ public interface IStateManager<TKey> {
      * @return boolean to indicate whether an old state has been restored.
      */
     boolean load();
+
+
+    /**
+     * clear is supposed to clear all the data stored on the device.
+     */
+    void clear();
 }

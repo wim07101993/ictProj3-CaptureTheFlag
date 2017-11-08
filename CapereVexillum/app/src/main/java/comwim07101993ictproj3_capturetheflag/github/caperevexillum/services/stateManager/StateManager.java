@@ -2,14 +2,13 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 
 import android.content.SharedPreferences;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
@@ -25,6 +24,18 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 
 public class StateManager extends AbstractStateManager<StateManagerKey> {
 
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
+
+    private static final Map<StateManagerKey, Type> KEY_TYPE_MAP = new HashMap<StateManagerKey, Type>() {{
+        put(StateManagerKey.FLAGS, Flags.class);
+        put(StateManagerKey.QUIZ_STARTER, boolean.class);
+        put(StateManagerKey.CURRENT_BEACON, Beacon.class);
+        put(StateManagerKey.MY_TEAM, String.class);
+    }};
+
+
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
@@ -32,43 +43,23 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     /**
      * StateManager is the constructor for the class StateManager.
      *
-     * @param sharedPreferences     the shared preferences to load and save the current state from and to.
-     * @param sharedPreferencesName the name of the shared preferences in the database.
+     * @param sharedPreferences the shared preferences to load and save the current state from and to.
      */
-    public StateManager(SharedPreferences sharedPreferences, String sharedPreferencesName) {
-        super(sharedPreferences, sharedPreferencesName);
+    public StateManager(SharedPreferences sharedPreferences) {
+        super(sharedPreferences);
     }
+
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
-    @Override
-    public synchronized boolean load() {
-        // TODO Wim: fix load function
-        return false;
-//        // get the value from the saved values
-//        String json = savedValues.getString(sharedPreferencesName, null);
-//
-//        // if value equals null => create new map
-//        if (json == null) {
-//            currentState = new HashMap<>();
-//            return false;
-//        }
-//
-//        Gson gson = new Gson();
-//        // Create type to convert json to.
-//        Type t = new TypeToken<Map<StateManagerKey, Object>>() {
-//        }.getType();
-//
-//        // set current state to the converted json.
-//        Map<StateManagerKey, Object> currentStateWithStringKeys = gson.fromJson(json, t);
-//        currentState = currentStateWithStringKeys;
-//
-//        return true;
-    }
-
     /* ------------------------- GETTERS ------------------------- */
+
+    @Override
+    protected Map<StateManagerKey, Type> getKeyTypeMap() {
+        return KEY_TYPE_MAP;
+    }
 
     /**
      * internalGet is the method that gets called when someone tries to get the state of a key.
@@ -76,7 +67,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
      * is called.
      *
      * @param key         key is the key of which the state is asked.
-     * @param changedKeys chagedKeys are the keys that changed in the chain of getting (and maybe
+     * @param changedKeys changedKeys are the keys that changed in the chain of getting (and maybe
      *                    setting) states.
      * @return The value of the asked state.
      * @throws IllegalArgumentException It is possible that when an argument is passed, the argument
@@ -87,6 +78,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
             throws IllegalArgumentException {
         return currentState.get(key);
     }
+
 
     /* ------------------------- SETTERS ------------------------- */
 
@@ -105,7 +97,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     @Override
     protected synchronized void internalSet(StateManagerKey key, Object value, List<StateManagerKey> changedKeys)
             throws IllegalArgumentException {
-        currentState.put(key, value);
+        this.currentState.put(key, value);
         changedKeys.add(key);
     }
 }
