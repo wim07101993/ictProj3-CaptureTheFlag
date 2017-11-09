@@ -30,7 +30,7 @@
         </activity>
         <activity android:name=".activities.DebugActivity" />
         <activity android:name=".activities.StartQuizActivity" />
-        <activity android:name=".activities.EndActivity"></activity>
+        <activity android:name=".activities.EndActivity" />
     </application>
 
 </manifest>

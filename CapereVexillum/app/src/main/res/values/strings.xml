@@ -10,4 +10,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="do_you_want_to_start_the_quiz">Do you want to start the quiz?</string>
+    <string name="waar_wilt_u_naartoe">Waar wilt u naartoe?</string>
+    <string name="lobby">Lobby</string>
+    <string name="start">Start</string>
 </resources>
