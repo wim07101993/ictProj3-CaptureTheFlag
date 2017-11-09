@@ -44,15 +44,16 @@ public class StartQuizActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View view) {
-
+        Intent intent = getIntent();
         if (view == YesButton) {
-            Intent intent = getIntent();
+
 
             setResult(1, intent);
 
             finish();
         }
         else if (view == NoButton) {
+            setResult(2, intent);
             finish();
         }
     }

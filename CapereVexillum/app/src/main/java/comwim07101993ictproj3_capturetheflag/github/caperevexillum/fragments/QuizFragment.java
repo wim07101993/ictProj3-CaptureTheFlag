@@ -49,11 +49,12 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private Quiz questionAndAnswer;
     private GameActivity gameActivity;
     private Beacon currentBeacon;
+
     //layout settings
     LinearLayout linearLayout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
+    Flags flags;
     private StateManager stateManager;
 
 
@@ -67,7 +68,8 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
-        stateManager = gameActivity.getStateManager();
+        //stateManager = gameActivity.getStateManager();
+        flags =gameActivity.flags;
     }
 
     public void setup(){
@@ -143,7 +145,8 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(Team.NO_TEAM);
-        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+
+        //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
         gameActivity.showQuiz(false);
     }
 
@@ -152,8 +155,9 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     public void capturedFlag(){
         Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown((String)stateManager.get(StateManagerKey.MY_TEAM));
-        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        flag.CaptureAndCooldown((String)gameActivity.myTeam);
+        //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        flags.addFlag(flag);
         count=0;
         gameActivity.showQuiz(false);
 

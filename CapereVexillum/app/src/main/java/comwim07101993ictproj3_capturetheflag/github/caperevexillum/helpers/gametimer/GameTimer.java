@@ -42,11 +42,12 @@ public class GameTimer {
         @Override
         public void call(Object... args) {
             String time = (String) args[0];
-            float timeInMinutes = Float.parseFloat(time);
+            float timer = Float.parseFloat(time);
+            int timeInMinutes = (int)timer;
             Calendar endDownCal = Calendar.getInstance();
-            int seconds = (int)(timeInMinutes- (int)timeInMinutes)*100;
+            int seconds =Math.abs  ((int)(timeInMinutes*100-timer*100));
             endDownCal.add(Calendar.SECOND,seconds);
-            endDownCal.add(Calendar.MINUTE,(int)timeInMinutes);
+            endDownCal.add(Calendar.MINUTE,timeInMinutes);
             DateEndTime = endDownCal.getTime();
         }
     };

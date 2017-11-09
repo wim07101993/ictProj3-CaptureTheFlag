@@ -118,11 +118,11 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         if (view == YesButton) {
-            stateManager.set(QUIZ_STARTER, true);
+          //  stateManager.set(QUIZ_STARTER, true);
             ((GameActivity)getActivity()).showQuiz(true);
         }
         else if (view == NoButton) {
-            stateManager.set(QUIZ_STARTER, false);
+            //stateManager.set(QUIZ_STARTER, false);
         }
         Done();
     }

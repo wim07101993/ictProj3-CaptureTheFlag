@@ -63,10 +63,10 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    private final String serverURL="http://192.168.0.201:4040";
+    private final String serverURL="http://192.168.137.1:4040";
 
     private final static String TAG = GameActivity.class.getSimpleName();
-
+    private boolean startquiz=false;
     private GameTimer gameTimer;
     private StateManager stateManager;
 
@@ -86,19 +86,19 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private static double SIGNAL_THRESHOLD = 2;
     private BeaconScanner beaconScanner;
     private BluetoothAdapter bluetoothAdapter;
-
+    public  Flags flags;
     private Socket socket;
     private long cooldownLeft = 0;
     private boolean beaconWithCooldown = false;
     private  boolean host=false;
     private boolean gameStarted=false;
-    private int gameDurtationInMinutes=5;
+    private int gameDurtationInMinutes=30;
     public float timerValue;
     public  OnGameTimerFinishedListener onGameTimerFinishedListener;
     ScoreFragment scoreFragment ;
     /* ------------------------- Teams ------------------------- */
 
-    //private String myTeam = Team.TEAM_ORANGE;
+    public String myTeam = Team.TEAM_ORANGE;
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -217,6 +217,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
             }
         }
         if(requestCode==START_QUIZ_ACTIVITY){
+            startquiz=false;
             if(resultCode==1){
                 showQuiz(true);
             }
@@ -229,15 +230,16 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_main);
+        flags= new Flags();
         checkIfBLEIsSupported();
         askPermissions();
         onGameTimerFinishedListener = this;
         stateManager = new StateManager(
-                PreferenceManager.getDefaultSharedPreferences(this),
-                "GameActivityState"
+                PreferenceManager.getDefaultSharedPreferences(this)
         );
+        checkIfNecessaryKeysExist();
         try {
             socket = IO.socket(serverURL);
             socket.connect();
@@ -246,10 +248,10 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
         socket.on("host",becomeHost);
         socket.on("start",startTimer);
-        checkIfNecessaryKeysExist();
-        Flags flags =(Flags) stateManager.get(StateManagerKey.FLAGS);
+       // Flags flags =(Flags) stateManager.get(StateManagerKey.FLAGS);
         flags.addSocket(socket);
         flags.setSyncFlagListener(this);
+        //stateManager.set(StateManagerKey.FLAGS,flags);
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
 
@@ -287,7 +289,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     protected void onPause() {
-        //stateManager.save();
+
         super.onPause();
     }
 
@@ -310,6 +312,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     public void onBeaconFound(Beacon beacon) {
         if(!gameStarted)
             return;
+        if(startquiz)
+            return;
         double beaconSignalStrength = beacon.getRelativeRssi();
 
         if (beaconSignalStrength < SIGNAL_THRESHOLD) {
@@ -319,8 +323,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
             //Beacon currentBeacon = (Beacon) stateManager.get(StateManagerKey.CURRENT_BEACON);
 
 
-            Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS))
-                    .findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM));
+            //Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM))
+            Object flagResult =      flags.findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM));
 
             if ((flagResult.getClass().equals(Boolean.class))) {
                 stopCooldown();
@@ -333,7 +337,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                     if(!startActivityOpen){
                         Intent intent = new Intent(this, StartQuizActivity.class);
                         startActivityForResult(intent,START_QUIZ_ACTIVITY);
-
+                        startquiz=true;
                         startActivityOpen = true;
                     }
 
@@ -377,7 +381,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     @Override
     public void OnGameTimerFinished() {
         Utils.toast(getApplicationContext(), "Game Finished, you have captured "
-                + ((Flags) stateManager.get(StateManagerKey.FLAGS)).getRegisteredFlags().size() +
+                + flags.getRegisteredFlags().size() +
                 " flags");
         timerTextView.setText("Finished");
         gameStarted=false;
@@ -405,8 +409,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     public void syncFlags() {
-        int redFlags=((Flags) stateManager.get(StateManagerKey.FLAGS)).getFlagByTeam(Team.TEAM_ORANGE);
-        int greenFlags =((Flags) stateManager.get(StateManagerKey.FLAGS)).getFlagByTeam(Team.TEAM_GREEN);
+        int redFlags=flags.getFlagByTeam(Team.TEAM_ORANGE);
+        int greenFlags =flags.getFlagByTeam(Team.TEAM_GREEN);
         scoreFragment.setScores(redFlags,greenFlags);
     }
 }
