@@ -37,7 +37,8 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         //put(StateManagerKey.CURRENT_ACTIVITY, )
         put(StateManagerKey.LOBBY_SETTINGS, LobbySettings.class);
         put(StateManagerKey.USER_ID, String.class);
-        put(StateManagerKey.TEAMS, new TypeToken<List<Team>>(){}.getType());
+        put(StateManagerKey.TEAMS, new TypeToken<List<Team>>() {
+        }.getType());
         put(StateManagerKey.SCORE, long.class);
 
         // TODO Wim: Safe remove

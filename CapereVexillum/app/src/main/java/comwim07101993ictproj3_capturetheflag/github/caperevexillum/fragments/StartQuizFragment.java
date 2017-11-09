@@ -1,28 +1,22 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.os.Vibrator;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.StartQuizActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-
-import static comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey.QUIZ_STARTER;
 
 /**
  * Gives an fragment where you can choose to begin the quiz or not
  * this is connected to the statemanager
- *
  */
-public class StartQuizFragment extends Fragment implements View.OnClickListener{
+public class StartQuizFragment extends Fragment implements View.OnClickListener {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -84,7 +78,7 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_start_quiz,container,false);
+        view = inflater.inflate(R.layout.fragment_start_quiz, container, false);
         return view;
     }
 
@@ -110,18 +104,15 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
     }
 
     /**
-     * @param view
-     *
-     * looks which button is clicked
-     * set the state on the statemanager
+     * @param view looks which button is clicked
+     *             set the state on the statemanager
      */
     @Override
     public void onClick(View view) {
         if (view == YesButton) {
-          //  stateManager.set(QUIZ_STARTER, true);
-            ((GameActivity)getActivity()).showQuiz(true);
-        }
-        else if (view == NoButton) {
+            //  stateManager.set(QUIZ_STARTER, true);
+            ((GameActivity) getActivity()).showQuiz(true);
+        } else if (view == NoButton) {
             //stateManager.set(QUIZ_STARTER, false);
         }
         Done();
