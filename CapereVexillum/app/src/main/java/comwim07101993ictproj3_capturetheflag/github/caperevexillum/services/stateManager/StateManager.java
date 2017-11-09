@@ -35,10 +35,14 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     private static final Map<StateManagerKey, Type> KEY_TYPE_MAP = new HashMap<StateManagerKey, Type>() {{
         put(StateManagerKey.FLAGS, Flags.class);
         //put(StateManagerKey.CURRENT_ACTIVITY, )
-        put(StateManagerKey.LOBBY_SETTINGS, LobbySettings.class)
+        put(StateManagerKey.LOBBY_SETTINGS, LobbySettings.class);
         put(StateManagerKey.USER_ID, String.class);
         put(StateManagerKey.TEAMS, new TypeToken<List<Team>>(){}.getType());
         put(StateManagerKey.SCORE, long.class);
+
+        // TODO Wim: Safe remove
+        put(StateManagerKey.MY_TEAM, String.class);
+        put(StateManagerKey.CURRENT_BEACON, Beacon.class);
     }};
 
 
