@@ -1,22 +1,21 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.StartQuizFragment;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 
-import static comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey.QUIZ_STARTER;
+public class StartQuizActivity extends AppCompatActivity implements View.OnClickListener {
 
-public class StartQuizActivity extends AppCompatActivity implements View.OnClickListener{
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
 
     //private Fragment fragment;
     View view;
@@ -26,7 +25,19 @@ public class StartQuizActivity extends AppCompatActivity implements View.OnClick
     // Instance buttons
     private Button YesButton;
     private Button NoButton;
+    // Instance Activities
     private GameActivity gameActivity;
+
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
+
+    /**
+     * gets view
+     * set listeners for buttons
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +53,17 @@ public class StartQuizActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
+
+    /**
+     * looks of a button is clicked
+     * return the button in Integer
+     * close the activity
+     *
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         Intent intent = getIntent();
@@ -51,8 +73,7 @@ public class StartQuizActivity extends AppCompatActivity implements View.OnClick
             setResult(1, intent);
 
             finish();
-        }
-        else if (view == NoButton) {
+        } else if (view == NoButton) {
             setResult(2, intent);
             finish();
         }
