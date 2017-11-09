@@ -3,15 +3,13 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 import static android.content.SharedPreferences.Editor;
 
@@ -35,11 +33,6 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
      * and load the current state (currentState)
      */
     protected SharedPreferences savedValues;
-    /**
-     * sharedPreferencesName is the name with which the savedValues are saved and loaded to and
-     * from the database.
-     */
-    protected String sharedPreferencesName;
 
     /**
      * currentState is the current state of the state manager.
@@ -55,6 +48,7 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
      */
     protected List<OnStateChangedListener> stateChangedListeners = new Vector<>();
 
+
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
@@ -65,17 +59,16 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
      * It sets the savedValues to the given sharedPreferences and the sharedPreferencesName to
      * the given value.
      *
-     * @param sharedPreferences     the shared preferences to load and save the current state from and to.
-     * @param sharedPreferencesName the name of the shared preferences in the database.
+     * @param sharedPreferences the shared preferences to load and save the current state from and to.
      */
-    protected AbstractStateManager(SharedPreferences sharedPreferences, String sharedPreferencesName) {
+    protected AbstractStateManager(SharedPreferences sharedPreferences) {
         // set global fields
-        this.sharedPreferencesName = sharedPreferencesName;
         savedValues = sharedPreferences;
 
         // load previous saved state.
         load();
     }
+
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -117,6 +110,18 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
     }
 
     /**
+     * notifyListeners is supposed to notify all listeners from the stateChangedListeners that some
+     * state has been changed.
+     *
+     * @param key is the key of the state that has been changed.
+     */
+    public void notifyListeners(TKey key) {
+        List<TKey> keys = new ArrayList<>();
+        keys.add(key);
+        notifyListeners(keys);
+    }
+
+    /**
      * save is supposed to save the current state to a database.
      *
      * @return boolean to indicate whether the state has been saved or not.
@@ -126,8 +131,13 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
         Gson gson = new Gson();
         // get the editor from the saved values
         Editor editor = savedValues.edit();
+
         // add the current state to the saved values
-        editor.putString(sharedPreferencesName, gson.toJson(currentState));
+        for (TKey key : currentState.keySet()) {
+            Object value = get(key);
+            editor.putString(key.toString(), gson.toJson(value));
+        }
+
         // apply changes.
         editor.apply();
         return true;
@@ -139,26 +149,40 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
      * @return boolean to indicate whether an old state has been restored.
      */
     public synchronized boolean load() {
-        // get the value from the saved values
-        String json = savedValues.getString(sharedPreferencesName, null);
+        // initiate new state
+        currentState = new HashMap<>();
 
-        // if value equals null => create new map
-        if (json == null) {
-            currentState = new HashMap<>();
+        // fetch the key-type-pairs from the shared preferences
+        Map<TKey, Type> keyTypeMap = getKeyTypeMap();
+        if (keyTypeMap == null) {
             return false;
         }
 
+        // create new gson for json deserialization
         Gson gson = new Gson();
-        // Create type to convert json to.
-        Type t = new TypeToken<Map<TKey, Object>>() {
-        }.getType();
-        // set current state to the converted json.
-        this.currentState = gson.fromJson(json, t);
+        // for every key fetch the value, deserialize it and add it to the current state
+        for (TKey key : keyTypeMap.keySet()) {
+            String json = savedValues.getString(key.toString(), null);
+            if (json == null)
+                continue;
+
+            set(key, gson.fromJson(json, keyTypeMap.get(key)));
+        }
 
         return true;
     }
 
+    /**
+     * clear clears all the data stored on the device.
+     */
+    public void clear() {
+        savedValues.edit().clear().apply();
+    }
+
+
     /* ------------------------- GETTERS ------------------------- */
+
+    protected abstract Map<TKey, Type> getKeyTypeMap();
 
     /**
      * get returns the state behind of TKey key.
@@ -174,7 +198,6 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
         return ret;
     }
 
-
     /**
      * internalGet is the method that gets called when someone tries to get the state of a key.
      * This method is supposed to do the internal handling of the change of a state when the state
@@ -189,6 +212,7 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
      */
     protected abstract Object internalGet(TKey key, List<TKey> changedKeys)
             throws IllegalArgumentException;
+
 
     /* ------------------------- SETTERS ------------------------- */
 

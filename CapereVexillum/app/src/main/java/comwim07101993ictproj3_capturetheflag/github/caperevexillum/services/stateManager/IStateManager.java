@@ -39,6 +39,14 @@ public interface IStateManager<TKey> {
     void notifyListeners(List<TKey> keys);
 
     /**
+     * notifyListeners is supposed to notify all listeners from the stateChangedListeners that some
+     * state has been changed.
+     *
+     * @param key is the key of the state that has been changed.
+     */
+    void notifyListeners(TKey key);
+
+    /**
      * get is supposed to return the state behind of TKey key.
      *
      * @param key is the key to get value of.
@@ -67,4 +75,10 @@ public interface IStateManager<TKey> {
      * @return boolean to indicate whether an old state has been restored.
      */
     boolean load();
+
+
+    /**
+     * clear is supposed to clear all the data stored on the device.
+     */
+    void clear();
 }

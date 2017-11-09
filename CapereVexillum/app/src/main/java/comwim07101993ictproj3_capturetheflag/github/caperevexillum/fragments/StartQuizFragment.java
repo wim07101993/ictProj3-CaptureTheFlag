@@ -27,7 +27,7 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
-
+    View view;
     // List for listeners for changes
     private OnFragmentInteractionListener mListener;
 
@@ -59,7 +59,7 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Vibrator v = (Vibrator) gameActivity.getSystemService(Context.VIBRATOR_SERVICE);
+       /* Vibrator v = (Vibrator) gameActivity.getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(1000);
 
         // declarate the statemanager
@@ -72,7 +72,7 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
 
         // set the listener for the buttons
         YesButton.setOnClickListener(this);
-        NoButton.setOnClickListener(this);
+        NoButton.setOnClickListener(this);*/
     }
 
     /**
@@ -84,8 +84,8 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_start_quiz, container, false);
+        view = inflater.inflate(R.layout.fragment_start_quiz,container,false);
+        return view;
     }
 
     /**

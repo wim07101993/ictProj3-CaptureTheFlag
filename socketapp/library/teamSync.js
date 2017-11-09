@@ -4,7 +4,7 @@ export default {
     teams : [],
 
     askTeams(socket){
-        socket.emit("answerTeams", JSON.stringify(this.teams));
+        socket.emit("syncTeam", JSON.stringify(this.teams));
     },
 
     addTeam(io, team){
@@ -14,7 +14,7 @@ export default {
 
         if(teamsWithSameName.length == 0){
             this.teams.push(inputTeam);
-            io.emit("addedTeam", JSON.stringify(this.teams));
+            io.emit("syncTeam", JSON.stringify(this.teams));
         }
     },
 
@@ -27,7 +27,7 @@ export default {
             let team = new Team(inputTeam.teamName, inputTeam.score, inputTeam.players);
 
             team.addPlayer(player);
-            io.emit("addedPlayer", JSON.stringify(inputTeam));
+            io.emit("syncTeam", JSON.stringify(inputTeam));
         }
     },
     
