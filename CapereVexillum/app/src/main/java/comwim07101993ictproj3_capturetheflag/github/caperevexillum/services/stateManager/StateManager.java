@@ -2,6 +2,8 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 
 import android.content.SharedPreferences;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +11,8 @@ import java.util.Map;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
@@ -30,9 +34,11 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
 
     private static final Map<StateManagerKey, Type> KEY_TYPE_MAP = new HashMap<StateManagerKey, Type>() {{
         put(StateManagerKey.FLAGS, Flags.class);
-        put(StateManagerKey.QUIZ_STARTER, boolean.class);
-        put(StateManagerKey.CURRENT_BEACON, Beacon.class);
-        put(StateManagerKey.MY_TEAM, String.class);
+        //put(StateManagerKey.CURRENT_ACTIVITY, )
+        put(StateManagerKey.LOBBY_SETTINGS, LobbySettings.class)
+        put(StateManagerKey.USER_ID, String.class);
+        put(StateManagerKey.TEAMS, new TypeToken<List<Team>>(){}.getType());
+        put(StateManagerKey.SCORE, long.class);
     }};
 
 
