@@ -13,5 +13,10 @@ public enum StateManagerKey {
     LOBBY_SETTINGS,
     USER_ID,
     TEAMS,
-    SCORE
+    SCORE,
+
+
+    // TODO Wim: SAFE REMOVE
+    MY_TEAM,
+    CURRENT_BEACON,
 }
