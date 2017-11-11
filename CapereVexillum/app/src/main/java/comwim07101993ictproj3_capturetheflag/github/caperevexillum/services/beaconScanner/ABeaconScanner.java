@@ -1,5 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 
 import java.util.List;
@@ -25,6 +27,9 @@ public abstract class ABeaconScanner implements IBeaconScanner {
     // instance to handle threading
     protected Handler handler = new Handler();
 
+    /* --------------------------------------------------------------- */
+    /* ------------------------- CONSTRUCTOR ------------------------- */
+    /* --------------------------------------------------------------- */
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -96,7 +101,7 @@ public abstract class ABeaconScanner implements IBeaconScanner {
         return isScanning;
     }
 
-    /* ------------------------- GETTERS ------------------------- */
+    /* ------------------------- SETTERS ------------------------- */
 
     protected void setIsScanning(boolean value) {
         this.isScanning = value;

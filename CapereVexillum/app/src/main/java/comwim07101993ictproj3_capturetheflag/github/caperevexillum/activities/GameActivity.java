@@ -1,6 +1,5 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
-import android.Manifest;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -12,11 +11,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -78,9 +74,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     /* ------------------------- Beacon scanner ------------------------- */
 
-    private static boolean BLE_SUPPORTED;
     private static final int START_QUIZ_ACTIVITY = 70;
-    private static final int REQUEST_ENABLE_BT = 1;
     private static final double SIGNAL_THRESHOLD = 2;
     private IBeaconScanner beaconScanner;
     public Flags flags;
@@ -126,38 +120,20 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
     };
 
-    /**
-     * Checks if BT LE is supported. If not, the app is closed after showing a message.
-     */
-    private void checkIfBLEIsSupported() {
-        // check if BT LE is supported
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            // show toast
-            Utils.toast(getApplicationContext(), "BLE not supported: entering test mode");
-
-            BLE_SUPPORTED = false;
+    private void initBeaconScanner() {
+        if (BeaconScanner.isBLESupported(this)) {
+            BeaconScanner.askPermissions(this);
+            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            if (bluetoothManager != null) {
+                BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+                beaconScanner = new BeaconScanner(bluetoothAdapter);
+            }
+        } else {
+            beaconScanner = new MockBeaconScanner();
         }
-    }
 
-    /**
-     * Asks for the needed permissions
-     */
-    private void askPermissions() {
-        if (!BLE_SUPPORTED)
-            return;
-
-        // create BT intent
-        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        // starts the activity depending on the result
-        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-
-        // check for needed permissions and if they are granted, move on
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Logging
-            Log.w(TAG, "Location access not granted!");
-            // If not granted ask for permission
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 42);
-        }
+        beaconScanner.addOnScanListener(this);
+        beaconScanner.start();
     }
 
     private void makeAppFullScreen() {
@@ -200,22 +176,22 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (BLE_SUPPORTED && requestCode == REQUEST_ENABLE_BT) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_CANCELED) {
-                // show toast
-                Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
-            } else {
-                beaconScanner.start();
-            }
-        }
 
-        if (requestCode == START_QUIZ_ACTIVITY) {
-            startQuiz = false;
-            if (resultCode == 1) {
-                showQuiz(true);
-            }
+        switch (requestCode){
+
+            case BeaconScanner.REQUEST_ENABLE_BT:
+                if (resultCode == RESULT_CANCELED) {
+                    Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
+                } else {
+                    beaconScanner.start();
+                }
+                break;
+
+            case START_QUIZ_ACTIVITY:
+                startQuiz = false;
+                if (resultCode == 1) {
+                    showQuiz(true);
+                }
         }
     }
 
@@ -228,11 +204,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         setContentView(R.layout.activity_main);
         flags = new Flags();
 
-        // disable this line for no-beacon-mode
-        checkIfBLEIsSupported();
-
-
-        askPermissions();
         onGameTimerFinishedListener = this;
         stateManager = new StateManager(
                 PreferenceManager.getDefaultSharedPreferences(this)
@@ -252,25 +223,14 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
 
-
         quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
         mainLayout = (ConstraintLayout) findViewById(R.id.content);
         quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
         quizFragment.addActivity(this);
         scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
 
-        if (BLE_SUPPORTED) {
-            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            if (bluetoothManager != null) {
-                BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-                beaconScanner = new BeaconScanner(bluetoothAdapter);
-            }
-        } else {
-            beaconScanner = new MockBeaconScanner();
-        }
+        initBeaconScanner();
 
-        beaconScanner.addOnScanListener(this);
-        beaconScanner.start();
         cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(cooldownFragment);
@@ -393,6 +353,15 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     }
 
+    /* ------------------------- syncFlags ------------------------- */
+
+    @Override
+    public void syncFlags() {
+        int redFlags = flags.getFlagByTeam(Team.TEAM_ORANGE);
+        int greenFlags = flags.getFlagByTeam(Team.TEAM_GREEN);
+        scoreFragment.setScores(redFlags, greenFlags);
+    }
+
     /* ------------------------- OnStateChangedListener ------------------------- */
 
     @Override
@@ -406,10 +375,5 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         return stateManager;
     }
 
-    @Override
-    public void syncFlags() {
-        int redFlags = flags.getFlagByTeam(Team.TEAM_ORANGE);
-        int greenFlags = flags.getFlagByTeam(Team.TEAM_GREEN);
-        scoreFragment.setScores(redFlags, greenFlags);
-    }
+
 }
