@@ -2,18 +2,16 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.Vector;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 
 
 /**
@@ -85,7 +83,7 @@ public class Flags {
      * @param beacon beacon to search the flag of
      * @return whether the flag exists or not
      */
-    public Object findFlag(Beacon beacon, String team){
+    public Object findFlag(IBeacon beacon, String team){
         //The beaconMAC the function is looking for
 
         String beaconMAC = beacon.getAddress();

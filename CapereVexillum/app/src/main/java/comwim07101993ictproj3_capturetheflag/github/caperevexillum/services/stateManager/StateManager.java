@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
@@ -43,7 +44,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
 
         // TODO Wim: Safe remove
         put(StateManagerKey.MY_TEAM, String.class);
-        put(StateManagerKey.CURRENT_BEACON, Beacon.class);
+        put(StateManagerKey.CURRENT_BEACON, IBeacon.class);
     }};
 
 

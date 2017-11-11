@@ -19,12 +19,12 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.DbHandler;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +48,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private Integer count;
     private Quiz questionAndAnswer;
     private GameActivity gameActivity;
-    private Beacon currentBeacon;
+    private IBeacon currentBeacon;
 
     //layout settings
     LinearLayout linearLayout;
@@ -62,7 +62,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
-    public void setCurrentBeacon(Beacon beacon){
+    public void setCurrentBeacon(IBeacon beacon){
         currentBeacon = beacon;
     }
 

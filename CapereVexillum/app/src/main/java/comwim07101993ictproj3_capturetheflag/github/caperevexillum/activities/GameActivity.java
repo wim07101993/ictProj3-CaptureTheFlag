@@ -37,7 +37,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.Sco
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.IFlagSync;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
@@ -303,7 +304,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     }
 
     @Override
-    public void onBeaconFound(Beacon beacon) {
+    public void onBeaconFound(IBeacon beacon) {
         if (!gameStarted)
             return;
         if (startquiz)
@@ -350,7 +351,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         ft.commit();
     }
 
-    public void coolDownFlag(Date flagResult, Beacon beacon) {
+    public void coolDownFlag(Date flagResult, IBeacon beacon) {
         Date dateCooldownLeft = flagResult;
         Date now = Calendar.getInstance().getTime();
         // TODO HAKAN: Polish code
