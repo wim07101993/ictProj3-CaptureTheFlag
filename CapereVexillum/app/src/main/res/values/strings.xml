@@ -18,4 +18,5 @@
     <string name="team_green">Team Green</string>
     <string name="no_team">No Team</string>
     <string name="team_orange">Team Orange</string>
+    <string name="finished">Finished</string>
 </resources>
