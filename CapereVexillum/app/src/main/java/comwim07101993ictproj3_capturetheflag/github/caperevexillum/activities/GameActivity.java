@@ -37,12 +37,13 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.Sco
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.IFlagSync;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.BeaconScanner;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.IBeaconScanner;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.MockBeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.OnScanListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.IStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.OnStateChangedListener;
@@ -76,11 +77,14 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private QuizFragment quizFragment;
     public CooldownTimerFragment cooldownUpdatable;
     private boolean startActivityOpen = false;
+
     /* ------------------------- Beacon scanner ------------------------- */
+
+    private static boolean BLE_SUPPORTED;
     private static final int START_QUIZ_ACTIVITY = 70;
     private static final int REQUEST_ENABLE_BT = 1;
     private static double SIGNAL_THRESHOLD = 2;
-    private BeaconScanner beaconScanner;
+    private IBeaconScanner beaconScanner;
     private BluetoothAdapter bluetoothAdapter;
     public Flags flags;
     private Socket socket;
@@ -92,6 +96,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     public float timerValue;
     public OnGameTimerFinishedListener onGameTimerFinishedListener;
     ScoreFragment scoreFragment;
+
     /* ------------------------- Teams ------------------------- */
 
     public String myTeam = Team.TEAM_ORANGE;
@@ -136,8 +141,10 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             // show toast
             Utils.toast(getApplicationContext(), "BLE not supported");
+
+            BLE_SUPPORTED = false;
             // end app
-            finish();
+            //finish();
         }
     }
 
@@ -145,6 +152,9 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
      * Asks for the needed permissions
      */
     private void askPermissions() {
+        if (!BLE_SUPPORTED)
+            return;
+
         // create BT intent
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         // starts the activity depending on the result
@@ -188,7 +198,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
     }
 
-
     private void checkIfNecessaryKeysExist() {
         if (stateManager.get(StateManagerKey.FLAGS) == null) {
             stateManager.set(StateManagerKey.FLAGS, new Flags());
@@ -198,11 +207,10 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == REQUEST_ENABLE_BT) {
+        if (BLE_SUPPORTED && requestCode == REQUEST_ENABLE_BT) {
             // Make sure the request was successful
             if (resultCode == RESULT_CANCELED) {
                 // show toast
@@ -211,12 +219,12 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                 beaconScanner.start();
             }
         }
+
         if (requestCode == START_QUIZ_ACTIVITY) {
             startquiz = false;
             if (resultCode == 1) {
                 showQuiz(true);
             }
-
         }
     }
 
@@ -257,8 +265,17 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
         quizFragment.addActivity(this);
         scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
-        bluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
-        beaconScanner = new BeaconScanner(bluetoothAdapter);
+
+        if (BLE_SUPPORTED) {
+            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            if (bluetoothManager != null) {
+                bluetoothAdapter = bluetoothManager.getAdapter();
+                beaconScanner = new BeaconScanner(bluetoothAdapter);
+            }
+        }else {
+            beaconScanner = new MockBeaconScanner();
+        }
+
         beaconScanner.addOnScanListener(this);
         beaconScanner.start();
         cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
