@@ -1,6 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner;
 
-import android.os.AsyncTask;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.MockBeacon;
@@ -15,8 +16,6 @@ public class MockBeaconScanner extends ABeaconScanner {
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    private Scanner scanner = new Scanner();
-
     private static IBeacon[] beacons = new IBeacon[]{
             new MockBeacon(-50, 50, "mockBeacon1"),
             new MockBeacon(-50, 50, "mockBeacon2"),
@@ -25,6 +24,7 @@ public class MockBeaconScanner extends ABeaconScanner {
             new MockBeacon(-50, 50, "mockBeacon5"),
     };
 
+    private static int currentBeaconIndex = 0;
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -39,7 +39,20 @@ public class MockBeaconScanner extends ABeaconScanner {
      */
     @Override
     public boolean start() {
-        scanner.execute();
+        setIsScanning(true);
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (currentBeaconIndex >= beacons.length) {
+                    currentBeaconIndex = 0;
+                }
+
+                notifyListeners(beacons[currentBeaconIndex]);
+                currentBeaconIndex++;
+            }
+        }, 10000, 10000);
+
         return true;
     }
 
@@ -53,35 +66,4 @@ public class MockBeaconScanner extends ABeaconScanner {
     }
 
 
-    /* ------------------------------------------------------------------ */
-    /* ------------------------- NESTED CLASSES ------------------------- */
-    /* ------------------------------------------------------------------ */
-
-    private class Scanner extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-            int i = 0;
-            while (isScanning()) {
-                try {
-                    this.wait(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (i >= beacons.length) {
-                    i = 0;
-                }
-
-                final IBeacon beacon = beacons[i];
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyListeners(beacon);
-                    }
-                });
-            }
-
-            return null;
-        }
-    }
 }

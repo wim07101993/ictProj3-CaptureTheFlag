@@ -236,7 +236,11 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
         setContentView(R.layout.activity_main);
         flags = new Flags();
-        checkIfBLEIsSupported();
+
+        // disable this line for no-beacon-mode
+        //checkIfBLEIsSupported();
+
+
         askPermissions();
         onGameTimerFinishedListener = this;
         stateManager = new StateManager(
