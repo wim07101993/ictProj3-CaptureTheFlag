@@ -20,14 +20,14 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon
  * <p>
  * You can listen for detection, start of scanning
  * and stop of scanning by implementing the OnScanListener and adding it by using the method
- * setScanEventListener.
- * If you stop listening, unsubscribe by using the removeScanEventListener method.
+ * addOnScanListener.
+ * If you stop listening, unsubscribe by using the removeOnScanListener method.
  * <p>
  * You can start scanning for beacons using the Start method and stop scanning with the stop method
  * <p>
  * With the IsScanning method you can ask if the scanner is scanning.
  */
-public class BeaconScanner {
+public class BeaconScanner implements IBeaconScanner {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -135,7 +135,7 @@ public class BeaconScanner {
      *
      * @param l listener to add to the listener list
      */
-    public void setScanEventListener(OnScanListener l) {
+    public void addOnScanListener(OnScanListener l) {
         // add l to the listeners
         eventListeners.add(l);
     }
@@ -145,7 +145,7 @@ public class BeaconScanner {
      *
      * @param l listener to remove from the listener list
      */
-    public void removeScanEventListener(OnScanListener l) {
+    public void removeOnScanListener(OnScanListener l) {
         // check if listeners contains l
         if (eventListeners.contains(l)) {
             // remove l from the listeners

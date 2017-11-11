@@ -258,7 +258,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
         bluetoothAdapter = ((BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
         beaconScanner = new BeaconScanner(bluetoothAdapter);
-        beaconScanner.setScanEventListener(this);
+        beaconScanner.addOnScanListener(this);
         beaconScanner.start();
         cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
