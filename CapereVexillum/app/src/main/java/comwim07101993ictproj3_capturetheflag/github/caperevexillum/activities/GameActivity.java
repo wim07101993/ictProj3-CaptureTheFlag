@@ -223,6 +223,25 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
     }
 
+    private void initView() {
+
+        quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
+        mainLayout = (ConstraintLayout) findViewById(R.id.content);
+        quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
+        quizFragment.addActivity(this);
+        scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
+
+        cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
+    }
+
+    private void initGameTimer() {
+
+        onGameTimerFinishedListener = this;
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.hide(cooldownFragment);
+        ft.commit();
+    }
+
     /* ------------------------- Lifecycle methods ------------------------- */
 
     @Override
@@ -232,24 +251,13 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         setContentView(R.layout.activity_main);
         flags = new Flags();
 
-        onGameTimerFinishedListener = this;
-
         initStateManager();
         initSocket();
         initBeaconScanner();
+        initView();
+        initGameTimer();
 
-        quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
-        mainLayout = (ConstraintLayout) findViewById(R.id.content);
-        quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
-        quizFragment.addActivity(this);
-        scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
-
-        cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.hide(cooldownFragment);
-        ft.commit();
         showQuiz(false);
-
         makeAppFullScreen();
     }
 
