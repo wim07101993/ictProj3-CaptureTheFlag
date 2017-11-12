@@ -19,4 +19,8 @@
     <string name="no_team">No Team</string>
     <string name="team_orange">Team Orange</string>
     <string name="finished">Finished</string>
+    <string name="lobby_name_text">Lobby name</string>
+    <string name="lobby_password_text">Lobby password</string>
+    <string name="join_lobby_text">JOIN LOBBY</string>
+    <string name="join_lobby_button_text">JOIN</string>
 </resources>

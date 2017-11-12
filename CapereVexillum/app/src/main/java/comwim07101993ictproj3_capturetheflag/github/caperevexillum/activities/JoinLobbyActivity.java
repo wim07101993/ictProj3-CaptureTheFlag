@@ -3,6 +3,8 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
+
 public class JoinLobbyActivity extends AppCompatActivity {
 
     @Override
