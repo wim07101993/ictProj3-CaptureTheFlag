@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -57,7 +56,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     /* ---------------------------------------------------------- */
 
     private static final String serverURL = "http://192.168.137.1:4040";
-
+    private static final boolean USE_BLUETOOTH = false;
     private static final String TAG = GameActivity.class.getSimpleName();
     private boolean startQuiz = false;
     private StateManager stateManager;
@@ -120,22 +119,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
     };
 
-    private void initBeaconScanner() {
-        if (BeaconScanner.isBLESupported(this)) {
-            BeaconScanner.askPermissions(this);
-            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
-            if (bluetoothManager != null) {
-                BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
-                beaconScanner = new BeaconScanner(bluetoothAdapter);
-            }
-        } else {
-            beaconScanner = new MockBeaconScanner();
-        }
-
-        beaconScanner.addOnScanListener(this);
-        beaconScanner.start();
-    }
-
     private void makeAppFullScreen() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
@@ -165,19 +148,10 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
     }
 
-    private void checkIfNecessaryKeysExist() {
-        if (stateManager.get(StateManagerKey.FLAGS) == null) {
-            stateManager.set(StateManagerKey.FLAGS, new Flags());
-        }
-        if (stateManager.get(StateManagerKey.MY_TEAM) == null) {
-            stateManager.set(StateManagerKey.MY_TEAM, Team.TEAM_ORANGE);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (requestCode){
+        switch (requestCode) {
 
             case BeaconScanner.REQUEST_ENABLE_BT:
                 if (resultCode == RESULT_CANCELED) {
@@ -195,6 +169,60 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         }
     }
 
+    /* ------------------------- Init methods ------------------------- */
+
+    private void initBeaconScanner() {
+        if (USE_BLUETOOTH && BeaconScanner.isBLESupported(this)) {
+            BeaconScanner.askPermissions(this);
+            BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+            if (bluetoothManager != null) {
+                BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+                beaconScanner = new BeaconScanner(bluetoothAdapter);
+            }
+        } else {
+            beaconScanner = new MockBeaconScanner();
+        }
+
+        beaconScanner.addOnScanListener(this);
+        beaconScanner.start();
+    }
+
+    private void initStateManager() {
+        if (stateManager == null) {
+            stateManager = new StateManager(
+                    PreferenceManager.getDefaultSharedPreferences(this)
+            );
+        }
+
+        stateManager.load();
+
+        if (stateManager.get(StateManagerKey.FLAGS) == null) {
+            stateManager.set(StateManagerKey.FLAGS, new Flags());
+        }
+        if (stateManager.get(StateManagerKey.MY_TEAM) == null) {
+            stateManager.set(StateManagerKey.MY_TEAM, Team.TEAM_ORANGE);
+        }
+    }
+
+    private void initSocket() {
+        try {
+            socket = IO.socket(serverURL);
+            socket.connect();
+        } catch (URISyntaxException ignored) {
+        }
+
+        socket.on("host", becomeHost);
+        socket.on("start", startTimer);
+
+        //Flags flags =(Flags) stateManager.get(StateManagerKey.FLAGS);
+        flags.addSocket(socket);
+        flags.setSyncFlagListener(this);
+
+        //stateManager.set(StateManagerKey.FLAGS,flags);
+        timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
+        //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
+    }
+
     /* ------------------------- Lifecycle methods ------------------------- */
 
     @Override
@@ -205,31 +233,16 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         flags = new Flags();
 
         onGameTimerFinishedListener = this;
-        stateManager = new StateManager(
-                PreferenceManager.getDefaultSharedPreferences(this)
-        );
-        checkIfNecessaryKeysExist();
-        try {
-            socket = IO.socket(serverURL);
-            socket.connect();
-        } catch (URISyntaxException ignored) {
-        }
-        socket.on("host", becomeHost);
-        socket.on("start", startTimer);
-        // Flags flags =(Flags) stateManager.get(StateManagerKey.FLAGS);
-        flags.addSocket(socket);
-        flags.setSyncFlagListener(this);
-        //stateManager.set(StateManagerKey.FLAGS,flags);
-        timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
-        //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
+
+        initStateManager();
+        initSocket();
+        initBeaconScanner();
 
         quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
         mainLayout = (ConstraintLayout) findViewById(R.id.content);
         quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
         quizFragment.addActivity(this);
         scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
-
-        initBeaconScanner();
 
         cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -242,24 +255,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     protected void onStart() {
-        stateManager.load();
-        checkIfNecessaryKeysExist();
+        initStateManager();
         super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     /* ------------------------- OnScanListener ------------------------- */
