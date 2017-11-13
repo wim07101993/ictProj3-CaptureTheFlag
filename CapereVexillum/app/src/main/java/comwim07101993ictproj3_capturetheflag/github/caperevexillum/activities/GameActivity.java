@@ -50,7 +50,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
  * Activity for the main activity.
  */
 public class GameActivity extends AppCompatActivity implements OnScanListener,
-        OnGameTimerFinishedListener, OnStateChangedListener<StateManagerKey>, IFlagSync {
+        OnStateChangedListener<StateManagerKey>, IFlagSync {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -58,17 +58,25 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     public static final String serverURL = "http://192.168.137.1:4040";
     private static final boolean USE_BLUETOOTH = false;
+    private static final int GAME_DURATION_IN_MINUTES = 30;
+
     private static final String TAG = GameActivity.class.getSimpleName();
     private boolean startQuiz = false;
-    private StateManager stateManager;
 
-    /* ------------------------- View elements ------------------------- */
+    private StateManager stateManager;
+    private Socket socket;
+
+    public float gameTime;
+
+       /* ------------------------- View elements ------------------------- */
 
     private TextView timerTextView;
     private RelativeLayout quizLayout;
     private ConstraintLayout mainLayout;
     private CooldownTimerFragment cooldownFragment;
     private QuizFragment quizFragment;
+    private ScoreFragment scoreFragment;
+
     public CooldownTimerFragment cooldownUpdatable;
 
     private boolean startActivityOpen = false;
@@ -78,12 +86,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private static final int START_QUIZ_ACTIVITY = 70;
     private static final double SIGNAL_THRESHOLD = 2;
     private IBeaconScanner beaconScanner;
-    private Socket socket;
     private boolean beaconWithCooldown = false;
-    private static final int gameDurtationInMinutes = 30;
-    public float timerValue;
-    public OnGameTimerFinishedListener onGameTimerFinishedListener;
-    ScoreFragment scoreFragment;
 
     /* ------------------------- Teams ------------------------- */
 
@@ -92,32 +95,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
-
-    //this code gets triggered when the server assigns you as  the host
-
-    Emitter.Listener becomeHost = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            socket.emit("start", gameDurtationInMinutes);
-        }
-    };
-    Emitter.Listener startTimer = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            stateManager.set(StateManagerKey.GAME_STARTED, true);
-            String request = (String) args[0];
-            timerValue = Float.parseFloat(request);
-            startTimeHandler.obtainMessage(1).sendToTarget();
-
-        }
-    };
-    Handler startTimeHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            GameTimer gameTimer = new GameTimer(timerTextView, timerValue, socket);
-            gameTimer.addListener(onGameTimerFinishedListener);
-        }
-    };
 
     private void makeAppFullScreen() {
         // Hide UI first
@@ -235,8 +212,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private void initGameTimer() {
 
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
-        //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
-        onGameTimerFinishedListener = this;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(cooldownFragment);
         ft.commit();
@@ -341,18 +316,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         ft.commit();
 
     }
-    /* ------------------------- OnGameTimerFinishedListener ------------------------- */
-
-    @Override
-    public void OnGameTimerFinished() {
-
-        Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
-        Utils.toast(getApplicationContext(), "Game Finished, you have captured "
-                + flags.getRegisteredFlags().size() +
-                " flags");
-        timerTextView.setText(R.string.finished);
-        stateManager.set(StateManagerKey.GAME_STARTED, false);
-    }
 
     /* ------------------------- syncFlags ------------------------- */
 
@@ -378,4 +341,43 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     }
 
 
+    /* ------------------------------------------------------------- */
+    /* ------------------------- LISTENERS ------------------------- */
+    /* ------------------------------------------------------------- */
+
+    /* ------------------------- SOCKET ------------------------- */
+
+    Emitter.Listener becomeHost = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            socket.emit("start", GAME_DURATION_IN_MINUTES);
+        }
+    };
+    Emitter.Listener startTimer = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            stateManager.set(StateManagerKey.GAME_STARTED, true);
+            String request = (String) args[0];
+            gameTime = Float.parseFloat(request);
+            startTimeHandler.obtainMessage(1).sendToTarget();
+
+        }
+    };
+    Handler startTimeHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            GameTimer gameTimer = new GameTimer(timerTextView, gameTime, socket);
+            gameTimer.addListener(new OnGameTimerFinishedListener() {
+                @Override
+                public void OnGameTimerFinished() {
+                    Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
+                    Utils.toast(getApplicationContext(), "Game Finished, you have captured "
+                            + flags.getRegisteredFlags().size() +
+                            " flags");
+                    timerTextView.setText(R.string.finished);
+                    stateManager.set(StateManagerKey.GAME_STARTED, false);
+                }
+            });
+        }
+    };
 }
