@@ -25,6 +25,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,7 +55,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     LinearLayout linearLayout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-    Flags flags;
+
     private StateManager stateManager;
 
 
@@ -68,8 +69,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
-        //stateManager = gameActivity.getStateManager();
-        flags =gameActivity.flags;
+        stateManager = gameActivity.getStateManager();
     }
 
     public void setup(){
@@ -156,8 +156,8 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown((String)gameActivity.myTeam);
-        //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
-        flags.addFlag(flag);
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+
         count=0;
         gameActivity.showQuiz(false);
 

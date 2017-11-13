@@ -76,7 +76,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private static final int START_QUIZ_ACTIVITY = 70;
     private static final double SIGNAL_THRESHOLD = 2;
     private IBeaconScanner beaconScanner;
-    public Flags flags;
     private Socket socket;
     private boolean beaconWithCooldown = false;
     private boolean gameStarted = false;
@@ -214,13 +213,11 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         socket.on("host", becomeHost);
         socket.on("start", startTimer);
 
-        //Flags flags =(Flags) stateManager.get(StateManagerKey.FLAGS);
+        Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
         flags.addSocket(socket);
         flags.setSyncFlagListener(this);
 
-        //stateManager.set(StateManagerKey.FLAGS,flags);
-        timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
-        //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
+        stateManager.set(StateManagerKey.FLAGS, flags);
     }
 
     private void initView() {
@@ -236,6 +233,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     private void initGameTimer() {
 
+        timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
+        //gameTimer = new GameTimer(timerTextView, gameDurtationInMinutes,socket);
         onGameTimerFinishedListener = this;
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(cooldownFragment);
@@ -249,7 +248,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        flags = new Flags();
 
         initStateManager();
         initSocket();
@@ -289,11 +287,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
             if (quizLayout.getVisibility() == View.VISIBLE)
                 return;
 
-            //Beacon currentBeacon = (Beacon) stateManager.get(StateManagerKey.CURRENT_BEACON);
-
-
-            //Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM))
-            Object flagResult = flags.findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM));
+            Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM));
 
             if ((flagResult.getClass().equals(Boolean.class))) {
                 stopCooldown();
@@ -350,6 +344,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     public void OnGameTimerFinished() {
+        Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
         Utils.toast(getApplicationContext(), "Game Finished, you have captured "
                 + flags.getRegisteredFlags().size() +
                 " flags");
@@ -362,6 +357,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     public void syncFlags() {
+        Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
         int redFlags = flags.getFlagByTeam(Team.TEAM_ORANGE);
         int greenFlags = flags.getFlagByTeam(Team.TEAM_GREEN);
         scoreFragment.setScores(redFlags, greenFlags);
