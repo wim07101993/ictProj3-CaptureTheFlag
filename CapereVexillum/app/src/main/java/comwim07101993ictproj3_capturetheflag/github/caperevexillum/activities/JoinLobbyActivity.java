@@ -40,7 +40,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
         if(view.getId() == R.id.join_lobby_button){
             if(socket == null){
                 try{
-                    socket = IO.socket(GameActivity.serverURL);
+                    socket = IO.socket(GameActivity.SERVER_URL);
                     socket.connect();
                 }catch(URISyntaxException e){
                     Log.d("JoinLobbyActivity", e.getMessage());

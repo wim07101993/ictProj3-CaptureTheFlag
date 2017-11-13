@@ -41,7 +41,7 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
         leaveLobbyButton.setOnClickListener(this);
 
         try{
-            socket = IO.socket(GameActivity.serverURL);
+            socket = IO.socket(GameActivity.SERVER_URL);
             socket.connect();
         }catch(URISyntaxException e){
             Log.d("LobbyActivity", e.getMessage());

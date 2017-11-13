@@ -56,11 +56,12 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    public static final String serverURL = "http://192.168.137.1:4040";
+    private static final String TAG = GameActivity.class.getSimpleName();
+
+    public static final String SERVER_URL = "http://192.168.137.1:4040";
     private static final boolean USE_BLUETOOTH = false;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
-    private static final String TAG = GameActivity.class.getSimpleName();
     private boolean startQuiz = false;
 
     private StateManager stateManager;
@@ -68,7 +69,11 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     public float gameTime;
 
-       /* ------------------------- View elements ------------------------- */
+    // TODO Someone: create in socket
+    public static final String MY_TEAM = Team.TEAM_ORANGE;
+
+
+    /* ------------------------- View elements ------------------------- */
 
     private TextView timerTextView;
     private RelativeLayout quizLayout;
@@ -88,9 +93,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private IBeaconScanner beaconScanner;
     private boolean beaconWithCooldown = false;
 
-    /* ------------------------- Teams ------------------------- */
-
-    public String myTeam = Team.TEAM_ORANGE;
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -175,14 +177,11 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         if (stateManager.get(StateManagerKey.FLAGS) == null) {
             stateManager.set(StateManagerKey.FLAGS, new Flags());
         }
-        if (stateManager.get(StateManagerKey.MY_TEAM) == null) {
-            stateManager.set(StateManagerKey.MY_TEAM, Team.TEAM_ORANGE);
-        }
     }
 
     private void initSocket() {
         try {
-            socket = IO.socket(serverURL);
+            socket = IO.socket(SERVER_URL);
             socket.connect();
         } catch (URISyntaxException ex) {
             Log.e(TAG, ex.getMessage());
@@ -263,7 +262,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
             if (quizLayout.getVisibility() == View.VISIBLE)
                 return;
 
-            Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, (String) stateManager.get(StateManagerKey.MY_TEAM));
+            Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
 
             if ((flagResult.getClass().equals(Boolean.class))) {
                 stopCooldown();

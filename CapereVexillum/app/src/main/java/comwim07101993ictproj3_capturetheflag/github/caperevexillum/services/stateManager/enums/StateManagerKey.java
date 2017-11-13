@@ -16,8 +16,6 @@ public enum StateManagerKey {
     SCORE,
     GAME_STARTED,
 
-
     // TODO Wim: SAFE REMOVE
-    MY_TEAM,
     CURRENT_BEACON,
 }

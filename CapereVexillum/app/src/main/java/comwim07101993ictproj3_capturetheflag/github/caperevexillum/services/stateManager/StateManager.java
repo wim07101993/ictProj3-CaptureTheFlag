@@ -9,9 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
@@ -46,7 +44,6 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         put(StateManagerKey.GAME_STARTED, boolean.class);
 
         // TODO Wim: Safe remove
-        put(StateManagerKey.MY_TEAM, String.class);
         put(StateManagerKey.CURRENT_BEACON, IBeacon.class);
     }};
 
@@ -91,9 +88,9 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     @Override
     protected synchronized Object internalGet(StateManagerKey key, List<StateManagerKey> changedKeys)
             throws IllegalArgumentException {
-        Object value =currentState.get(key);
+        Object value = currentState.get(key);
 
-        if (value == null){
+        if (value == null) {
             Type type = KEY_TYPE_MAP.get(key);
             return PrimitiveDefaults.getDefaultValue(type);
         }
