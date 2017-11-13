@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -55,7 +56,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    public static final String serverURL = "http://192.168.0.163:4040";
+    public static final String serverURL = "http://192.168.137.1:4040";
     private static final boolean USE_BLUETOOTH = false;
     private static final String TAG = GameActivity.class.getSimpleName();
     private boolean startQuiz = false;
@@ -191,9 +192,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
             stateManager = new StateManager(
                     PreferenceManager.getDefaultSharedPreferences(this)
             );
+            stateManager.load();
         }
-
-        stateManager.load();
 
         if (stateManager.get(StateManagerKey.FLAGS) == null) {
             stateManager.set(StateManagerKey.FLAGS, new Flags());
@@ -207,7 +207,8 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         try {
             socket = IO.socket(serverURL);
             socket.connect();
-        } catch (URISyntaxException ignored) {
+        } catch (URISyntaxException ex) {
+            Log.e(TAG, ex.getMessage());
         }
 
         socket.on("host", becomeHost);
