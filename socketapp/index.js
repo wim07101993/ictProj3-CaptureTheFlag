@@ -46,6 +46,7 @@ io.on('connection', function(socket){
 
     // lobby
     socket.on("checkCredentials", (lobbyName, lobbyPassword) => console.log("checkCredentials req received: " + lobbyName + " - " + lobbyPassword));
+    socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
 });
 
 
