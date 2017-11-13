@@ -122,8 +122,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
         } else {
             mainLayout.setVisibility(View.VISIBLE);
             quizLayout.setVisibility(View.INVISIBLE);
-
-            stateManager.set(StateManagerKey.CURRENT_BEACON, null);
         }
     }
 
@@ -270,7 +268,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
                 if (!result) {
                     //new beacon found or beacon of enemey team found
                     beaconWithCooldown = false;
-                    stateManager.set(StateManagerKey.CURRENT_BEACON, beacon);
                     quizFragment.setCurrentBeacon(beacon);
                     if (!startActivityOpen) {
                         Intent intent = new Intent(this, StartQuizActivity.class);

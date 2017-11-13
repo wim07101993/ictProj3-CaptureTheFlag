@@ -42,9 +42,6 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         }.getType());
         put(StateManagerKey.SCORE, long.class);
         put(StateManagerKey.GAME_STARTED, boolean.class);
-
-        // TODO Wim: Safe remove
-        put(StateManagerKey.CURRENT_BEACON, IBeacon.class);
     }};
 
 
