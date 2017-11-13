@@ -27,19 +27,25 @@ io.on('connection', function(socket){
       timeClass.clientStart(socket);
     }
     
-  
+    // time
     socket.on("start",(duration) => timeClass.start(io,socket,duration));
     socket.on("syncTime",(timeLeft) => timeClass.syncTime(io,socket,timeLeft))
     socket.on("askTime",() => timeClass.askTime(io,socket));
 
+    // flags
     socket.on("askFlags",()=> flagsClass.askFlags(socket));
     socket.on("addFlag",(flag)=> flagsClass.addFlag(io, socket, flag));
     socket.on("updateFlag",(flag)=> flagsClass.updateFlag(io, socket, flag));
     socket.on("removeFlag",(flag)=> flagsClass.removeFlag(io, socket, flag));
+    
+    // teams
     teamClass.addStaticTeams();
     socket.on("askTeams",() => teamClass.askTeams(socket));
     socket.on("addPlayer", (teamName, player) => teamClass.addPlayer(io, teamName, player));
     socket.on("addTeam", (team) => teamClass.addTeam(io, team));
+
+    // lobby
+    socket.on("checkCredentials", (lobbyName, lobbyPassword) => console.log("checkCredentials req received: " + lobbyName + " - " + lobbyPassword));
 });
 
 

@@ -55,7 +55,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    private static final String serverURL = "http://192.168.137.1:4040";
+    public static final String serverURL = "http://192.168.0.163:4040";
     private static final boolean USE_BLUETOOTH = false;
     private static final String TAG = GameActivity.class.getSimpleName();
     private boolean startQuiz = false;
