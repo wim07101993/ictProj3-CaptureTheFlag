@@ -70,6 +70,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private CooldownTimerFragment cooldownFragment;
     private QuizFragment quizFragment;
     public CooldownTimerFragment cooldownUpdatable;
+
     private boolean startActivityOpen = false;
 
     /* ------------------------- Beacon scanner ------------------------- */
@@ -79,7 +80,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     private IBeaconScanner beaconScanner;
     private Socket socket;
     private boolean beaconWithCooldown = false;
-    private boolean gameStarted = false;
     private static final int gameDurtationInMinutes = 30;
     public float timerValue;
     public OnGameTimerFinishedListener onGameTimerFinishedListener;
@@ -104,7 +104,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
     Emitter.Listener startTimer = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            gameStarted = true;
+            stateManager.set(StateManagerKey.GAME_STARTED, true);
             String request = (String) args[0];
             timerValue = Float.parseFloat(request);
             startTimeHandler.obtainMessage(1).sendToTarget();
@@ -278,7 +278,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     public void onBeaconFound(IBeacon beacon) {
-        if (!gameStarted)
+        if (!((boolean) stateManager.get(StateManagerKey.GAME_STARTED)))
             return;
         if (startQuiz)
             return;
@@ -345,13 +345,13 @@ public class GameActivity extends AppCompatActivity implements OnScanListener,
 
     @Override
     public void OnGameTimerFinished() {
+
         Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
         Utils.toast(getApplicationContext(), "Game Finished, you have captured "
                 + flags.getRegisteredFlags().size() +
                 " flags");
         timerTextView.setText(R.string.finished);
-        gameStarted = false;
-
+        stateManager.set(StateManagerKey.GAME_STARTED, false);
     }
 
     /* ------------------------- syncFlags ------------------------- */

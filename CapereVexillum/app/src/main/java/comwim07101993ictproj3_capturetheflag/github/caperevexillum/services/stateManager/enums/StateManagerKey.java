@@ -14,6 +14,7 @@ public enum StateManagerKey {
     USER_ID,
     TEAMS,
     SCORE,
+    GAME_STARTED,
 
 
     // TODO Wim: SAFE REMOVE
