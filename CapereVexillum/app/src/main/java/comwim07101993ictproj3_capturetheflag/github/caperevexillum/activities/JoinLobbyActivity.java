@@ -2,14 +2,54 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import java.net.URISyntaxException;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 
-public class JoinLobbyActivity extends AppCompatActivity {
+public class JoinLobbyActivity extends AppCompatActivity implements View.OnClickListener{
+
+    Socket socket;
+
+    EditText lobbyNameEditText;
+    EditText lobbyPasswordEditText;
+
+    Button joinLobbyButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_lobby);
+
+        joinLobbyButton = (Button)findViewById(R.id.join_lobby_button);
+        joinLobbyButton.setOnClickListener(this);
+
+        lobbyNameEditText = (EditText)findViewById(R.id.lobby_name_edittext);
+        lobbyPasswordEditText = (EditText)findViewById(R.id.lobby_password_edittext);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.join_lobby_button){
+            if(socket == null){
+                try{
+                    socket = IO.socket(GameActivity.serverURL);
+                    socket.connect();
+                }catch(URISyntaxException e){
+                    Log.d("JoinLobbyActivity", e.getMessage());
+                }
+            }
+
+            if(socket != null){
+                socket.emit("checkCredentials", lobbyNameEditText.getText(), lobbyPasswordEditText.getText());
+            }
+        }
     }
 }
