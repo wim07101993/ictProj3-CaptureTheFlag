@@ -65,7 +65,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
     // TODO Someone: create in socket
     public static final String MY_TEAM = Team.TEAM_ORANGE;
 
-
     /* ------------------------- View elements ------------------------- */
 
     private TextView timerTextView;
@@ -77,7 +76,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
 
     public CooldownTimerFragment cooldownUpdatable;
 
-    private boolean startActivityOpen = false;
+    private boolean isStartQuizActivityOpen = false;
 
     /* ------------------------- Beacon scanner ------------------------- */
 
@@ -108,7 +107,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
 
     public void showQuiz(boolean showQuestion) {
 
-        startActivityOpen = false;
+        isStartQuizActivityOpen = false;
         if (showQuestion) {
             mainLayout.setVisibility(View.INVISIBLE);
             quizLayout.setVisibility(View.VISIBLE);
@@ -119,24 +118,29 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void hideCooldownFragment() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.hide(cooldownFragment);
+        ft.commit();
+    }
 
-        switch (requestCode) {
-            case BeaconScanner.REQUEST_ENABLE_BT:
-                if (resultCode == RESULT_CANCELED) {
-                    Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
-                } else {
-                    beaconScanner.start();
-                }
-                break;
+    public void showCooldownFragment(Date flagResult) {
+        Date now = Calendar.getInstance().getTime();
+        // TODO HAKAN: Polish code
+        long cooldownLeft = flagResult.getTime() - now.getTime();
 
-            case START_QUIZ_ACTIVITY:
-                startActivityOpen = false;
-                if (resultCode == 1) {
-                    showQuiz(true);
-                }
+        beaconWithCooldown = (cooldownLeft > 1010);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (!beaconWithCooldown) {
+            ft.hide(cooldownFragment);
+        } else {
+
+            if (cooldownUpdatable != null) {
+                cooldownUpdatable.update((float) (cooldownLeft / 1000));
+            }
+            ft.show(cooldownFragment);
         }
+        ft.commit();
     }
 
     /* ------------------------- Init methods ------------------------- */
@@ -235,6 +239,26 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
         initStateManager();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case BeaconScanner.REQUEST_ENABLE_BT:
+                if (resultCode == RESULT_CANCELED) {
+                    Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
+                } else {
+                    beaconScanner.start();
+                }
+                break;
+
+            case START_QUIZ_ACTIVITY:
+                isStartQuizActivityOpen = false;
+                if (resultCode == 1) {
+                    showQuiz(true);
+                }
+        }
+    }
+
     /* ------------------------- OnScanListener ------------------------- */
 
     @Override
@@ -256,43 +280,18 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
         Flag flag = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
 
         if (flag != null && flag.getCooldown()) {
-            coolDownFlag(flag.getCooldownTime());
+            showCooldownFragment(flag.getCooldownTime());
         } else {
-            stopCooldown();
+            hideCooldownFragment();
             beaconWithCooldown = false;
             quizFragment.setCurrentBeacon(beacon);
 
-            if (!startActivityOpen) {
+            if (!isStartQuizActivityOpen) {
                 Intent intent = new Intent(this, StartQuizActivity.class);
                 startActivityForResult(intent, START_QUIZ_ACTIVITY);
-                startActivityOpen = true;
+                isStartQuizActivityOpen = true;
             }
         }
-    }
-
-    public void stopCooldown() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.hide(cooldownFragment);
-        ft.commit();
-    }
-
-    public void coolDownFlag(Date flagResult) {
-        Date now = Calendar.getInstance().getTime();
-        // TODO HAKAN: Polish code
-        long cooldownLeft = flagResult.getTime() - now.getTime();
-
-        beaconWithCooldown = (cooldownLeft > 1010);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (!beaconWithCooldown) {
-            ft.hide(cooldownFragment);
-        } else {
-
-            if (cooldownUpdatable != null) {
-                cooldownUpdatable.update((float) (cooldownLeft / 1000));
-            }
-            ft.show(cooldownFragment);
-        }
-        ft.commit();
     }
 
     /* ------------------------- syncFlags ------------------------- */
