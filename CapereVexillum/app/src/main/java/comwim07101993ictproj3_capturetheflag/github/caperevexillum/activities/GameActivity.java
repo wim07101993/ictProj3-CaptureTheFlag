@@ -33,6 +33,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.IFlagSync;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
@@ -131,6 +132,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
                 break;
 
             case START_QUIZ_ACTIVITY:
+                startActivityOpen = false;
                 if (resultCode == 1) {
                     showQuiz(true);
                 }
@@ -247,26 +249,23 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
     public void onBeaconFound(IBeacon beacon) {
         if (!((boolean) stateManager.get(StateManagerKey.GAME_STARTED)) ||
                 beacon.getRelativeRssi() > SIGNAL_THRESHOLD ||
-                quizLayout.getVisibility() == View.VISIBLE ){
+                quizLayout.getVisibility() == View.VISIBLE) {
             return;
         }
 
-        Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
+        Flag flag = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
 
-        if (!(flagResult.getClass().equals(Boolean.class))){
-            coolDownFlag((Date) flagResult);
-        } else{
+        if (flag != null && flag.getCooldown()) {
+            coolDownFlag(flag.getCooldownTime());
+        } else {
             stopCooldown();
+            beaconWithCooldown = false;
+            quizFragment.setCurrentBeacon(beacon);
 
-            if (!((Boolean) flagResult)) {
-                beaconWithCooldown = false;
-                quizFragment.setCurrentBeacon(beacon);
-
-                if (!startActivityOpen) {
-                    Intent intent = new Intent(this, StartQuizActivity.class);
-                    startActivityForResult(intent, START_QUIZ_ACTIVITY);
-                    startActivityOpen = true;
-                }
+            if (!startActivityOpen) {
+                Intent intent = new Intent(this, StartQuizActivity.class);
+                startActivityForResult(intent, START_QUIZ_ACTIVITY);
+                startActivityOpen = true;
             }
         }
     }
