@@ -56,8 +56,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
     private static final boolean USE_BLUETOOTH = false;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
-    private boolean startQuiz = false;
-
     private StateManager stateManager;
     private Socket socket;
 
@@ -133,7 +131,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
                 break;
 
             case START_QUIZ_ACTIVITY:
-                startQuiz = false;
                 if (resultCode == 1) {
                     showQuiz(true);
                 }
@@ -250,8 +247,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
     public void onBeaconFound(IBeacon beacon) {
         if (!((boolean) stateManager.get(StateManagerKey.GAME_STARTED)) ||
                 beacon.getRelativeRssi() > SIGNAL_THRESHOLD ||
-                quizLayout.getVisibility() == View.VISIBLE ||
-                startQuiz) {
+                quizLayout.getVisibility() == View.VISIBLE ){
             return;
         }
 
@@ -269,7 +265,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
                 if (!startActivityOpen) {
                     Intent intent = new Intent(this, StartQuizActivity.class);
                     startActivityForResult(intent, START_QUIZ_ACTIVITY);
-                    startQuiz = true;
                     startActivityOpen = true;
                 }
             }
