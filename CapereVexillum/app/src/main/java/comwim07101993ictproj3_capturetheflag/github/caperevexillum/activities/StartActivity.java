@@ -28,7 +28,7 @@ public class StartActivity extends AppCompatActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(parent, StartQuizActivity.class);
+                Intent intent = new Intent(parent, CreateLobbyActivity.class);
                 startActivity(intent);
             }
         });

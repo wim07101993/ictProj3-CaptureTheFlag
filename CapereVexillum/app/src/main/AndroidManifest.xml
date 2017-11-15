@@ -18,7 +18,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.GameActivity"
+            android:name=".activities.GameActivity">
+
+        </activity>
+        <activity android:name=".activities.DebugActivity" />
+        <activity android:name=".activities.StartQuizActivity" />
+        <activity android:name=".activities.EndActivity" />
+        <activity android:name=".activities.LobbyActivity" />
+        <activity android:name=".activities.JoinLobbyActivity" />
+        <activity android:name=".activities.StartActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme">
@@ -27,13 +35,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".activities.DebugActivity" />
-        <activity android:name=".activities.StartQuizActivity" />
-        <activity android:name=".activities.EndActivity" />
-        <activity android:name=".activities.LobbyActivity" />
-        <activity android:name=".activities.JoinLobbyActivity" />
-        <activity android:name=".activities.StartActivity" />
+
         <activity android:name=".activities.CreateLobbyActivity"></activity>
     </application>
 

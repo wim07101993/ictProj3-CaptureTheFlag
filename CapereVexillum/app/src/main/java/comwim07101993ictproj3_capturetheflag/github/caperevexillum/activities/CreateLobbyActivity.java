@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -16,7 +17,7 @@ import java.util.List;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.HardwareInfo;
 
-public class CreateLobbyActivity extends AppCompatActivity {
+public class CreateLobbyActivity extends AppCompatActivity implements View.OnClickListener {
     String macAddress;
 
     @Override
@@ -29,8 +30,11 @@ public class CreateLobbyActivity extends AppCompatActivity {
 
 
 
+
     }
-    public View.OnClickListener createLobbey()= new View.OnClickListener(){
-        
+
+    @Override
+    public void onClick(View v) {
+
     }
 }
