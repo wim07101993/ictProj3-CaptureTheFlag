@@ -21,6 +21,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
 
     EditText lobbyNameEditText;
     EditText lobbyPasswordEditText;
+    EditText playerNameEditText;
 
     Button joinLobbyButton;
 
@@ -34,6 +35,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
 
         lobbyNameEditText = (EditText)findViewById(R.id.lobby_name_edittext);
         lobbyPasswordEditText = (EditText)findViewById(R.id.lobby_password_edittext);
+        playerNameEditText = (EditText)findViewById(R.id.playername_edittext);
     }
 
     @Override
@@ -49,7 +51,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
             }
 
             if(socket != null){
-                socket.emit("checkCredentials", lobbyNameEditText.getText(), lobbyPasswordEditText.getText());
+                socket.emit("checkCredentials", lobbyNameEditText.getText(), lobbyPasswordEditText.getText() , playerNameEditText.getText());
                 socket.on("getLobbyId", getLobbyId);
             }
         }

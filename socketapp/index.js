@@ -39,11 +39,11 @@ io.on('connection', function(socket){
     socket.on("addTeam", (team) => teamClass.addTeam(io, team));
     }
     // lobby
-    socket.on("checkCredentials", (lobbyName, lobbyPassword) => {
+    socket.on("checkCredentials", (lobbyName, lobbyPassword, playerName) => {
       let lobby =lobbies.filter((lobby)=>{return lobby.name==lobbyName});
       if(lobby[0]!=undefined){
         lobby = lobby[0];
-        let name="playername";
+        let name=playerName;
         let team = null;
         lobbies[lobby.id].players.push({"name":name,"team":team,"socket":socket});
         console.log("player "+name+" joined lobby "+lobby.id+":"+lobby.name);
@@ -63,7 +63,6 @@ io.on('connection', function(socket){
     })
 
 });
-
 
 
 console.log("listening")
