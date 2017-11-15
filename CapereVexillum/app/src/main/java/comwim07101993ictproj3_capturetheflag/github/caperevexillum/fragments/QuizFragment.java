@@ -16,17 +16,26 @@ import android.widget.LinearLayout.LayoutParams;
 import java.util.ArrayList;
 import java.util.List;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.MainActivity;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.DbHandler;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class QuizFragment extends Fragment implements View.OnClickListener {
+
+
+    /* ---------------------------------------------------------- */
+    /* ------------------------- FIELDS ------------------------- */
+    /* ---------------------------------------------------------- */
 
     //variabele van de klasse db_handler
     private DbHandler db_handler;
@@ -35,38 +44,46 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private List<Button> buttons;
 
     //variabele declareren (main)
-    private TextView vraag;
-    private Integer aantalVragen;
+    private TextView question;
+    private Integer nQuestions;
     private Integer count;
-    private Quiz vraagEnAntwoord;
-    private Boolean answeredCorrect;
-    private MainActivity mainActivity;
-    private Beacon currentBeacon;
+    private Quiz questionAndAnswer;
+    private GameActivity gameActivity;
+    private IBeacon currentBeacon;
+
     //layout settings
     LinearLayout linearLayout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-    public QuizFragment() {
 
-    }
-    public void setCurrentBeacon(Beacon beacon){
+    private StateManager stateManager;
+
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
+
+    public void setCurrentBeacon(IBeacon beacon){
         currentBeacon = beacon;
     }
-    public void addActivity(MainActivity mainActivity) {
-        this.mainActivity= mainActivity;
+
+    public void addActivity(GameActivity gameActivity) {
+        this.gameActivity = gameActivity;
+        stateManager = gameActivity.getStateManager();
     }
+
     public void setup(){
         //locale waarde
         db_handler = new DbHandler();
         count = 0;
         buttons = new ArrayList<>();
-        aantalVragen = 3;
-        linearLayout =  (LinearLayout) view.findViewById(R.id.buttonsLayout);;
+        nQuestions = 3;
+        linearLayout = view.findViewById(R.id.buttonsLayout);;
 
-        vraag = (TextView)  view.findViewById(R.id.vraagTextView);
+        question = (TextView) view.findViewById(R.id.questionTextView);
 
-        //Eerste vraag afhalen
-        vraagEnAntwoord = db_handler.getVraagEnAntwoord(count);
+        //Eerste question afhalen
+        questionAndAnswer = db_handler.getVraagEnAntwoord(count);
 
         //buttons toevoegen aan layout
         createButtons();
@@ -74,12 +91,12 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     //buttons dynamish aanmaken aan de hand van aantal antwoorden
     private void createButtons(){
-        vraag.setText(vraagEnAntwoord.getVraag());
+        question.setText(questionAndAnswer.getVraag());
         linearLayout.removeAllViews();
 
-        for(int i = 0; i<vraagEnAntwoord.getAantalAntwoorden()-1;i++ ){
+        for(int i = 0; i< questionAndAnswer.getAantalAntwoorden()-1; i++ ){
             Button button = new Button(getActivity());
-            button.setText(vraagEnAntwoord.getAntwoord(i));
+            button.setText(questionAndAnswer.getAntwoord(i));
             button.setTextSize(14);
             button.setGravity(Gravity.CENTER);
             button.setId(i);
@@ -94,37 +111,27 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
-
-    //kijkt of het antwoord juist is
-    @Override
-    public void onClick(View view) {
-
-        answeredCorrect = checkAnswerQuestion( (Button)view);
-
-    }
-
     //kijkt of de antwoorden juist zijn en returnt true or false
     boolean checkAnswerQuestion(Button button){
 
-        //als de vraag juist is toon dan de volgende
-        //of als alle vragen zijn geweest ga naar de functie overnemenSucces
+        //als de question juist is toon dan de volgende
+        //of als alle vragen zijn geweest ga naar de functie capturedFlag
         //anders ga naar de functie einde quiz
-        if(button.getText()== vraagEnAntwoord.getJuisteAntwoord()){
+        if(button.getText()== questionAndAnswer.getJuisteAntwoord()){
             count++;
-            if (aantalVragen-1 >= count){
-                vraagEnAntwoord = db_handler.getVraagEnAntwoord(count);
+            if (nQuestions -1 >= count){
+                questionAndAnswer = db_handler.getVraagEnAntwoord(count);
 
                 createButtons();
             }
             else{
                 //Quiz capture and cooldown
 
-                overnemenSucces();
+                capturedFlag();
             }
 
         }else{
-            eindeQuiz();
+            endQuiz();
 
             return false;
         }
@@ -132,27 +139,30 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     }
 
     //zet variabele terug normaal en toont een melding dat het antwoord fout was
-    //het toont een nieuwe vraag en zet de antwoorden erbij
-    public  void eindeQuiz(){
+    //het toont een nieuwe question en zet de antwoorden erbij
+    public  void endQuiz(){
         count = 0;
-        Toast.makeText(mainActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
+        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(Team.NO_TEAM);
-        mainActivity.flags.addFlag(flag);
-        mainActivity.showQuestion(false);
+
+        //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        gameActivity.showQuiz(false);
     }
 
     //geeft een melding dat de vragen juist waren en de vlag overgenomen is
     //zet de variabele terug tegoei
-    public void overnemenSucces(){
-        Toast.makeText(mainActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
+    public void capturedFlag(){
+        Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(mainActivity.myTeam);
-        mainActivity.flags.addFlag(flag);
+        flag.CaptureAndCooldown(GameActivity.MY_TEAM);
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+
         count=0;
-        mainActivity.showQuestion(false);
+        gameActivity.showQuiz(false);
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -160,6 +170,16 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_quiz,container,false);
         setup();
         return view;
+    }
+
+    /* ------------------------- OnClickListener ------------------------- */
+
+    //kijkt of het antwoord juist is
+    @Override
+    public void onClick(View view) {
+
+        checkAnswerQuestion( (Button)view);
+
     }
 }
 

@@ -1,49 +1,50 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner;
 
 
+import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
-import android.os.Handler;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 
 
 /**
- * Created by wimva on 6/10/2017.
+ * Created by Wim Van Laer on 6/10/2017.
  * <p>
  * BeaconScanner uses bluetooth to scan for beacons.
  * <p>
  * You can listen for detection, start of scanning
  * and stop of scanning by implementing the OnScanListener and adding it by using the method
- * setScanEventListener.
- * If you stop listening, unsubscribe by using the removeScanEventListener method.
+ * addOnScanListener.
+ * If you stop listening, unsubscribe by using the removeOnScanListener method.
  * <p>
  * You can start scanning for beacons using the Start method and stop scanning with the stop method
  * <p>
  * With the IsScanning method you can ask if the scanner is scanning.
  */
-public class BeaconScanner {
+public class BeaconScanner extends ABeaconScanner {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    // List of listeners for changes
-    private List<OnScanListener> eventListeners = new ArrayList<>();
+    private static final String TAG = BeaconScanner.class.getSimpleName();
+    public static final int REQUEST_ENABLE_BT = 1;
+    public static final int REQUEST_ENABLE_COURSE_LOCATION = 2;
 
     // scanner to get bluetooth devices
     private BluetoothLeScanner scanner;
-    private BluetoothAdapter adapter;
 
-    // boolean to indicate if adapter is scanning
-    private boolean scanning;
-    // instance to handle threading
-    private Handler handler;
+    private BluetoothAdapter adapter;
 
     // callback when scanned
     private ScanCallback scanCallback =
@@ -56,10 +57,7 @@ public class BeaconScanner {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                // notify each of the listeners
-                                for (OnScanListener l : eventListeners) {
-                                    l.onBeaconFound(scannedBeacon);
-                                }
+                                notifyListeners(scannedBeacon);
                             }
                         });
                     }
@@ -67,11 +65,9 @@ public class BeaconScanner {
             };
 
 
-
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
-
 
     /**
      * Constructor to construct a BeaconScanner instance.
@@ -84,7 +80,6 @@ public class BeaconScanner {
 
         // set scanner and handler
         scanner = adapter.getBluetoothLeScanner();
-        handler = new Handler();
     }
 
     /* ----------------------------------------------------------- */
@@ -105,13 +100,8 @@ public class BeaconScanner {
         }
 
         // start the scan
-        scanning = true;
         scanner.startScan(scanCallback);
-
-        // notify listeners
-        for (OnScanListener l : eventListeners) {
-            l.onScanStarted();
-        }
+        setIsScanning(true);
 
         return true;
     }
@@ -122,45 +112,31 @@ public class BeaconScanner {
      */
     public void stop() {
         // stop scanning
-        scanning = false;
         scanner.stopScan(scanCallback);
+        setIsScanning(false);
+    }
 
-        // notify listeners
-        for (OnScanListener l : eventListeners) {
-            l.onScanStopped();
+    /**
+     * Asks for the needed permissions
+     */
+    public static void askPermissions(Activity activity) {
+
+        // create BT intent
+        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        // starts the activity depending on the result
+        activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
+        // check for needed permissions and if they are granted, move on
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Location access not granted!");
+            // If not granted ask for permission
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_ENABLE_COURSE_LOCATION);
         }
     }
 
-    /**
-     * Adds l to the listener list
-     *
-     * @param l listener to add to the listener list
-     */
-    public void setScanEventListener(OnScanListener l) {
-        // add l to the listeners
-        eventListeners.add(l);
+
+    public static boolean isBLESupported(Context context){
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
     }
 
-    /**
-     * Removes l to the listener list
-     *
-     * @param l listener to remove from the listener list
-     */
-    public void removeScanEventListener(OnScanListener l) {
-        // check if listeners contains l
-        if (eventListeners.contains(l)) {
-            // remove l from the listeners
-            eventListeners.remove(l);
-        }
-    }
-
-    /* ------------------------- GETTERS ------------------------- */
-
-    /**
-     * @return the scanner state.
-     */
-    public boolean isScanning() {
-        // return the scanner state
-        return scanning;
-    }
 }

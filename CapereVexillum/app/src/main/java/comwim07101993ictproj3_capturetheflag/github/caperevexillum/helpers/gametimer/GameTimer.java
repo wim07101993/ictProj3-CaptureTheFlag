@@ -5,6 +5,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.TextView;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.Socket;
+
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,10 +38,32 @@ public class GameTimer {
      * @param textViewTime Give a textview that wich will have the timer as text
      * @param timeInMinutes Give the amount of time for the countdown
      */
-    public GameTimer(TextView textViewTime, int timeInMinutes){
+    Emitter.Listener syncTime = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            String time = (String) args[0];
+            float timer = Float.parseFloat(time);
+            int timeInMinutes = (int)timer;
+            Calendar endDownCal = Calendar.getInstance();
+            int seconds =Math.abs  ((int)(timeInMinutes*100-timer*100));
+            endDownCal.add(Calendar.SECOND,seconds);
+            endDownCal.add(Calendar.MINUTE,timeInMinutes);
+            DateEndTime = endDownCal.getTime();
+        }
+    };
+    public GameTimer(TextView textViewTime, float timeInMinutes, Socket socket){
         timer = new Timer();
-        DateEndTime = Calendar.getInstance().getTime();
-        DateEndTime.setMinutes(DateEndTime.getMinutes()+timeInMinutes);
+        socket.on("reSyncTime" , syncTime);
+        Calendar endDownCal = Calendar.getInstance();
+        int seconds = (int)(timeInMinutes- (int)timeInMinutes)*100;
+        endDownCal.add(Calendar.SECOND,seconds);
+        endDownCal.add(Calendar.MINUTE,(int)timeInMinutes);
+
+
+        DateEndTime = endDownCal.getTime();
+
+
+
         dateCcurrentTime = Calendar.getInstance().getTime();
         this.textViewTime = textViewTime;
 

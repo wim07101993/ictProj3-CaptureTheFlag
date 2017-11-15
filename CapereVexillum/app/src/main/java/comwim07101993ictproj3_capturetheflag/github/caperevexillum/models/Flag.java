@@ -3,6 +3,9 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 import java.util.Calendar;
 import java.util.Date;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
+
 /**
  * Created by Michiel on 12/10/2017.
  */
@@ -45,7 +48,7 @@ public class Flag {
      *
      * @param beacon beacon that represents the flag
      */
-    public Flag(Beacon beacon) {
+    public Flag(IBeacon beacon) {
         //Sets the Flag's beaconMAC to the beacon's MAC address
         beaconMAC = beacon.getAddress();
         //Sets the Flag's cooldown to false
@@ -106,7 +109,9 @@ public class Flag {
         long now = nowTime.getTime();
         return (now > cooldown);
     }
-
+    public Date getCooldownTime() {
+        return  cooldownTimer;
+    }
     /**
      * @return the Flag's team alignment
      */

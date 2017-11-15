@@ -6,4 +6,21 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="beacon_NA">Beacon niet beschikbaar</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="do_you_want_to_start_the_quiz">Do you want to start the quiz?</string>
+    <string name="waar_wilt_u_naartoe">Waar wilt u naartoe?</string>
+    <string name="lobby">Lobby</string>
+    <string name="start">Start</string>
+    <string name="join">Join</string>
+    <string name="leave">Leave</string>
+    <string name="team_green">Team Green</string>
+    <string name="no_team">No Team</string>
+    <string name="team_orange">Team Orange</string>
+    <string name="finished">Finished</string>
+    <string name="lobby_name_text">Lobby name</string>
+    <string name="lobby_password_text">Lobby password</string>
+    <string name="join_lobby_text">JOIN LOBBY</string>
+    <string name="join_lobby_button_text">JOIN</string>
 </resources>

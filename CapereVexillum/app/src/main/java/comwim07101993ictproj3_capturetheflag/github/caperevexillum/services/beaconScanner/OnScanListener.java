@@ -1,9 +1,9 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner;
 
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 
 /**
- * Created by wimva on 6/10/2017.
+ * Created by Wim Van Laer on 6/10/2017.
  * <p>
  * Interface to detect scanner changes.
  */
@@ -22,5 +22,5 @@ public interface OnScanListener {
     /**
      * Invokes when a beacon is found.
      */
-    void onBeaconFound(Beacon beacon);
+    void onBeaconFound(IBeacon beacon);
 }
