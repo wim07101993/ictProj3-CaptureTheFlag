@@ -17,8 +17,8 @@ var teams;
 let lobbies = [];
 io.on('connection', function(socket){
     console.log("connected");
-    let hasLobby=false;
-    let lobbyId;
+    let hasLobby=true;
+    let lobbyId=null;
     
     // time
     if(hasLobby==true){
@@ -39,14 +39,27 @@ io.on('connection', function(socket){
     socket.on("addTeam", (team) => teamClass.addTeam(io, team));
     }
     // lobby
-    socket.on("checkCredentials", (lobbyName, lobbyPassword) => console.log("checkCredentials req received: " + lobbyName + " - " + lobbyPassword));
+    socket.on("checkCredentials", (lobbyName, lobbyPassword) => {
+      let lobby =lobbies.filter((lobby)=>{return lobby.name==lobbyName});
+      if(lobby[0]!=undefined){
+        lobby = lobby[0];
+        let name="playername";
+        let team = null;
+        lobbies[lobby.id].players.push({"name":name,"team":team,"socket":socket});
+        console.log("player "+name+" joined lobby "+lobby.id+":"+lobby.name);
+      }
+    });
     socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
 
-    socket.on("create",(id,name,password,time)=>{
+    socket.on("createLobby",(id,name,password,time)=>{
       
       let lobby={"id":id,"name":name,"password":password,"time":time,"players":[]};
+      
       lobbies[id]=lobby;
-      JSON.stringify(lobby);
+      console.log("*")
+      console.log("*")
+      console.log("*")
+      console.log(JSON.stringify(lobbies))
     })
 
 });

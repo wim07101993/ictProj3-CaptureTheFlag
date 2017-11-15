@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
@@ -49,7 +50,16 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
 
             if(socket != null){
                 socket.emit("checkCredentials", lobbyNameEditText.getText(), lobbyPasswordEditText.getText());
+                socket.on("getLobbyId", getLobbyId);
             }
         }
     }
+   Emitter.Listener getLobbyId= new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.d("JoinLobbyActivity", "test");
+        }
+    };
+
+
 }
