@@ -8,6 +8,7 @@ const io = require('socket.io')(server, {
   pingTimeout: 5000,
   cookie: false
 });
+
 import timeClass from "./library/timesync"
 import flagsClass from "./library/flagsSync"
 import teamClass from "./library/teamSync"
@@ -43,9 +44,9 @@ io.on('connection', function(socket){
 
     socket.on("create",(id,name,password,time)=>{
       
-      let lobby={"id":id,"name":name,"password":password,"time":time};
+      let lobby={"id":id,"name":name,"password":password,"time":time,"players":[]};
       lobbies[id]=lobby;
-      
+      JSON.stringify(lobby);
     })
 
 });
