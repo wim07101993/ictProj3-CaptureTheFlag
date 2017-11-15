@@ -72,11 +72,17 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void joinTeamOrange() {
-
+        if(socket != null){
+            socket.emit("joinTeamOrange");
+            socket.disconnect();
+        }
     }
 
     private void joinTeamGreen() {
-
+        if(socket != null){
+            socket.emit("joinTeamGreen");
+            socket.disconnect();
+        }
     }
 
     private void startGame() {
