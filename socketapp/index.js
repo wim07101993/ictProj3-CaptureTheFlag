@@ -13,21 +13,14 @@ import flagsClass from "./library/flagsSync"
 import teamClass from "./library/teamSync"
 let players=[];
 var teams;
-
+let lobbies = [];
 io.on('connection', function(socket){
     console.log("connected");
-  
-    if (players.length ==0){
-      console.log("host connected")
-      players.push(socket);
-      socket.emit("host","");
-    }else{
-      console.log("client connected")
-      flagsClass.askFlags(socket);
-      timeClass.clientStart(socket);
-    }
+    let hasLobby=false;
+    let lobbyId;
     
     // time
+    if(hasLobby==true){
     socket.on("start",(duration) => timeClass.start(io,socket,duration));
     socket.on("syncTime",(timeLeft) => timeClass.syncTime(io,socket,timeLeft))
     socket.on("askTime",() => timeClass.askTime(io,socket));
@@ -43,10 +36,18 @@ io.on('connection', function(socket){
     socket.on("askTeams",() => teamClass.askTeams(socket));
     socket.on("addPlayer", (teamName, player) => teamClass.addPlayer(io, teamName, player));
     socket.on("addTeam", (team) => teamClass.addTeam(io, team));
-
+    }
     // lobby
     socket.on("checkCredentials", (lobbyName, lobbyPassword) => console.log("checkCredentials req received: " + lobbyName + " - " + lobbyPassword));
     socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
+
+    socket.on("create",(id,name,password,time)=>{
+      
+      let lobby={"id":id,"name":name,"password":password,"time":time};
+      lobbies[id]=lobby;
+      
+    })
+
 });
 
 

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import flepsik.github.com.progress_ring.ProgressRingView;
+
 
 
 public class CooldownTimerFragment extends Fragment  {

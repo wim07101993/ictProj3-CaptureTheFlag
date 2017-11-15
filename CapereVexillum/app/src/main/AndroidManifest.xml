@@ -32,7 +32,9 @@
         <activity android:name=".activities.StartQuizActivity" />
         <activity android:name=".activities.EndActivity" />
         <activity android:name=".activities.LobbyActivity" />
-        <activity android:name=".activities.JoinLobbyActivity"></activity>
+        <activity android:name=".activities.JoinLobbyActivity" />
+        <activity android:name=".activities.StartActivity" />
+        <activity android:name=".activities.CreateLobbyActivity"></activity>
     </application>
 
 </manifest>
