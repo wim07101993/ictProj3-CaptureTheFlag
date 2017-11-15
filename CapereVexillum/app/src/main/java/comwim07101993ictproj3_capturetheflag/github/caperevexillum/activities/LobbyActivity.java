@@ -86,7 +86,8 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void startGame() {
-
+        //TODO Nick: verdeling overige spelers
+        //TODO Nick: connectie socket
     }
 
     private void leaveLobby() {
