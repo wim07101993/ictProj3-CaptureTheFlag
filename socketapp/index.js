@@ -36,10 +36,10 @@ io.on('connection', function(socket){
 
     // lobby
     socket.on("createLobby",(name,password,time)=> lobbyClass.createLobby(name, password, time));
-    socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(socket, lobbyName, lobbyPassword, playerName));
+    socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(io, lobbyName, lobbyPassword, playerName));
     socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
     socket.on("startLobby", (lobbyId) => {
-      lobbyClass.distributePlayers(lobbies[lobbyId].players);
+      //lobbyClass.distributePlayers(lobbies[lobbyId].players);
       // lobbyClass.timeStart(io, socket, duration);
     });
     socket.on("getPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket));

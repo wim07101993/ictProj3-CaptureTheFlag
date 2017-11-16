@@ -12,15 +12,17 @@ export default{
         console.log("created lobby: " + lobby.name + " - " + lobby.password + " - " + lobby.time);
     },
 
-    joinLobby(socket, lobbyName, lobbyPassword, playerName){
+    joinLobby(io, lobbyName, lobbyPassword, playerName){
       let lobby = this.lobbies.filter((lobby)=>{return lobby.name==lobbyName});
       if(lobby[0]!=undefined){
         lobby = lobby[0];
         let name = playerName;
+        // use standard team "no_team"
         let team = lobby.teams[2];
         this.lobbies[lobby.id].addPlayer(playerName, team);
        
         console.log("player "+ name +" joined lobby "+ lobby.id +":"+ lobby.name);
+        this.getPlayers(lobby.id, io)
       }
     },
 
@@ -32,12 +34,12 @@ export default{
         
     },
 
-    getPlayers(lobbyID, socket){
-        // let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+    getPlayers(lobbyID, io){
+        let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
 
-        // if(lobby[0] != undefined){
-        //     socket.emit("getPlayersResult", JSON.stringify(lobby[0].players));
-        // }        
+        if(lobby[0] != undefined){
+            io.emit("getPlayersResult", JSON.stringify(lobby[0].players));
+        }        
     },
 
     joinTeam(lobbyID, team){
