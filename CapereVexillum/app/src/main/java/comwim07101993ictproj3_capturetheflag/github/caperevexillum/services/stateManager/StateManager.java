@@ -57,7 +57,6 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     private static final boolean USE_SOCKET = true;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
-
     private final Socket socket = initSocket();
 
 
@@ -123,6 +122,32 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     @Override
     protected synchronized Object internalGet(StateManagerKey key, List<StateManagerKey> changedKeys)
             throws IllegalArgumentException {
+
+        switch (key){
+
+            case FLAGS:
+                socket.emit("askFlags");
+                break;
+            case LOBBY_SETTINGS:
+                break;
+            case USER_ID:
+                break;
+            case TEAMS:
+                socket.emit("askTeams");
+                break;
+            case SCORE:
+                break;
+            case LOBBY_ID:
+                break;
+            case GAME_STARTED:
+                break;
+            case GAME_TIME:
+                socket.emit("askTime");
+                break;
+            case IS_HOST:
+                break;
+        }
+
         Object value = currentState.get(key);
 
         if (value == null) {
@@ -155,7 +180,73 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     @Override
     protected synchronized void internalSet(StateManagerKey key, Object value, List<StateManagerKey> changedKeys)
             throws IllegalArgumentException {
+
+        switch (key){
+
+            case FLAGS:
+                break;
+            case LOBBY_SETTINGS:
+                break;
+            case USER_ID:
+                break;
+            case TEAMS:
+                break;
+            case SCORE:
+                break;
+            case LOBBY_ID:
+                break;
+            case GAME_STARTED:
+                socket.emit("start", GAME_DURATION_IN_MINUTES);
+                break;
+            case GAME_TIME:
+                break;
+            case IS_HOST:
+                break;
+        }
+
         this.currentState.put(key, value);
         changedKeys.add(key);
     }
+
+
+    /* ------------------------------------------------------------- */
+    /* ------------------------- LISTENERS ------------------------- */
+    /* ------------------------------------------------------------- */
+
+    /* ------------------------- SOCKET ------------------------- */
+
+    private Emitter.Listener becomeHost = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            set(StateManagerKey.IS_HOST, true);
+        }
+    };
+
+    private Emitter.Listener startTimer = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            set(StateManagerKey.GAME_STARTED, true);
+        }
+    };
+
+    private Emitter.Listener syncTime = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            set(StateManagerKey.GAME_TIME, args[0]);
+        }
+    };
+
+    private Emitter.Listener syncFlags = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            set(StateManagerKey.FLAGS, args[0]);
+        }
+    };
+
+    private Emitter.Listener syncTeam = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            set(StateManagerKey.TEAMS, args[0]);
+        }
+    };
 }
