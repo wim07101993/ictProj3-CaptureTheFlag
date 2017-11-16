@@ -40,17 +40,18 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
 
     private static final String TAG = GameActivity.class.getSimpleName();
 
-    private static final Map<StateManagerKey, Type> KEY_TYPE_MAP = new HashMap<StateManagerKey, Type>() {{
-        put(StateManagerKey.TEAMS, new TypeToken<List<Team>>() {
-        }.getType());
+    private static final Map<StateManagerKey, IState> KEY_TYPE_MAP = new HashMap<StateManagerKey, IState>() {{
+        put(StateManagerKey.TEAMS, new State(new TypeToken<List<Team>>() {
+        }.getType(), true, false));
 
-        put(StateManagerKey.FLAGS, Flags.class);
-        put(StateManagerKey.LOBBY_SETTINGS, LobbySettings.class);
-        put(StateManagerKey.USER_ID, String.class);
-        put(StateManagerKey.SCORE, long.class);
-        put(StateManagerKey.LOBBY_ID, String.class);
-        put(StateManagerKey.GAME_TIME, Float.class);
-        put(StateManagerKey.GAME_STARTED, boolean.class);
+        put(StateManagerKey.FLAGS, new State(Flags.class, true, true));
+        put(StateManagerKey.LOBBY_SETTINGS, new State(LobbySettings.class, false, true));
+        put(StateManagerKey.USER_ID, new State(String.class, true, true));
+        put(StateManagerKey.SCORE, new State(long.class, true, false));
+        put(StateManagerKey.LOBBY_ID, new State(String.class, true, true));
+        put(StateManagerKey.GAME_TIME, new State(Float.class, true, false));
+        put(StateManagerKey.GAME_STARTED, new State(boolean.class, true, true));
+        put(StateManagerKey.MY_FLAGS, new State(Flags.class, true, true));
     }};
 
     private static final String SERVER_URL = "http://192.168.137.1:4040";
@@ -103,7 +104,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     /* ------------------------- GETTERS ------------------------- */
 
     @Override
-    protected Map<StateManagerKey, Type> getKeyTypeMap() {
+    protected Map<StateManagerKey, IState> getKeyTypeMap() {
         return KEY_TYPE_MAP;
     }
 
@@ -123,26 +124,26 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     protected synchronized Object internalGet(StateManagerKey key, List<StateManagerKey> changedKeys)
             throws IllegalArgumentException {
 
-        switch (key){
+        switch (key) {
 
             case FLAGS:
                 socket.emit("askFlags");
                 break;
+            case TEAMS:
+                socket.emit("askTeams");
+                break;
+            case GAME_TIME:
+                socket.emit("askTime");
+                break;
             case LOBBY_SETTINGS:
                 break;
             case USER_ID:
-                break;
-            case TEAMS:
-                socket.emit("askTeams");
                 break;
             case SCORE:
                 break;
             case LOBBY_ID:
                 break;
             case GAME_STARTED:
-                break;
-            case GAME_TIME:
-                socket.emit("askTime");
                 break;
             case IS_HOST:
                 break;
@@ -151,7 +152,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         Object value = currentState.get(key);
 
         if (value == null) {
-            Type type = KEY_TYPE_MAP.get(key);
+            Type type = KEY_TYPE_MAP.get(key).getType();
             return PrimitiveDefaults.getDefaultValue(type);
         }
 
@@ -181,7 +182,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     protected synchronized void internalSet(StateManagerKey key, Object value, List<StateManagerKey> changedKeys)
             throws IllegalArgumentException {
 
-        switch (key){
+        switch (key) {
 
             case FLAGS:
                 break;
@@ -218,35 +219,40 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     private Emitter.Listener becomeHost = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            set(StateManagerKey.IS_HOST, true);
+            currentState.put(StateManagerKey.IS_HOST, true);
+            notifyListeners(StateManagerKey.IS_HOST);
         }
     };
 
     private Emitter.Listener startTimer = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            set(StateManagerKey.GAME_STARTED, true);
+            currentState.put(StateManagerKey.GAME_STARTED, true);
+            notifyListeners(StateManagerKey.GAME_STARTED);
         }
     };
 
     private Emitter.Listener syncTime = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            set(StateManagerKey.GAME_TIME, args[0]);
+            currentState.put(StateManagerKey.GAME_TIME, args[0]);
+            notifyListeners(StateManagerKey.GAME_TIME);
         }
     };
 
     private Emitter.Listener syncFlags = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            set(StateManagerKey.FLAGS, args[0]);
+            currentState.put(StateManagerKey.FLAGS, args[0]);
+            notifyListeners(StateManagerKey.FLAGS);
         }
     };
 
     private Emitter.Listener syncTeam = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            set(StateManagerKey.TEAMS, args[0]);
+            currentState.put(StateManagerKey.TEAMS, args[0]);
+            notifyListeners(StateManagerKey.TEAMS);
         }
     };
 }

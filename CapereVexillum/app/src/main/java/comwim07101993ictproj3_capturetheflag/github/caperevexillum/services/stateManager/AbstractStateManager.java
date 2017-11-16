@@ -153,7 +153,7 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
         currentState = new HashMap<>();
 
         // fetch the key-type-pairs from the shared preferences
-        Map<TKey, Type> keyTypeMap = getKeyTypeMap();
+        Map<TKey, IState> keyTypeMap = getKeyTypeMap();
         if (keyTypeMap == null) {
             return false;
         }
@@ -166,7 +166,7 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
             if (json == null)
                 continue;
 
-            set(key, gson.fromJson(json, keyTypeMap.get(key)));
+            set(key, gson.fromJson(json, keyTypeMap.get(key).getType()));
         }
 
         return true;
@@ -182,7 +182,7 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
 
     /* ------------------------- GETTERS ------------------------- */
 
-    protected abstract Map<TKey, Type> getKeyTypeMap();
+    protected abstract Map<TKey, IState> getKeyTypeMap();
 
     /**
      * get returns the state behind of TKey key.

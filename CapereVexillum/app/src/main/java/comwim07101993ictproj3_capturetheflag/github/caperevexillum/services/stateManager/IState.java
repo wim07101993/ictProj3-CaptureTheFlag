@@ -2,13 +2,12 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 
 import java.lang.reflect.Type;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
-public interface IState<TKey> {
-    TKey getKey();
 
-    Object getValue();
-
-    void setValue(Object value);
-
+public interface IState {
     Type getType();
+
+    boolean canSet();
+    boolean canGet();
 }

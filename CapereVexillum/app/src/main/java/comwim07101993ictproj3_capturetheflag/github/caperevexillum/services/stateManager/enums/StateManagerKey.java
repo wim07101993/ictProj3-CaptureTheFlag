@@ -19,4 +19,5 @@ public enum StateManagerKey {
     GAME_STARTED,
     GAME_TIME,
     IS_HOST,
+    MY_FLAGS,
 }
