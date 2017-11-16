@@ -44,7 +44,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
         playerNameEditText = (EditText) findViewById(R.id.playername_edittext);
 
         // TODO Sven: get statemanager from previous activity via Intent
-        initStateManager();
+//        initStateManager();
     }
 
     @Override
@@ -62,14 +62,13 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
 
             if (socket != null) {
                 // Send join lobby request to server
-                socket.emit("checkCredentials", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText());
+                socket.emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText());
                 // Link listener for server answer
                 socket.on("getLobbyId", getLobbyId);
 
                 // Navigate to lobby
                 Intent goToLobby = new Intent(this, LobbyActivity.class);
                 startActivity(goToLobby);
-                // TODO Sven: send is_host=false to state manager
 //                stateManager.set(StateManagerKey.IS_HOST, false);
             }
         }
@@ -79,23 +78,21 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
         @Override
         public void call(Object... args) {
             String lobbyID = (String) args[0];
-            // TODO Sven: send lobby id to state manager
 //            stateManager.set(StateManagerKey.LOBBY_ID, lobbyID);
         }
     };
 
-    private void initStateManager() {
-
-        if (stateManager == null) {
-            stateManager = new StateManager(
-                    PreferenceManager.getDefaultSharedPreferences(this)
-            );
-            stateManager.load();
-        }
-
-        if (stateManager.get(StateManagerKey.FLAGS) == null) {
-            stateManager.set(StateManagerKey.FLAGS, new Flags());
-        }
-    }
-
+//    private void initStateManager() {
+//
+//        if (stateManager == null) {
+//            stateManager = new StateManager(
+//                    PreferenceManager.getDefaultSharedPreferences(this)
+//            );
+//            stateManager.load();
+//        }
+//
+//        if (stateManager.get(StateManagerKey.FLAGS) == null) {
+//            stateManager.set(StateManagerKey.FLAGS, new Flags());
+//        }
+//    }
 }

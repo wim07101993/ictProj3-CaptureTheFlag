@@ -97,7 +97,6 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
         // Start on socket
         if(socket != null){
             socket.emit("startLobby");
-            socket.disconnect();
         }
         // Start game activity
         Intent i = new Intent(this, GameActivity.class);
