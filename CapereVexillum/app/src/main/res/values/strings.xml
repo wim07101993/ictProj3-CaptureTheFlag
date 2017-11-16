@@ -23,4 +23,5 @@
     <string name="lobby_password_text">Lobby password</string>
     <string name="join_lobby_text">JOIN LOBBY</string>
     <string name="join_lobby_button_text">JOIN</string>
+    <string name="player_name_label">Player name</string>
 </resources>

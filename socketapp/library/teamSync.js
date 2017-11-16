@@ -23,18 +23,24 @@ export default {
 
         if(selectedTeamIndex != -1){
             let inputTeam = this.teams[selectedTeamIndex];
-            
-            let team = new Team(inputTeam.teamName, inputTeam.score, inputTeam.players);
+
+            let team = new Team(inputTeam.teamName, inputTeam.score);
 
             team.addPlayer(player);
             io.emit("syncTeam", JSON.stringify(inputTeam));
         }
     },
-    
+
     addStaticTeams(){
-        let team = new Team("testTeam", 5, ["john","sam", "dirk"]);
-        let team2 = new Team("testTeam2", 19, ["ronny","johnny", "ronald"]);
-        this.teams.push(team);
-        this.teams.push(team2);
+        let teamOrange = new Team("orange", 0, []);
+        let teamGreen = new Team("green", 0, []);
+        let teamNo = new Team("no_team", 0, []);
+        this.teams.push(teamOrange);
+        this.teams.push(teamGreen);
+        this.teams.push(teamNo);
+    },
+
+    distributePlayers(lobbyPlayers){
+
     }
 }

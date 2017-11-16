@@ -33,6 +33,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.IFlagSync;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
@@ -56,8 +57,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
     private static final boolean USE_BLUETOOTH = false;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
-    private boolean startQuiz = false;
-
     private StateManager stateManager;
     private Socket socket;
 
@@ -65,7 +64,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
 
     // TODO Someone: create in socket
     public static final String MY_TEAM = Team.TEAM_ORANGE;
-
 
     /* ------------------------- View elements ------------------------- */
 
@@ -78,7 +76,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
 
     public CooldownTimerFragment cooldownUpdatable;
 
-    private boolean startActivityOpen = false;
+    private boolean isStartQuizActivityOpen = false;
 
     /* ------------------------- Beacon scanner ------------------------- */
 
@@ -109,7 +107,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
 
     public void showQuiz(boolean showQuestion) {
 
-        startActivityOpen = false;
+        isStartQuizActivityOpen = false;
         if (showQuestion) {
             mainLayout.setVisibility(View.INVISIBLE);
             quizLayout.setVisibility(View.VISIBLE);
@@ -120,28 +118,46 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void hideCooldownFragment() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.hide(cooldownFragment);
 
-        switch (requestCode) {
-            case BeaconScanner.REQUEST_ENABLE_BT:
-                if (resultCode == RESULT_CANCELED) {
-                    Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
-                } else {
-                    beaconScanner.start();
-                }
-                break;
+        try {
+            ft.commit();
+        } catch (Exception e) {
+            // TODO SOMEONE: solve the error that comes when taskmanager is opened on the device
+            Log.e(TAG, e.getMessage());
+        }
+    }
 
-            case START_QUIZ_ACTIVITY:
-                startQuiz = false;
-                if (resultCode == 1) {
-                    showQuiz(true);
-                }
+    public void showCooldownFragment(Date flagResult) {
+        Date now = Calendar.getInstance().getTime();
+        // TODO HAKAN: Polish code
+        long cooldownLeft = flagResult.getTime() - now.getTime();
+
+        beaconWithCooldown = (cooldownLeft > 1010);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        if (!beaconWithCooldown) {
+            ft.hide(cooldownFragment);
+        } else {
+
+            if (cooldownUpdatable != null) {
+                cooldownUpdatable.update((float) (cooldownLeft / 1000));
+            }
+            ft.show(cooldownFragment);
+        }
+
+        try {
+            ft.commit();
+        } catch (Exception e) {
+            // TODO SOMEONE: solve the error that comes when taskmanager is opened on the device
+            Log.e(TAG, e.getMessage());
         }
     }
 
     /* ------------------------- Init methods ------------------------- */
 
+    @SuppressWarnings("UnusedAssignment")
     private void initBeaconScanner() {
 
         if (USE_BLUETOOTH && BeaconScanner.isBLESupported(this)) {
@@ -208,6 +224,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(cooldownFragment);
+
         ft.commit();
     }
 
@@ -236,6 +253,26 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
         initStateManager();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
+            case BeaconScanner.REQUEST_ENABLE_BT:
+                if (resultCode == RESULT_CANCELED) {
+                    Utils.toast(getApplicationContext(), "Please turn on Bluetooth");
+                } else {
+                    beaconScanner.start();
+                }
+                break;
+
+            case START_QUIZ_ACTIVITY:
+                isStartQuizActivityOpen = false;
+                if (resultCode == 1) {
+                    showQuiz(true);
+                }
+        }
+    }
+
     /* ------------------------- OnScanListener ------------------------- */
 
     @Override
@@ -250,55 +287,25 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
     public void onBeaconFound(IBeacon beacon) {
         if (!((boolean) stateManager.get(StateManagerKey.GAME_STARTED)) ||
                 beacon.getRelativeRssi() > SIGNAL_THRESHOLD ||
-                quizLayout.getVisibility() == View.VISIBLE ||
-                startQuiz) {
+                quizLayout.getVisibility() == View.VISIBLE) {
             return;
         }
 
-        Object flagResult = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
+        Flag flag = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
 
-        if (!(flagResult.getClass().equals(Boolean.class))){
-            coolDownFlag((Date) flagResult);
-        } else{
-            stopCooldown();
-
-            if (!((Boolean) flagResult)) {
-                beaconWithCooldown = false;
-                quizFragment.setCurrentBeacon(beacon);
-
-                if (!startActivityOpen) {
-                    Intent intent = new Intent(this, StartQuizActivity.class);
-                    startActivityForResult(intent, START_QUIZ_ACTIVITY);
-                    startQuiz = true;
-                    startActivityOpen = true;
-                }
-            }
-        }
-    }
-
-    public void stopCooldown() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.hide(cooldownFragment);
-        ft.commit();
-    }
-
-    public void coolDownFlag(Date flagResult) {
-        Date now = Calendar.getInstance().getTime();
-        // TODO HAKAN: Polish code
-        long cooldownLeft = flagResult.getTime() - now.getTime();
-
-        beaconWithCooldown = (cooldownLeft > 1010);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (!beaconWithCooldown) {
-            ft.hide(cooldownFragment);
+        if (flag != null && flag.getCooldown()) {
+            showCooldownFragment(flag.getCooldownTime());
         } else {
+            hideCooldownFragment();
+            beaconWithCooldown = false;
+            quizFragment.setCurrentBeacon(beacon);
 
-            if (cooldownUpdatable != null) {
-                cooldownUpdatable.update((float) (cooldownLeft / 1000));
+            if (!isStartQuizActivityOpen) {
+                Intent intent = new Intent(this, StartQuizActivity.class);
+                startActivityForResult(intent, START_QUIZ_ACTIVITY);
+                isStartQuizActivityOpen = true;
             }
-            ft.show(cooldownFragment);
         }
-        ft.commit();
     }
 
     /* ------------------------- syncFlags ------------------------- */

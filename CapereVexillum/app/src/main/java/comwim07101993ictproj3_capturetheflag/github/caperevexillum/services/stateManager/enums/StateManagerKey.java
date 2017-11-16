@@ -14,5 +14,9 @@ public enum StateManagerKey {
     USER_ID,
     TEAMS,
     SCORE,
+
+    LOBBY_ID,
     GAME_STARTED,
+    GAME_TIME,
+    IS_HOST,
 }
