@@ -33,14 +33,16 @@ io.on('connection', function(socket){
     socket.on("updateFlag",(flag)=> flagsClass.updateFlag(io, socket, flag));
     socket.on("removeFlag",(flag)=> flagsClass.removeFlag(io, socket, flag));
     }
+
     // lobby
     socket.on("createLobby",(name,password,time)=> lobbyClass.createLobby(name, password, time));
     socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(socket, lobbyName, lobbyPassword, playerName));
     socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
     socket.on("startLobby", (lobbyId) => {
-      teamClass.distributePlayers(lobbies[lobbyId].players);
-      timeClass.timeStart(io, socket, duration);
+      lobbyClass.distributePlayers(lobbies[lobbyId].players);
+      // lobbyClass.timeStart(io, socket, duration);
     });
+    socket.on("getPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket));
 
 });
 
