@@ -121,7 +121,13 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
     public void hideCooldownFragment() {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(cooldownFragment);
-        ft.commit();
+
+        try {
+            ft.commit();
+        } catch (Exception e) {
+            // TODO SOMEONE: solve the error that comes when taskmanager is opened on the device
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     public void showCooldownFragment(Date flagResult) {
@@ -140,11 +146,18 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
             }
             ft.show(cooldownFragment);
         }
-        ft.commit();
+
+        try {
+            ft.commit();
+        } catch (Exception e) {
+            // TODO SOMEONE: solve the error that comes when taskmanager is opened on the device
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     /* ------------------------- Init methods ------------------------- */
 
+    @SuppressWarnings("UnusedAssignment")
     private void initBeaconScanner() {
 
         if (USE_BLUETOOTH && BeaconScanner.isBLESupported(this)) {
@@ -211,6 +224,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(cooldownFragment);
+
         ft.commit();
     }
 
