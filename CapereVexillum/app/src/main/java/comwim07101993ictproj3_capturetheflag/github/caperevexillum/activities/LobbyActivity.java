@@ -1,5 +1,6 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -95,10 +96,14 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void startGame() {
+        // Start on socket
         if(socket != null){
             socket.emit("startlobby");
             socket.disconnect();
         }
+        // Start game activity
+        Intent i = new Intent(this, GameActivity.class);
+        startActivity(i);
     }
 
     private void leaveLobby() {
