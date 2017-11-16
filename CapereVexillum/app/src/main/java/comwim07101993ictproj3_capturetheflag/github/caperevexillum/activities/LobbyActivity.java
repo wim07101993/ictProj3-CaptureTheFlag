@@ -19,6 +19,7 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     Button joinTeamOrangeButton;
     Button startGameButton;
     Button leaveLobbyButton;
+    Boolean isHost = true;
 
     // Socket (to be replaced with socket in background service??)
     Socket socket;
@@ -39,6 +40,14 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
         joinTeamOrangeButton.setOnClickListener(this);
         startGameButton.setOnClickListener(this);
         leaveLobbyButton.setOnClickListener(this);
+
+        // Set startbutton visible for host
+        if (isHost){
+            startGameButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            startGameButton.setVisibility(View.INVISIBLE);
+        }
 
         try{
             socket = IO.socket(GameActivity.SERVER_URL);
@@ -86,8 +95,10 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void startGame() {
-        //TODO Nick: verdeling overige spelers
-        //TODO Nick: connectie socket
+        if(socket != null){
+            socket.emit("startlobby");
+            socket.disconnect();
+        }
     }
 
     private void leaveLobby() {
