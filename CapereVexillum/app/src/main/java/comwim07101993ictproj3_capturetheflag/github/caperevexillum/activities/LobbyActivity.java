@@ -74,14 +74,12 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     private void joinTeamOrange() {
         if(socket != null){
             socket.emit("joinTeamOrange");
-            socket.disconnect();
         }
     }
 
     private void joinTeamGreen() {
         if(socket != null){
             socket.emit("joinTeamGreen");
-            socket.disconnect();
         }
     }
 
@@ -95,6 +93,8 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
         if(socket != null){
             socket.emit("disconnectFromLobby");
             socket.disconnect();
+            // TODO Sven: navigate elsewhere?
+            onBackPressed();
         }
     }
 }
