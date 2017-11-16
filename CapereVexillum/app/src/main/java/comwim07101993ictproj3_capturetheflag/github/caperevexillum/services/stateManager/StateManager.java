@@ -80,6 +80,27 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
+    private Socket initSocket() {
+
+        Socket socket = null;
+
+        try {
+            socket = IO.socket(SERVER_URL);
+            socket.connect();
+
+            socket.on("host", becomeHost);
+            socket.on("start", startTimer);
+            socket.on("reSyncTime", syncTime);
+            socket.on("syncFlags", syncFlags);
+            socket.on("syncTeam", syncTeam);
+
+        } catch (URISyntaxException ex) {
+            Log.e(TAG, ex.getMessage());
+        }
+
+        return socket;
+    }
+
     /* ------------------------- GETTERS ------------------------- */
 
     @Override
