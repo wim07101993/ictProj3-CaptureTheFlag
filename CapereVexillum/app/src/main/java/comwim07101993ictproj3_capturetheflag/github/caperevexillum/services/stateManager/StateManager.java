@@ -1,16 +1,21 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
@@ -33,16 +38,27 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
+    private static final String TAG = GameActivity.class.getSimpleName();
+
     private static final Map<StateManagerKey, Type> KEY_TYPE_MAP = new HashMap<StateManagerKey, Type>() {{
-        put(StateManagerKey.FLAGS, Flags.class);
-        //put(StateManagerKey.CURRENT_ACTIVITY, )
-        put(StateManagerKey.LOBBY_SETTINGS, LobbySettings.class);
-        put(StateManagerKey.USER_ID, String.class);
         put(StateManagerKey.TEAMS, new TypeToken<List<Team>>() {
         }.getType());
+
+        put(StateManagerKey.FLAGS, Flags.class);
+        put(StateManagerKey.LOBBY_SETTINGS, LobbySettings.class);
+        put(StateManagerKey.USER_ID, String.class);
         put(StateManagerKey.SCORE, long.class);
+        put(StateManagerKey.LOBBY_ID, String.class);
+        put(StateManagerKey.GAME_TIME, Float.class);
         put(StateManagerKey.GAME_STARTED, boolean.class);
     }};
+
+    private static final String SERVER_URL = "http://192.168.137.1:4040";
+    private static final boolean USE_SOCKET = true;
+    private static final int GAME_DURATION_IN_MINUTES = 30;
+
+
+    private final Socket socket = initSocket();
 
 
     /* --------------------------------------------------------------- */
@@ -56,6 +72,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
      */
     public StateManager(SharedPreferences sharedPreferences) {
         super(sharedPreferences);
+        initSocket();
     }
 
 
@@ -93,6 +110,10 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         }
 
         return value;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
 
