@@ -8,9 +8,6 @@
 >* [X] sprint 2
 >* [ ] sprint 3
 >* [ ] sprint 4
->* [ ] sprint 5
->* [ ] sprint 6
-
 
 ## Student
 
