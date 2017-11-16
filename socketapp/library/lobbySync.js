@@ -11,12 +11,6 @@ export default{
         console.log(lobby.teams);
         console.log("created lobby: " + lobby.name + " - " + lobby.password + " - " + lobby.time);
     },
-    emmit(lobby,emmitkey,emmitvalue){
-        let players = lobby.players;
-        players.forEach(function(player) {
-            player.socket.emmit(emmitkey,emmitvalue)
-        }, this);
-    },
 
     joinLobby(socket, lobbyName, lobbyPassword, playerName){
       let lobby = this.lobbies.filter((lobby)=>{return lobby.name==lobbyName});
@@ -26,12 +20,31 @@ export default{
         let team = lobby.teams[2];
         this.lobbies[lobby.id].addPlayer(playerName, team);
        
-        console.log("player "+name+" joined lobby "+lobby.id+":"+lobby.name);
-        console.log(this.lobbies[lobby.id].players);
+        console.log("player "+ name +" joined lobby "+ lobby.id +":"+ lobby.name);
       }
+    },
+
+    leaveLobby(lobbyID){
+    
     },
 
     distributePlayers(lobbyID){
         
+    },
+
+    getPlayers(lobbyID, socket){
+        // let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+
+        // if(lobby[0] != undefined){
+        //     socket.emit("getPlayersResult", JSON.stringify(lobby[0].players));
+        // }        
+    },
+
+    joinTeam(lobbyID, team){
+
+    },
+
+    startTime(lobbyID){
+
     }
 }

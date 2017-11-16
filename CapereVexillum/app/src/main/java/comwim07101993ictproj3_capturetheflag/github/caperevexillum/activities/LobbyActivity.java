@@ -7,10 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 
@@ -53,6 +57,7 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
         try{
             socket = IO.socket(GameActivity.SERVER_URL);
             socket.connect();
+            socket.on("getPlayersResult", getPlayersResult);
         }catch(URISyntaxException e){
             Log.d("LobbyActivity", e.getMessage());
         }
@@ -65,10 +70,12 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
         switch(id){
             case R.id.teamGreenJoinButton:
                 joinTeamOrange();
+                socket.emit("getPlayers", 0);
                 break;
 
             case R.id.teamOrangeJoinButton:
                 joinTeamGreen();
+                socket.emit("getPlayers", 0);
                 break;
 
             case R.id.startButton:
@@ -112,4 +119,15 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
             onBackPressed();
         }
     }
+
+    Emitter.Listener getPlayersResult = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            //TODO Sven of Nick: Fix this stuff
+//            String players = (String) args[0];
+//            Log.d("DINGES", players);
+//            Gson gson = new Gson();
+//            List<String> playerList = gson.fromJson(players, new TypeToken<List<String>> (){}.getType());
+        }
+    };
 }
