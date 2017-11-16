@@ -123,10 +123,11 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     Emitter.Listener getPlayersResult = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            String players = (String) args[0];
-            Log.d("DINGES", players);
-            Gson gson = new Gson();
-            List<String> playerList = gson.fromJson(players, new TypeToken<List<String>> (){}.getType());
+            //TODO Sven of Nick: Fix this stuff
+//            String players = (String) args[0];
+//            Log.d("DINGES", players);
+//            Gson gson = new Gson();
+//            List<String> playerList = gson.fromJson(players, new TypeToken<List<String>> (){}.getType());
         }
     };
 }
