@@ -12,11 +12,9 @@ const io = require('socket.io')(server, {
 //imports
 import timeClass from "./library/timesync"
 import flagsClass from "./library/flagsSync"
-import teamClass from "./library/teamSync"
 import lobbyClass from "./library/lobbySync"
 
-// add default teams
-teamClass.addStaticTeams();
+lobbyClass.createLobby("test", "test", 30);
 
 io.on('connection', function(socket){
     console.log("connected");
@@ -34,21 +32,15 @@ io.on('connection', function(socket){
     socket.on("addFlag",(flag)=> flagsClass.addFlag(io, socket, flag));
     socket.on("updateFlag",(flag)=> flagsClass.updateFlag(io, socket, flag));
     socket.on("removeFlag",(flag)=> flagsClass.removeFlag(io, socket, flag));
-
-    // teams
-    socket.on("askTeams",() => teamClass.askTeams(socket));
-    socket.on("addPlayer", (teamName, player) => teamClass.addPlayer(io, teamName, player));
-    socket.on("addTeam", (team) => teamClass.addTeam(io, team));
     }
     // lobby
-    socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(lobbyName, lobbyPassword, playerName));
+    socket.on("createLobby",(name,password,time)=> lobbyClass.createLobby(name, password, time));
+    socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(socket, lobbyName, lobbyPassword, playerName));
     socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
     socket.on("startLobby", (lobbyId) => {
       teamClass.distributePlayers(lobbies[lobbyId].players);
       timeClass.timeStart(io, socket, duration);
     });
-
-    socket.on("createLobby",(name,password,time)=> lobbyClass.createLobby(name, password, time);
 
 });
 
