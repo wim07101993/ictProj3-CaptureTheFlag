@@ -44,7 +44,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     static final int CATEGORY = 1;
     static  final  String TAG = QuizFragment.class.getSimpleName();
     final DataService dataService = new DataService(this.gameActivity);
-    //variabele van de klasse db_handler
+
     private View view;
     //lijst met buttons die getoond worden
     private List<Button> buttons;
@@ -57,6 +57,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private GameActivity gameActivity;
     private IBeacon currentBeacon;
     private List<Quiz> quizList;
+
     //layout settings
     LinearLayout linearLayout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -104,7 +105,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         question = (TextView) view.findViewById(R.id.questionTextView);
 
         //Eerste question afhalen
-        questionAndAnswer = quizList.get(0);
+        questionAndAnswer = quizList.get(count);
 
         //buttons toevoegen aan layout
         createButtons();
@@ -122,14 +123,11 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
             button.setGravity(Gravity.CENTER);
             button.setId(i);
             button.setLayoutParams(params);
-            //button.setSingleLine(true);
-            //button.setHeight((int    )"wrap_content");
             button.setOnClickListener(this);
 
             buttons.add(button);
             linearLayout.addView(button);
         }
-
     }
 
     //kijkt of de antwoorden juist zijn en returnt true or false
