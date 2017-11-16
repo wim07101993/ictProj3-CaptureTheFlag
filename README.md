@@ -4,8 +4,8 @@
 >https://trello.com/b/Yzqmv8Oh/ictproject
 ## Planning
 >* [X] sprint 0 onderzoek werk
->* [ ] sprint 1
->* [ ] sprint 2
+>* [X] sprint 1
+>* [X] sprint 2
 >* [ ] sprint 3
 >* [ ] sprint 4
 >* [ ] sprint 5
