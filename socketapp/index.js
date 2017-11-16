@@ -51,6 +51,9 @@ io.on('connection', function(socket){
     });
     socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
 
+    socket.on("joinTeamGreen", () => console.log("joinTeamGreen request"));
+    socket.on("joinTeamOrange", () => console.log("joinTeamOrange request"));
+
     socket.on("createLobby",(id,name,password,time)=>{
       
       let lobby={"id":id,"name":name,"password":password,"time":time,"players":[]};

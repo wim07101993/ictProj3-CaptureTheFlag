@@ -1,5 +1,6 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     Button joinTeamOrangeButton;
     Button startGameButton;
     Button leaveLobbyButton;
+    Boolean isHost = true;
 
     // Socket (to be replaced with socket in background service??)
     Socket socket;
@@ -39,6 +41,14 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
         joinTeamOrangeButton.setOnClickListener(this);
         startGameButton.setOnClickListener(this);
         leaveLobbyButton.setOnClickListener(this);
+
+        // Set startbutton visible for host
+        if (isHost){
+            startGameButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            startGameButton.setVisibility(View.INVISIBLE);
+        }
 
         try{
             socket = IO.socket(GameActivity.SERVER_URL);
@@ -74,20 +84,24 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
     private void joinTeamOrange() {
         if(socket != null){
             socket.emit("joinTeamOrange");
-            socket.disconnect();
         }
     }
 
     private void joinTeamGreen() {
         if(socket != null){
             socket.emit("joinTeamGreen");
-            socket.disconnect();
         }
     }
 
     private void startGame() {
-        //TODO Nick: verdeling overige spelers
-        //TODO Nick: connectie socket
+        // Start on socket
+        if(socket != null){
+            socket.emit("startlobby");
+            socket.disconnect();
+        }
+        // Start game activity
+        Intent i = new Intent(this, GameActivity.class);
+        startActivity(i);
     }
 
     private void leaveLobby() {
@@ -95,6 +109,8 @@ public class LobbyActivity extends AppCompatActivity implements View.OnClickList
         if(socket != null){
             socket.emit("disconnectFromLobby");
             socket.disconnect();
+            // TODO Sven: navigate elsewhere?
+            onBackPressed();
         }
     }
 }
