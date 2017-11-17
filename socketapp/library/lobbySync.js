@@ -56,7 +56,7 @@ export default{
               console.log(index);
               console.log("while(this.playersNoTeam.length > 0");
               console.log(this.playersOrange.length + " - " + this.playersGreen.length);
-            if (this.playersOrange.length <= this.playersGreen.length) {
+            if (this.playersOrange.length < this.playersGreen.length) {
               this.playersOrange.push(this.playersNoTeam[index]);
               for(var player of lobby[0].players) {
                 if (player.name == this.playersNoTeam[index].name) {
@@ -88,8 +88,18 @@ export default{
         }
     },
 
-    joinTeam(lobbyID, team){
-
+    joinTeam(lobbyID, team, playername, io){
+      let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+      if (lobby != undefined) {
+        let player = lobby.players.filter((player)=>{return player.name == playername});
+        if (player != undefined) {
+          let team = lobby.teams.filter((team)=>{return team.teamname == team});
+          if (team != undefined) {
+            player.team = team;
+            this.getPlayers(lobbyID, io);
+          }
+        }
+      }
     },
 
     startTime(lobbyID){

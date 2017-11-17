@@ -38,6 +38,7 @@ io.on('connection', function(socket){
     socket.on("createLobby",(name,password,time)=> lobbyClass.createLobby(name, password, time));
     socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(io, lobbyName, lobbyPassword, playerName));
     socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
+    socket.on("joinTeam", (lobbyID, team, playername) => lobbyClass.joinTeam(lobbyID, team, playername, io));
     socket.on("startLobby", (lobbyId) => {
       lobbyClass.distributePlayers(lobbyId, io);
       // lobbyClass.timeStart(io, socket, duration);
