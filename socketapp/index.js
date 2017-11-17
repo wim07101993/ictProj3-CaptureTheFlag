@@ -41,7 +41,7 @@ io.on('connection', function(socket){
     socket.on("joinTeam", (lobbyID, team, playername) => lobbyClass.joinTeam(lobbyID, team, playername, io));
     socket.on("startLobby", (lobbyId) => {
       lobbyClass.distributePlayers(lobbyId, io);
-      // lobbyClass.timeStart(io, socket, duration);
+      //lobbyClass.timeStart(io, socket, duration);
     });
     socket.on("getPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket));
 
