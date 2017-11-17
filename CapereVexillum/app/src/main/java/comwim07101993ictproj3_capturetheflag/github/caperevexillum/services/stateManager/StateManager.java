@@ -58,7 +58,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
     private static final boolean USE_SOCKET = true;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
-    private final Socket socket = initSocket();
+    private Socket socket;
 
 
     /* --------------------------------------------------------------- */
@@ -72,7 +72,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
      */
     public StateManager(SharedPreferences sharedPreferences) {
         super(sharedPreferences);
-        initSocket();
+        socket = initSocket();
     }
 
 

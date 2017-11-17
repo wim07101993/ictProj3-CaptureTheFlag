@@ -1,10 +1,10 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +27,8 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
+
+    protected static final String TAG = AbstractStateManager.class.getSimpleName();
 
     /**
      * savedValues is the SharedPreferences object used to save
@@ -166,7 +168,11 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
             if (json == null)
                 continue;
 
-            set(key, gson.fromJson(json, keyTypeMap.get(key).getType()));
+            try {
+                set(key, gson.fromJson(json, keyTypeMap.get(key).getType()));
+            } catch (Exception ex) {
+                Log.e(TAG, ex.getMessage());
+            }
         }
 
         return true;

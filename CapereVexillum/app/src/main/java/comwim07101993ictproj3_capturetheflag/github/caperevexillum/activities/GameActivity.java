@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.CooldownTimerFragment;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.ScoreFragment;
@@ -45,7 +46,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 
-public class GameActivity extends AppCompatActivity implements OnScanListener, IFlagSync {
+public class GameActivity extends AActivityWithStateManager implements OnScanListener, IFlagSync {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -59,9 +60,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
             ":4040";
     private static final boolean USE_BLUETOOTH = false;
     private static final int GAME_DURATION_IN_MINUTES = 30;
-
-    private StateManager stateManager;
-    private Socket socket;
 
     public float gameTime;
 
@@ -178,20 +176,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
         beaconScanner.start();
     }
 
-    private void initStateManager() {
-
-        if (stateManager == null) {
-            stateManager = new StateManager(
-                    PreferenceManager.getDefaultSharedPreferences(this)
-            );
-            stateManager.load();
-        }
-
-        if (stateManager.get(StateManagerKey.FLAGS) == null) {
-            stateManager.set(StateManagerKey.FLAGS, new Flags());
-        }
-    }
-
+    // TODO Safe remove this method
     private void initSocket() {
 
         try {
@@ -239,7 +224,6 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
 
         setContentView(R.layout.activity_main);
 
-        initStateManager();
         initSocket();
         initBeaconScanner();
         initView();
