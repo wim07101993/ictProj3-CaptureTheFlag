@@ -7,96 +7,124 @@ import java.util.Vector;
  */
 
 public class Team {
-    /* ---------------------------------------------------------- */
-    /* ------------------------- FIELDS ------------------------- */
-    /* ---------------------------------------------------------- */
-
-    /**
-     * Team identifier team green
-     */
     public static String TEAM_GREEN="green";
-    /**
-     * Team identifier team orange
-     */
     public static String TEAM_ORANGE ="orange";
-    /**
-     * Team identifier no team
-     */
     public static String NO_TEAM = "no team";
-    /**
-     * Property that keeps track of this Team's specific alignment
-     */
-    private String teamIdentifier;
 
-    /**
-     * Property that keeps track of the players in this Team
-     */
-    private Vector<User> Users = new Vector<User>();
-
-    /**
-     * Property that keeps track of this Team's score
-     */
+    private String teamname;
     private int score;
 
-    /* --------------------------------------------------------------- */
-    /* ------------------------- CONSTRUCTOR ------------------------- */
-    /* --------------------------------------------------------------- */
-
-    /**
-     * Constructor creates an instance of Team
-     * setting the teamIdentifier and score
-     *
-     * @param teamIdentifier identifier of the team
-     */
-    private Team(String teamIdentifier){
-        //Sets the teamIdentifier to what should be either green or orange
-        this.teamIdentifier = teamIdentifier;
-        //Sets the Team's score to zero
-        score = 0;
+    public Team(String teamname, int score){
+        this.teamname = teamname;
+        this.score = score;
     }
 
-    /* ----------------------------------------------------------- */
-    /* ------------------------- METHODS ------------------------- */
-    /* ----------------------------------------------------------- */
-
-    /**
-     * Method adds new players to the Users vector
-     *
-     * @param newUser
-     */
-    public void addUser(User newUser){
-        Users.add(newUser);
+    public String getTeamname() {
+        return teamname;
     }
 
-    /* ------------------------- GETTERS ------------------------- */
-
-    /**
-     * @return the Users vector
-     */
-    public Vector<User> getUsers() {
-        return Users;
+    public void setTeamname(String teamname) {
+        this.teamname = teamname;
     }
 
-    /**
-     * @return the Team's score
-     */
     public int getScore() {
         return score;
     }
 
-    /* ------------------------- SETTERS ------------------------- */
-
-    /**
-     * @param users the Users vector's content
-     */
-    public void setUsers(Vector<User> users) {
-        Users = users;
-    }
-
-    /**
-     * @param score the Team's score
-     */
     public void setScore(int score) {
         this.score = score;
     }
+
+    //    /* ---------------------------------------------------------- */
+//    /* ------------------------- FIELDS ------------------------- */
+//    /* ---------------------------------------------------------- */
+//
+//    /**
+//     * Team identifier team green
+//     */
+//    public static String TEAM_GREEN="green";
+//    /**
+//     * Team identifier team orange
+//     */
+//    public static String TEAM_ORANGE ="orange";
+//    /**
+//     * Team identifier no team
+//     */
+//    public static String NO_TEAM = "no team";
+//    /**
+//     * Property that keeps track of this Team's specific alignment
+//     */
+//    private String teamIdentifier;
+//
+//    /**
+//     * Property that keeps track of the players in this Team
+//     */
+//    private Vector<User> Users = new Vector<User>();
+//
+//    /**
+//     * Property that keeps track of this Team's score
+//     */
+//    private int score;
+//
+//    /* --------------------------------------------------------------- */
+//    /* ------------------------- CONSTRUCTOR ------------------------- */
+//    /* --------------------------------------------------------------- */
+//
+//    /**
+//     * Constructor creates an instance of Team
+//     * setting the teamIdentifier and score
+//     *
+//     * @param teamIdentifier identifier of the team
+//     */
+//    private Team(String teamIdentifier){
+//        //Sets the teamIdentifier to what should be either green or orange
+//        this.teamIdentifier = teamIdentifier;
+//        //Sets the Team's score to zero
+//        score = 0;
+//    }
+//
+//    /* ----------------------------------------------------------- */
+//    /* ------------------------- METHODS ------------------------- */
+//    /* ----------------------------------------------------------- */
+//
+//    /**
+//     * Method adds new players to the Users vector
+//     *
+//     * @param newUser
+//     */
+//    public void addUser(User newUser){
+//        Users.add(newUser);
+//    }
+//
+//    /* ------------------------- GETTERS ------------------------- */
+//
+//    /**
+//     * @return the Users vector
+//     */
+//    public Vector<User> getUsers() {
+//        return Users;
+//    }
+//
+//    /**
+//     * @return the Team's score
+//     */
+//    public int getScore() {
+//        return score;
+//    }
+//
+//    /* ------------------------- SETTERS ------------------------- */
+//
+//    /**
+//     * @param users the Users vector's content
+//     */
+//    public void setUsers(Vector<User> users) {
+//        Users = users;
+//    }
+//
+//    /**
+//     * @param score the Team's score
+//     */
+//    public void setScore(int score) {
+//        this.score = score;
+//    }
 }
