@@ -62,9 +62,6 @@ public class ScoreFragment extends Fragment {
         scoreBalanceProgressbar = (ProgressBar) view.findViewById(R.id.scoreVerhoudingProgressBar);
 
         stateManager = gameActivity.getStateManager();
-
-        setViewValues();
-
         return view;
     }
 
@@ -83,46 +80,7 @@ public class ScoreFragment extends Fragment {
         scoreBalanceProgressbar.setMax((int)(scoreGreen+scoreRed));
         scoreBalanceProgressbar.setProgress((int)scoreRed);
     }
-    private void setViewValues(){
-        try {
-            if (stateManager !=null){
-               /*
-               //todo statemanager include
-                flags = ((Flags)stateManager.get(StateManagerKey.FLAGS)).getRegisteredFlags();
-
-                for (Flag flag: flags) {
-
-                    switch (flag.getTeam()){
-                        case "red": amountFlagsRed++;
-                            break;
-                        case "green":  amountFlagsGreen++;
-                            break;
-                        default: break;
-                    }
-
-                }*/
-            }else {
-                scoreRed = 0.01;
-                scoreGreen = 0.01;
-                amountFlagsRed = 0;
-                amountFlagsGreen = 0;
-
-
-
-            }
-            scoreBalance= scoreGreen/(scoreGreen+scoreRed)*100.0;
-
-            amountFlagsRedView.setText(amountFlagsRed+"");
-            amountFlagsGreenView.setText(amountFlagsGreen+"");
-
-            scoreBalanceProgressbar.setProgress((int)scoreBalance);
-        }catch (Exception ex){
-
-        }
-
-
-
-    }
-
 }
+
+
 

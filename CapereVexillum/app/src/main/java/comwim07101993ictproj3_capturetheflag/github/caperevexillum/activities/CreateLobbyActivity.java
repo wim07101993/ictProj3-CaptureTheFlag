@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -25,11 +26,14 @@ public class CreateLobbyActivity extends AppCompatActivity  {
     String macAddress;
     Socket socket;
     int id=1;
+    TextView name,password,time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_lobby);
-        List<NetworkInterface> all = null;
+        name = (TextView)findViewById(R.id.lobbyNameTextview);
+        password = (TextView)findViewById(R.id.lobbyPasswordTextView);
+        time = (TextView)findViewById(R.id.lobbyTimeTextView);
         try{
             socket = IO.socket(GameActivity.SERVER_URL);
             socket.connect();
@@ -41,8 +45,11 @@ public class CreateLobbyActivity extends AppCompatActivity  {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                id++;
-                socket.emit("createLobby",id,"hakan","test",10);
+                String nameString=(String)name.getText();
+                String passwordString=(String)password.getText();
+                String timeString=(String)time.getText();
+
+                socket.emit("createLobby",macAddress,nameString,passwordString,timeString);
             }
         });
 

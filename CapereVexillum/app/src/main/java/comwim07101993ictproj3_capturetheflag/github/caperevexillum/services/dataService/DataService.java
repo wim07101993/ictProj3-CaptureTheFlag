@@ -28,6 +28,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.
 
 public class DataService implements IDataService {
     private static final String SERVER_IP = "10.0.2.2";
+    //Virtual devices connect to local host through 10.0.2.2
     private static final String API_URL = "http://10.0.2.2:8000/api/v1/";
     private static final String GET_ALL = "GET/Vragen";
     private static final String GET_RANDOM = "GET/RandomVragen/";

@@ -53,7 +53,7 @@ public class GameActivity extends AppCompatActivity implements OnScanListener, I
 
     private static final String TAG = GameActivity.class.getSimpleName();
 
-    public static final String SERVER_URL = "http://192.168.137.1:4040";
+    public static final String SERVER_URL = "http://10.13.138.38:4040";
     private static final boolean USE_BLUETOOTH = false;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
