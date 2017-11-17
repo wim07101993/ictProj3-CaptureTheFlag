@@ -36,34 +36,46 @@ export default{
     distributePlayers(lobbyID, io){
       console.log("start");
         let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
-        if (Lobby[0] != undefined) {
-          for (var player in Lobby[0].players) {
-            if (player.team.teamName == "orange") {
-              playersOrange.push(player);
-              console.log(playersOrange);
+        if (lobby[0] != undefined) {
+          for (var player of lobby[0].players) {
+            if (player.team.teamname == "orange") {
+              this.playersOrange.push(player);
+              console.log(this.playersOrange);
             }
-            else if (player.team.teamName == "green") {
-              playersGreen.push(player);
-              console.log(playersGreen);
+            else if (player.team.teamname == "green") {
+              this.playersGreen.push(player);
+              console.log(this.playersGreen);
             }
-            else if (player.team.teamName == "no_team") {
-              playersNoTeam.push(player);
-              console.log(playersNoTeam);
+            else if (player.team.teamname == "no_team") {
+              this.playersNoTeam.push(player);
+              console.log(this.playersNoTeam);
             }
           }
           let index = 0;
-          while(playersNoTeam.length > 0) {
-            if (teamOrange.length <= teamGreen.length) {
-              playersOrange.push(playersNoTeam[index]);
-              for(var player in Lobby[0].players) {
-                if (player.name == playersNoTeam[index].name) {
-                  player.team.teamName = "orange";
-                  this.getPlayers(lobbyID, io);
+          while(index+1 <= this.playersNoTeam.length) {
+              console.log(index);
+              console.log("while(this.playersNoTeam.length > 0");
+              console.log(this.playersOrange.length + " - " + this.playersGreen.length);
+            if (this.playersOrange.length <= this.playersGreen.length) {
+              this.playersOrange.push(this.playersNoTeam[index]);
+              for(var player of lobby[0].players) {
+                if (player.name == this.playersNoTeam[index].name) {
+                  player.team.teamname = "orange";
                 }
               }
               index++;
+            }else{
+                this.playersGreen.push(this.playersNoTeam[index]);
+                for(var player of lobby[0].players) {
+                  if (player.name == this.playersNoTeam[index].name) {
+                    player.team.teamname = "green";
+                    
+                  }
+                }
+                index++;    
             }
           }
+          this.getPlayers(lobbyID, io);
         }
     },
 
