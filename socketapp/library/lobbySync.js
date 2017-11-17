@@ -4,7 +4,7 @@ export default{
     lobbies:[],
     playersOrange:[],
     playersGreen:[],
-    playersNoTeam[],
+    playersNoTeam:[],
     getLobbey(id){
         return this.lobbies.filter((lobby)=> {return lobby.id==(id)});
     },
