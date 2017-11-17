@@ -56,7 +56,7 @@ export default{
             if (teamOrange.length <= teamGreen.length) {
               playersOrange.push(playersNoTeam[index]);
               for(var player in Lobby[0].players) {
-                if (player.playerName == playersNoTeam[index].playerName) {
+                if (player.name == playersNoTeam[index].name) {
                   player.team.teamName = "orange";
                   this.getPlayers(lobbyID, io);
                 }
