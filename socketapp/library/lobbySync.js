@@ -52,7 +52,7 @@ export default{
             }
           }
           let index = 0;
-          while(index+1 <= this.playersNoTeam.length) {
+          while(index < this.playersNoTeam.length) {
               console.log(index);
               console.log("while(this.playersNoTeam.length > 0");
               console.log(this.playersOrange.length + " - " + this.playersGreen.length);
@@ -61,6 +61,7 @@ export default{
               for(var player of lobby[0].players) {
                 if (player.name == this.playersNoTeam[index].name) {
                   player.team.teamname = "orange";
+                  console.log("team orange " + player);
                 }
               }
               index++;
@@ -69,10 +70,10 @@ export default{
                 for(var player of lobby[0].players) {
                   if (player.name == this.playersNoTeam[index].name) {
                     player.team.teamname = "green";
-                    
+                    console.log("team green " + player);
                   }
                 }
-                index++;    
+                index++;
             }
           }
           this.getPlayers(lobbyID, io);
