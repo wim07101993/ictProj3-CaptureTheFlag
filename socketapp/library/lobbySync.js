@@ -33,7 +33,7 @@ export default{
 
     },
 
-    distributePlayers(lobbyID){
+    distributePlayers(lobbyID, io){
       console.log("start");
         let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
         if (Lobby[0] != undefined) {
@@ -58,6 +58,7 @@ export default{
               for(var player in Lobby[0].players) {
                 if (player.playerName == playersNoTeam[index].playerName) {
                   player.team.teamName = "orange";
+                  this.getPlayers(lobbyID, io);
                 }
               }
               index++;

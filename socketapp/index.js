@@ -39,7 +39,7 @@ io.on('connection', function(socket){
     socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(io, lobbyName, lobbyPassword, playerName));
     socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
     socket.on("startLobby", (lobbyId) => {
-      lobbyClass.distributePlayers(lobbyId);
+      lobbyClass.distributePlayers(lobbyId, io);
       // lobbyClass.timeStart(io, socket, duration);
     });
     socket.on("getPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket));
