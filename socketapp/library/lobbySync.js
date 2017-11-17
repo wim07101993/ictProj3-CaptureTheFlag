@@ -1,4 +1,5 @@
 import Lobby from '../db/lobby';
+import timeClass from './timeSync';
 
 export default{
     lobbies:[],
@@ -89,7 +90,17 @@ export default{
       }
     },
 
-    startTime(lobbyID){
+    setupTime(lobbyID, duration){
+      let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+      if (lobby != undefined) {
+        lobby[0].time = duration;
+      }
+    },
 
+    startTime(lobbyID, io, socket){
+      let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+      if (lobby != undefined) {
+        timeClass.timeStart(io, socket, lobby[0].time);
+      }
     },
 }

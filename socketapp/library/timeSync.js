@@ -1,6 +1,6 @@
 export default {
     time:0,
-    start: function(io,socket,time){
+    timeStart(io,socket,time){
 
         this.time = time;
         

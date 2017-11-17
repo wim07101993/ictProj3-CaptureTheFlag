@@ -20,10 +20,11 @@ io.on('connection', function(socket){
     console.log("connected");
     let hasLobby=true;
     let lobbyId=null;
+    let duration = 10;
 
     // time
     if(hasLobby==true){
-    socket.on("timeStart",(duration) => timeClass.start(io,socket,duration));
+    socket.on("timeSetup",(lobbyID, duration) => {lobbyClass.setupTime(lobbyId, duration)});
     socket.on("syncTime",(timeLeft) => timeClass.syncTime(io,socket,timeLeft))
     socket.on("askTime",() => timeClass.askTime(io,socket));
 
@@ -41,7 +42,7 @@ io.on('connection', function(socket){
     socket.on("joinTeam", (lobbyID, team, playername) => lobbyClass.joinTeam(lobbyID, team, playername, io));
     socket.on("startLobby", (lobbyId) => {
       lobbyClass.distributePlayers(lobbyId, io);
-      //lobbyClass.timeStart(io, socket, duration);
+      lobbyClass.startTime(lobbyId, io, socket);
     });
     socket.on("getPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket));
 
