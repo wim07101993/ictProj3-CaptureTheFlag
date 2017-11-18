@@ -45,9 +45,9 @@ public class CreateLobbyActivity extends AppCompatActivity  {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nameString=(String)name.getText();
-                String passwordString=(String)password.getText();
-                String timeString=(String)time.getText();
+                String nameString=name.getText()+"";
+                String passwordString=password.getText()+"";
+                String timeString=time.getText()+"";
 
                 socket.emit("createLobby",macAddress,nameString,passwordString,timeString);
             }
