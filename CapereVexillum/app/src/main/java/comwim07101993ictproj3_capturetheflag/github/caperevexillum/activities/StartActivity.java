@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 
@@ -17,6 +18,8 @@ public class StartActivity extends AActivityWithStateManager {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+
 
         joinButton = (Button) findViewById(R.id.joinLobbyButton);
         createButton = (Button) findViewById(R.id.createLobbyButton);

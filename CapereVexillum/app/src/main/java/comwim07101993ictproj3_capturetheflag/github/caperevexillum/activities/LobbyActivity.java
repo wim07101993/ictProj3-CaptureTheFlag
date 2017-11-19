@@ -1,27 +1,23 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Player;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 public class LobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
     // UI elements
@@ -35,7 +31,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     private ListView noTeamListView;
 
     // Socket (to be replaced with socket in background service??)
-    private Socket socket;
+
 
     private Boolean isHost = true;
     private String playerName = "";
@@ -75,15 +71,12 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
             startGameButton.setVisibility(View.INVISIBLE);
         }
 
-        try {
-            socket = IO.socket(GameActivity.SERVER_URL);
-            socket.connect();
+
+            socket.on("timeStart", startGameActivityListener);
             socket.on("getPlayersResult", getPlayersResult);
             socket.on("leaveLobby", leaveLobby);
             socket.emit("getPlayers", lobbyID);
-        } catch (URISyntaxException e) {
-            Log.d("LobbyActivity", e.getMessage());
-        }
+
     }
 
     @Override
@@ -122,13 +115,10 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     }
 
     private void startGame() {
-        // Start on socket
-        if (socket != null) {
+
+
             socket.emit("startLobby", lobbyID);
-        }
-        // Start game activity
-        //Intent i = new Intent(this, GameActivity.class);
-        //startActivity(i);
+
     }
 
     private void leaveLobby() {
@@ -187,6 +177,19 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                     leaveLobby();
                 }
             });
+        }
+    };
+    public LobbyActivity parent;
+    public void startGameActivity(){
+
+        Intent i = new Intent(this, GameActivity.class);
+        startActivity(i);
+
+    }
+    Emitter.Listener startGameActivityListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            startGameActivity();
         }
     };
 

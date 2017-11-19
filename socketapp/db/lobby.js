@@ -1,5 +1,6 @@
 import Team from '../db/team';
 
+
 export default class Lobby {
     id = "";
     name = "";
@@ -26,8 +27,15 @@ export default class Lobby {
         this.teams.push(teamNo);
     }
 
-    addPlayer(name, team){
-        this.players.push({"name":name,"team":team});
+    addPlayer(name, team, socket){
+        this.players.push({"name":name,"team":team, socket});
+    }
+    emit(notifier,data){
+         
+        for(let player of this.players){
+         
+            player.socket.emit(notifier,data)
+        }
     }
 
 }

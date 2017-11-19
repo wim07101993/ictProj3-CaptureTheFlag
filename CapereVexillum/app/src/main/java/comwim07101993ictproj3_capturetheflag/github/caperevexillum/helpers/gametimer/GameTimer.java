@@ -51,9 +51,9 @@ public class GameTimer {
             DateEndTime = endDownCal.getTime();
         }
     };
-    public GameTimer(TextView textViewTime, float timeInMinutes, Socket socket){
+    public GameTimer(TextView textViewTime, float timeInMinutes){
         timer = new Timer();
-        socket.on("reSyncTime" , syncTime);
+
         Calendar endDownCal = Calendar.getInstance();
         int seconds = (int)(timeInMinutes- (int)timeInMinutes)*100;
         endDownCal.add(Calendar.SECOND,seconds);

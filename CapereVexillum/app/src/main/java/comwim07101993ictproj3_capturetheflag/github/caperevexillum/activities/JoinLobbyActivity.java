@@ -18,13 +18,14 @@ import java.net.URISyntaxException;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 public class JoinLobbyActivity extends AppCompatActivity implements View.OnClickListener {
 
     private StateManager stateManager;
-    private Socket socket;
+
 
     private EditText lobbyNameEditText;
     private EditText lobbyPasswordEditText;
@@ -47,35 +48,22 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
         lobbyPasswordEditText = (EditText) findViewById(R.id.lobby_password_edittext);
         playerNameEditText = (EditText) findViewById(R.id.playername_edittext);
 
-        // TODO Sven: get statemanager from previous activity via Intent
-//        initStateManager();
+
     }
 
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.join_lobby_button) {
             if (view.getId() == R.id.join_lobby_button) {
-                // If socket doesn't exist, get socket and connect to it
-                if (socket == null) {
-                    try {
-                        socket = IO.socket(GameActivity.SERVER_URL);
-                        socket.connect();
-                    } catch (URISyntaxException e) {
-                        Log.d("JoinLobbyActivity", e.getMessage());
-                    }
-                }
 
-                if (socket != null) {
-                    socket.connect();
-                    // Send join lobby request to server
-                    socket.emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText().toString());
+                SocketInstance.socket().emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText().toString());
                     // Link listener for server answer
-                    socket.on("getLobbyId", getLobbyId);
-                    socket.on("playerNameUnavailable", playerNameUnavailable);
-                    socket.on("lobbyNotFound", lobbyNotFound);
+                SocketInstance.socket().on("getLobbyId", getLobbyId);
+                SocketInstance.socket().on("playerNameUnavailable", playerNameUnavailable);
+                SocketInstance.socket().on("lobbyNotFound", lobbyNotFound);
 
                     goToLobby = new Intent(this, LobbyActivity.class);
-                }
+
             }
         }
     }

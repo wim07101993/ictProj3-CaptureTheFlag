@@ -2,6 +2,7 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +30,8 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener 
     private Button YesButton;
     private Button NoButton;
 
-    // Instance statemanager
     private GameActivity gameActivity;
-    private StateManager stateManager;
+
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
@@ -53,12 +53,12 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       /* Vibrator v = (Vibrator) gameActivity.getSystemService(Context.VIBRATOR_SERVICE);
+        gameActivity = (GameActivity) getActivity();
+        Vibrator v = (Vibrator) gameActivity.getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(1000);
 
         // declarate the statemanager
-        gameActivity = (GameActivity) getActivity();
-        stateManager = gameActivity.getStateManager();
+
 
         // declarate the buttons on the fragment
         YesButton = (Button) getView().findViewById(R.id.YesButton);
@@ -66,7 +66,7 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener 
 
         // set the listener for the buttons
         YesButton.setOnClickListener(this);
-        NoButton.setOnClickListener(this);*/
+        NoButton.setOnClickListener(this);
     }
 
     /**

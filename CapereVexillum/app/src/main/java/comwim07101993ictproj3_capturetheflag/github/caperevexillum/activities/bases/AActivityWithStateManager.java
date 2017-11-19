@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.github.nkzawa.socketio.client.Socket;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
@@ -22,7 +23,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     /* ---------------------------------------------------------- */
 
     protected StateManager stateManager;
-    protected Socket socket;
+    protected Socket socket ;
 
 
     /* ----------------------------------------------------------- */

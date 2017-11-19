@@ -1,19 +1,23 @@
 import Lobby from '../db/lobby';
 import timeClass from './timeSync';
-
+const JSON = require('circular-json');
 export default{
     lobbies:[],
     playersOrange:[],
     playersGreen:[],
     playersNoTeam:[],
+    parent:null,
     getLobbey(id){
         return this.lobbies.filter((lobby)=> {return lobby.id==(id)});
     },
-
+    addParent(parent){
+      this.parent=parent;
+    },
     createLobby(io, socket, playerName, lobbyName , password, time){
       let lobbyFilter = this.lobbies.filter((lobby) => {return lobby.name == lobbyName});
-
+      console.log("creating lobby:"+lobbyName)
       if(lobbyFilter[0] != undefined){
+        console.log("failed creating:"+lobbyName)
         socket.emit("lobbyExists");
       }else{
         let lobby = new Lobby(this.lobbies.length, lobbyName, password, time, []);
@@ -26,7 +30,7 @@ export default{
     joinLobby(io, socket, lobbyName, lobbyPassword, playerName){
       let lobby = this.lobbies.filter((lobby)=>{return (lobby.name==lobbyName && lobby.password == lobbyPassword)});
       let resultLobby = lobby[0];
-
+      this.parent.lobby=resultLobby;
       if(resultLobby != undefined){
         let playerFilter = resultLobby.players.filter((player)=>{return player.name == playerName});
         let resultPlayer = playerFilter[0];
@@ -35,7 +39,7 @@ export default{
           socket.emit("playerNameUnavailable");
           console.log("playerNameUnavailable");
         }else{
-          resultLobby.addPlayer(playerName, resultLobby.teams[2]);
+          resultLobby.addPlayer(playerName, resultLobby.teams[2],socket);
           socket.emit("getLobbyId", resultLobby.id);
           this.getPlayers(resultLobby.id, io);
         }
@@ -97,7 +101,8 @@ export default{
         let lobby = this.lobbies[lobbyID];
         
         if(lobby != undefined){
-          io.emit("getPlayersResult", JSON.stringify(lobby.players));
+          
+          lobby.emit("getPlayersResult", JSON.stringify(lobby.players));
         }
     },
 
@@ -130,12 +135,18 @@ export default{
     startTime(lobbyID, io, socket){
       let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
       if (lobby != undefined) {
+        console.log(io);
         timeClass.timeStart(io, socket, lobby[0].time);
       }
     },
 
     hostLeft(io, lobbyID){
-      io.emit("leaveLobby");
-      this.lobbies.splice(lobbyID, 1);
+      let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+      if (lobby != undefined) {
+        lobby=lobby[0];
+        lobby.emit("leaveLobby","");
+        this.lobbies.splice(lobbyID, 1);
+      }
+      
     }
 }

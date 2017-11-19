@@ -19,6 +19,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Primi
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
@@ -52,6 +53,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         put(StateManagerKey.GAME_TIME, new State(Float.class, true, false));
         put(StateManagerKey.GAME_STARTED, new State(boolean.class, true, true));
         put(StateManagerKey.MY_FLAGS, new State(Flags.class, true, true));
+        put(StateManagerKey.GAME_ENDED,new State(Boolean.class,true,false));
     }};
 
     private static final String SERVER_URL = "http://192.168.137.1:4040";
@@ -82,11 +84,10 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
 
     private Socket initSocket() {
 
-        Socket socket = null;
 
+        Socket socket = null;
         try {
-            socket = IO.socket(SERVER_URL);
-            socket.connect();
+            socket = SocketInstance.socket();
 
             socket.on("host", becomeHost);
             socket.on("start", startTimer);
@@ -94,7 +95,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
             socket.on("syncFlags", syncFlags);
             socket.on("syncTeam", syncTeam);
 
-        } catch (URISyntaxException ex) {
+        } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
         }
 
@@ -127,13 +128,13 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         switch (key) {
 
             case FLAGS:
-                socket.emit("askFlags");
+                //socket.emit("askFlags");
                 break;
             case TEAMS:
-                socket.emit("askTeams");
+                //socket.emit("askTeams");
                 break;
             case GAME_TIME:
-                socket.emit("askTime");
+                //socket.emit("askTime");
                 break;
             case LOBBY_SETTINGS:
                 break;
@@ -158,9 +159,8 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
 
         return value;
     }
-
     public Socket getSocket() {
-        return socket;
+       return socket;
     }
 
 
@@ -197,7 +197,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
             case LOBBY_ID:
                 break;
             case GAME_STARTED:
-                socket.emit("start", GAME_DURATION_IN_MINUTES);
+             //   socket.emit("start", GAME_DURATION_IN_MINUTES);
                 break;
             case GAME_TIME:
                 break;
@@ -244,6 +244,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         @Override
         public void call(Object... args) {
             currentState.put(StateManagerKey.FLAGS, args[0]);
+
             notifyListeners(StateManagerKey.FLAGS);
         }
     };
@@ -255,4 +256,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
             notifyListeners(StateManagerKey.TEAMS);
         }
     };
+
+
+
 }

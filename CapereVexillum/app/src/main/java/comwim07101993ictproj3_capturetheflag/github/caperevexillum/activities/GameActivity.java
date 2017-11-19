@@ -176,18 +176,10 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     // TODO Safe remove this method
     private void initSocket() {
 
-        try {
-            socket = IO.socket(SERVER_URL);
-            socket.connect();
-        } catch (URISyntaxException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
 
-        socket.on("host", becomeHost);
-        socket.on("start", startTimer);
 
         Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
-        flags.addSocket(socket);
+
         flags.setSyncFlagListener(this);
 
         stateManager.set(StateManagerKey.FLAGS, flags);
@@ -221,13 +213,22 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
         setContentView(R.layout.activity_main);
 
-        initSocket();
-        initBeaconScanner();
-        initView();
-        initGameTimer();
+        try{
+            initBeaconScanner();
+        }catch(Exception ex){
+            Log.e("gameActivity",ex.getMessage());
+        }
 
-        showQuiz(false);
-        makeAppFullScreen();
+        try{
+            initView();
+            //initGameTimer();
+        }catch(Exception ex){
+            Log.e("gameActivity",ex.getMessage());
+        }
+
+
+        //showQuiz(false);
+       // makeAppFullScreen();
     }
 
     @Override
@@ -270,8 +271,9 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     @Override
     public void onBeaconFound(IBeacon beacon) {
         if (!((boolean) stateManager.get(StateManagerKey.GAME_STARTED)) ||
-                beacon.getRelativeRssi() > SIGNAL_THRESHOLD ||
-                quizLayout.getVisibility() == View.VISIBLE) {
+                beacon.getRelativeRssi() > SIGNAL_THRESHOLD
+                ||quizLayout.getVisibility() == View.VISIBLE
+                ) {
             return;
         }
 
@@ -280,7 +282,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         if (flag != null && flag.getCooldown()) {
             showCooldownFragment(flag.getCooldownTime());
         } else {
-            hideCooldownFragment();
+            //hideCooldownFragment();
             beaconWithCooldown = false;
             quizFragment.setCurrentBeacon(beacon);
 
@@ -318,7 +320,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     Emitter.Listener becomeHost = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            socket.emit("start", GAME_DURATION_IN_MINUTES);
+
         }
     };
     Emitter.Listener startTimer = new Emitter.Listener() {
@@ -334,7 +336,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     Handler startTimeHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            GameTimer gameTimer = new GameTimer(timerTextView, gameTime, socket);
+            GameTimer gameTimer = new GameTimer(timerTextView, gameTime);
             gameTimer.addListener(new OnGameTimerFinishedListener() {
                 @Override
                 public void OnGameTimerFinished() {

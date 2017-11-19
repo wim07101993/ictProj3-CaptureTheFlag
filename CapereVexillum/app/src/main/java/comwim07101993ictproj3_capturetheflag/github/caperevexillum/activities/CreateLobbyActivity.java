@@ -1,33 +1,28 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.HardwareInfo;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.IStateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.OnStateChangedListener;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
-public class CreateLobbyActivity extends AppCompatActivity  implements View.OnClickListener {
-    private Socket socket;
+public class CreateLobbyActivity extends AActivityWithStateManager implements View.OnClickListener  {
+
     private EditText lobbyNameEditText, passwordEditText, timeEditText, playerNameEditText;
     private Button createLobbyButton;
     private String playerName, lobbyName, lobbyPassword, lobbyTime;
@@ -47,6 +42,7 @@ public class CreateLobbyActivity extends AppCompatActivity  implements View.OnCl
         createLobbyButton.setOnClickListener(this);
 
         goToLobby = new Intent(this, LobbyActivity.class);
+
     }
 
 
@@ -56,25 +52,10 @@ public class CreateLobbyActivity extends AppCompatActivity  implements View.OnCl
         lobbyName = lobbyNameEditText.getText().toString();
         lobbyPassword = passwordEditText.getText().toString();
         lobbyTime = timeEditText.getText().toString();
-
-        if(socket == null){
-            try{
-                socket = IO.socket(GameActivity.SERVER_URL);
-                socket.on("lobbyExists", lobbyExists);
-                socket.on("getLobbyId", getLobbyId);
-                socket.on("playerNameUnavailable", playerNameUnavailable);
-                socket.connect();
-            }catch(URISyntaxException e){
-                Log.d("createlobbyactivity", e.getMessage());
-            }
-        }
-
-        if(!socket.connected()){
-            socket.connect();
-            socket.emit("createLobby", playerName, lobbyName, lobbyPassword, lobbyTime);
-        }else if(socket != null && socket.connected()){
-            socket.emit("createLobby", playerName, lobbyName, lobbyPassword, lobbyTime);
-        }
+        socket.on("lobbyExists", lobbyExists);
+        socket.on("getLobbyId", getLobbyId);
+        socket.on("playerNameUnavailable", playerNameUnavailable);
+        socket.emit("createLobby", playerName, lobbyName, lobbyPassword, lobbyTime);
     }
 
     Emitter.Listener lobbyExists = new Emitter.Listener() {
@@ -114,6 +95,8 @@ public class CreateLobbyActivity extends AppCompatActivity  implements View.OnCl
             }
         });
     }
+
+
 }
 
 

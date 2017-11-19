@@ -43,7 +43,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     /* ---------------------------------------------------------- */
     static final int CATEGORY = 1;
     static  final  String TAG = QuizFragment.class.getSimpleName();
-    final DataService dataService = new DataService(this.gameActivity);
+     DataService dataService;
 
     private View view;
     //lijst met buttons die getoond worden
@@ -76,6 +76,9 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
+
+        dataService=new DataService(gameActivity);
+        setup();
         stateManager = gameActivity.getStateManager();
 
     }
@@ -87,6 +90,11 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(List<Quiz> response) {
                 quizList = response;
+                //Eerste question afhalen
+                count = 0;
+                questionAndAnswer = quizList.get(count);
+                //buttons toevoegen aan layout
+                createButtons();
             }
         };
         final Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -95,20 +103,16 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
                 Log.e(TAG, error.getMessage());
             }
         };
-        dataService.getRandomQuestions(listener,errorListener,3,CATEGORY);
         //TODO Georges statemanager.GET(MY_FLAGS);
-        count = 0;
+
         buttons = new ArrayList<>();
         nQuestions = 3;
         linearLayout = view.findViewById(R.id.buttonsLayout);;
 
         question = (TextView) view.findViewById(R.id.questionTextView);
+        dataService.getRandomQuestions(listener,errorListener,3,CATEGORY);
 
-        //Eerste question afhalen
-        questionAndAnswer = quizList.get(count);
 
-        //buttons toevoegen aan layout
-        createButtons();
     }
 
     //buttons dynamish aanmaken aan de hand van aantal antwoorden
@@ -187,7 +191,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_quiz,container,false);
-        setup();
+        //setup();
 
         return view;
     }
