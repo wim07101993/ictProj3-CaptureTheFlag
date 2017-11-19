@@ -14,8 +14,6 @@ import timeClass from "./library/timesync"
 import flagsClass from "./library/flagsSync"
 import lobbyClass from "./library/lobbySync"
 
-lobbyClass.createLobby("test", "test", 30);
-
 io.on('connection', function(socket){
     console.log("connected");
     let hasLobby=true;
@@ -36,9 +34,10 @@ io.on('connection', function(socket){
     }
 
     // lobby
-    socket.on("createLobby",(name,password,time)=> lobbyClass.createLobby(name, password, time));
-    socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(io, lobbyName, lobbyPassword, playerName));
-    socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
+    socket.on("createLobby",(playerName, lobbyName, password, time)=> lobbyClass.createLobby(io, socket, playerName, lobbyName, password, time));
+    socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(io, socket, lobbyName, lobbyPassword, playerName));
+    socket.on("leaveLobby", (lobbyId, playerName) => lobbyClass.leaveLobby(lobbyId, playerName, io));
+    socket.on("hostLeft", (lobbyID) => lobbyClass.hostLeft(io, lobbyID));
     socket.on("joinTeam", (lobbyID, team, playername) => lobbyClass.joinTeam(lobbyID, team, playername, io));
     socket.on("startLobby", (lobbyId) => {
       lobbyClass.distributePlayers(lobbyId, io);
