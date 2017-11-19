@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -31,6 +32,9 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
 
     private Button joinLobbyButton;
 
+    private int lobbyID;
+    private Intent goToLobby;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,49 +54,70 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.join_lobby_button) {
-            // If socket doesn't exist, get socket and connect to it
-            if (socket == null) {
-                try {
-                    socket = IO.socket(GameActivity.SERVER_URL);
-                    socket.connect();
-                } catch (URISyntaxException e) {
-                    Log.d("JoinLobbyActivity", e.getMessage());
+            if (view.getId() == R.id.join_lobby_button) {
+                // If socket doesn't exist, get socket and connect to it
+                if (socket == null) {
+                    try {
+                        socket = IO.socket(GameActivity.SERVER_URL);
+                        socket.connect();
+                    } catch (URISyntaxException e) {
+                        Log.d("JoinLobbyActivity", e.getMessage());
+                    }
                 }
-            }
 
-            if (socket != null) {
-                // Send join lobby request to server
-                socket.emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText());
-                // Link listener for server answer
-                socket.on("getLobbyId", getLobbyId);
+                if (socket != null) {
+                    socket.connect();
+                    // Send join lobby request to server
+                    socket.emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText().toString());
+                    // Link listener for server answer
+                    socket.on("getLobbyId", getLobbyId);
+                    socket.on("playerNameUnavailable", playerNameUnavailable);
+                    socket.on("lobbyNotFound", lobbyNotFound);
 
-                // Navigate to lobby
-                Intent goToLobby = new Intent(this, LobbyActivity.class);
-                startActivity(goToLobby);
-//                stateManager.set(StateManagerKey.IS_HOST, false);
+                    goToLobby = new Intent(this, LobbyActivity.class);
+                }
             }
         }
     }
+        Emitter.Listener getLobbyId = new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                lobbyID = (int) args[0];
 
-    Emitter.Listener getLobbyId = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            String lobbyID = (String) args[0];
-//            stateManager.set(StateManagerKey.LOBBY_ID, lobbyID);
-        }
-    };
+                Log.d("JOINLOBBY", String.valueOf(lobbyID));
 
-//    private void initStateManager() {
-//
-//        if (stateManager == null) {
-//            stateManager = new StateManager(
-//                    PreferenceManager.getDefaultSharedPreferences(this)
-//            );
-//            stateManager.load();
-//        }
-//
-//        if (stateManager.get(StateManagerKey.FLAGS) == null) {
-//            stateManager.set(StateManagerKey.FLAGS, new Flags());
-//        }
-//    }
+                // Navigate to lobby
+                goToLobby.putExtra("playerName", playerNameEditText.getText().toString());
+                goToLobby.putExtra("isHost", false);
+                goToLobby.putExtra("lobbyID", lobbyID);
+                startActivity(goToLobby);
+            }
+        };
+
+        Emitter.Listener lobbyNotFound = new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // TODO Sven: show toast
+                showToast("Lobby not found");
+            }
+        };
+
+        Emitter.Listener playerNameUnavailable = new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // TODO Sven: show toast
+                showToast("Player name unavailable");
+            }
+        };
+
+    private void showToast(final String msg) {
+        final JoinLobbyActivity context = this;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

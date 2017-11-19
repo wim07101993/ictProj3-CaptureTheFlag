@@ -54,10 +54,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     private static final String TAG = GameActivity.class.getSimpleName();
 
-    public static final String SERVER_URL = "http://192.168.0.152" +
-            "" +
-            "" +
-            ":4040";
+    public static final String SERVER_URL = "http://192.168.0.152:4040";
     private static final boolean USE_BLUETOOTH = false;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 

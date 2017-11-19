@@ -1,16 +1,20 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
+import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,36 +24,65 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Player
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 public class LobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
+    // UI elements
+    private Button joinTeamGreenButton;
+    private Button joinTeamOrangeButton;
+    private Button startGameButton;
+    private Button leaveLobbyButton;
 
     private ListView teamOrangeListView;
     private ListView teamGreenListView;
     private ListView noTeamListView;
 
+    // Socket (to be replaced with socket in background service??)
+    private Socket socket;
+
     private Boolean isHost = true;
+    private String playerName = "";
+    private int lobbyID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
+        // Link UI with code
+        joinTeamGreenButton = (Button) findViewById(R.id.teamGreenJoinButton);
+        joinTeamOrangeButton = (Button) findViewById(R.id.teamOrangeJoinButton);
+        startGameButton = (Button) findViewById(R.id.startButton);
+        leaveLobbyButton = (Button) findViewById(R.id.leaveButton);
+
         teamOrangeListView = (ListView) findViewById(R.id.teamOrangeListView);
         teamGreenListView = (ListView) findViewById(R.id.teamGreenListView);
         noTeamListView = (ListView) findViewById(R.id.noTeamListView);
 
         // Set listener for all buttons to this
-        findViewById(R.id.teamGreenJoinButton).setOnClickListener(this);
-        findViewById(R.id.teamOrangeJoinButton).setOnClickListener(this);
-        findViewById(R.id.leaveButton).setOnClickListener(this);
-
-        Button startGameButton = (Button) findViewById(R.id.startButton);
+        joinTeamGreenButton.setOnClickListener(this);
+        joinTeamOrangeButton.setOnClickListener(this);
         startGameButton.setOnClickListener(this);
+        leaveLobbyButton.setOnClickListener(this);
+
+        // Get data from intent
+        Bundle extras = getIntent().getExtras();
+        playerName = extras.getString("playerName", "PLAYERNAME_NOT_FOUND");
+        isHost = extras.getBoolean("isHost", false);
+        lobbyID = extras.getInt("lobbyID", 0);
 
         // Set startbutton visible for host
-        isHost = (boolean) stateManager.get(StateManagerKey.IS_HOST);
         if (isHost) {
             startGameButton.setVisibility(View.VISIBLE);
         } else {
             startGameButton.setVisibility(View.INVISIBLE);
+        }
+
+        try {
+            socket = IO.socket(GameActivity.SERVER_URL);
+            socket.connect();
+            socket.on("getPlayersResult", getPlayersResult);
+            socket.on("leaveLobby", leaveLobby);
+            socket.emit("getPlayers", lobbyID);
+        } catch (URISyntaxException e) {
+            Log.d("LobbyActivity", e.getMessage());
         }
     }
 
@@ -59,11 +92,11 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
         switch (id) {
             case R.id.teamGreenJoinButton:
-                joinTeamOrange();
+                joinTeamGreen();
                 break;
 
             case R.id.teamOrangeJoinButton:
-                joinTeamGreen();
+                joinTeamOrange();
                 break;
 
             case R.id.startButton:
@@ -77,22 +110,21 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     }
 
     private void joinTeamOrange() {
-        Socket socket = getSocket();
         if (socket != null) {
-            socket.emit("joinTeamOrange");
+            socket.emit("joinTeam", lobbyID, "orange", playerName);
         }
     }
 
     private void joinTeamGreen() {
         if (socket != null) {
-            socket.emit("joinTeamGreen");
+            socket.emit("joinTeam", lobbyID, "green", playerName);
         }
     }
 
     private void startGame() {
         // Start on socket
         if (socket != null) {
-            socket.emit("startLobby", 0);
+            socket.emit("startLobby", lobbyID);
         }
         // Start game activity
         //Intent i = new Intent(this, GameActivity.class);
@@ -101,18 +133,20 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
     private void leaveLobby() {
         // Tell the socket that we're leaving this lobby
-        if (socket != null) {
-            socket.emit("disconnectFromLobby");
+        if (socket != null && socket.connected()) {
+            if (isHost) {
+                socket.emit("hostLeft", lobbyID);
+            } else {
+                socket.emit("leaveLobby", lobbyID, playerName);
+            }
             socket.disconnect();
-            // TODO Sven: navigate elsewhere?
-            onBackPressed();
         }
+        finish();
     }
 
     Emitter.Listener getPlayersResult = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            //TODO Sven of Nick: Fix this stuff
             String players = (String) args[0];
             Gson gson = new Gson();
             ArrayList<Player> playerList = gson.fromJson(players, new TypeToken<ArrayList<Player>>() {
@@ -140,6 +174,19 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
             updateUI(noTeam, noTeamListView);
             updateUI(teamOrange, teamOrangeListView);
             updateUI(teamGreen, teamGreenListView);
+        }
+    };
+
+    Emitter.Listener leaveLobby = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            showToast("Host left, leaving lobby...");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    leaveLobby();
+                }
+            });
         }
     };
 
@@ -171,5 +218,15 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
             }
         });
 
+    }
+
+    private void showToast(final String msg) {
+        final LobbyActivity context = this;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
