@@ -30,7 +30,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     /* ----------------------------------------------------------- */
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initStateManager();
     }

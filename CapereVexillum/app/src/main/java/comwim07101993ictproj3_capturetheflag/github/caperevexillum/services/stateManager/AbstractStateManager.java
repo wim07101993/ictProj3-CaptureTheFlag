@@ -137,7 +137,14 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
         // add the current state to the saved values
         for (TKey key : currentState.keySet()) {
             Object value = get(key);
+            try{
             editor.putString(key.toString(), gson.toJson(value));
+            }
+            catch (Exception ex){
+
+                Log.e("State Add",ex.getMessage());
+                Log.e("Key name",key.toString());
+            }
         }
 
         // apply changes.
