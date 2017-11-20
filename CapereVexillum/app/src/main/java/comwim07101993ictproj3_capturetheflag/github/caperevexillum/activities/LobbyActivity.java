@@ -139,8 +139,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         public void call(Object... args) {
             String players = (String) args[0];
             Gson gson = new Gson();
-            ArrayList<Player> playerList = gson.fromJson(players, new TypeToken<ArrayList<Player>>() {
-            }.getType());
+            ArrayList<Player> playerList = gson.fromJson(players, new TypeToken<ArrayList<Player>>() {}.getType());
 
             ArrayList<Player> teamGreen = new ArrayList<Player>();
             ArrayList<Player> teamOrange = new ArrayList<Player>();

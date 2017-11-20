@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.
 public class DataService implements IDataService {
     private static final String SERVER_IP = "10.0.2.2";
     //Virtual devices connect to local host through 10.0.2.2
-    private static final String API_URL = "http://9ebd015f.ngrok.io/api/v1/";
+    private static final String API_URL = "http://33bb0bc5.ngrok.io/api/v1/";
     private static final String GET_ALL = "GET/Vragen";
     private static final String GET_RANDOM = "GET/RandomVragen/";
 
@@ -63,12 +64,29 @@ public class DataService implements IDataService {
 
                     // convert response to sheet music and notify listener
 
-                    Type collectionType = new TypeToken<List<Quiz>>() {
+                    Type collectionType = new TypeToken<List<Question>>() {
                     }.getType();
                     //String nlResponse= response.replace("Question","vraag");
                     //nlResponse=nlResponse.replace("Answers","totaalAntwoorden");
                     String nlResponse="[{'vraag':'Dit is vraag 1','fouteAntwoorden':['fout','fout','fout'],juisteAntwoord:'juist'},{'vraag':'Dit is vraag 3','fouteAntwoorden':['fout','fout','fout'],juisteAntwoord:'juist'},{'vraag':'Dit is vraag 2','fouteAntwoorden':['fout','fout','fout'],juisteAntwoord:'juist'}]";
-                    List<Quiz> boxSearchCollection = new Gson().fromJson(nlResponse, collectionType);
+                    List<Question> questions = new Gson().fromJson(response,collectionType);
+                    List<Quiz> boxSearchCollection=new ArrayList<Quiz>();
+                    for(Question question : questions){
+                        ArrayList<String> fouteVragen=new ArrayList<>();
+                        String juisteVraag=null;
+                        for(Answers answer : question.Answers){
+                            if(answer.Correct.equals("1")){
+                                juisteVraag=answer.Answer;}
+                            else{
+                                fouteVragen.add(answer.Answer);}
+                        }
+
+                        Quiz vraag = new Quiz(question.Question,fouteVragen,juisteVraag);
+                        boxSearchCollection.add(vraag);
+                    }
+
+                    //List<Quiz> boxSearchCollection = new Gson().fromJson(response, collectionType);
+
 
                     listener.onResponse(boxSearchCollection);
                 } catch (Exception e) {
@@ -103,3 +121,4 @@ public class DataService implements IDataService {
     }
 
 }
+

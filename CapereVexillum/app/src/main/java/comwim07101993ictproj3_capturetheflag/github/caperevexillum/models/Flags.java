@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
 
 
 /**
@@ -36,7 +37,7 @@ public class Flags {
      * Constructor creates an instance of Flags
      * no properties need to be set
      */
-    Socket socket;
+
 
     public Flags() {/*Nothing to do here*/}
 
@@ -74,7 +75,7 @@ public class Flags {
     public void addFlag(Flag flag) {
 
         registeredFlags.add(flag);
-
+        Socket socket =SocketInstance.socket();
         String sendValue = gson.toJson(flag).toString();
         socket.emit("addFlag", sendValue);
     }
@@ -155,8 +156,8 @@ public class Flags {
         this.flagSyncListener = flagSyncListener;
     }
 
-    public void addSocket(Socket socket) {
-        this.socket = socket;
+    public void startSocketListener() {
+        Socket socket = SocketInstance.socket();
         socket.on("syncFlags", resyncFlags);
     }
 }

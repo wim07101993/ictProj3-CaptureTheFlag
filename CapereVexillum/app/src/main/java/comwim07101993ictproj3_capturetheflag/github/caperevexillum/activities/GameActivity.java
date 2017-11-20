@@ -54,8 +54,8 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     private static final String TAG = GameActivity.class.getSimpleName();
 
-    public static final String SERVER_URL = "http://192.168.0.152:4040";
-    private static final boolean USE_BLUETOOTH = false;
+
+    private static final boolean USE_BLUETOOTH = true;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
     public float gameTime;
@@ -195,13 +195,13 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
         cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
     }
-
+    GameTimer gt;
     private void initGameTimer() {
 
         timerTextView = (TextView) findViewById(R.id.txtTimeLeft);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(cooldownFragment);
-
+        gt=new GameTimer(timerTextView,30);
         ft.commit();
     }
 
@@ -221,7 +221,8 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
         try{
             initView();
-            //initGameTimer();
+            initGameTimer();
+
         }catch(Exception ex){
             Log.e("gameActivity",ex.getMessage());
         }
@@ -270,10 +271,11 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     @Override
     public void onBeaconFound(IBeacon beacon) {
-        if (!((boolean) stateManager.get(StateManagerKey.GAME_STARTED)) ||
+
+        if ((
                 beacon.getRelativeRssi() > SIGNAL_THRESHOLD
                 ||quizLayout.getVisibility() == View.VISIBLE
-                ) {
+                )) {
             return;
         }
 

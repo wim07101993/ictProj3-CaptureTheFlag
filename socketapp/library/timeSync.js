@@ -13,6 +13,7 @@ export default {
         socket.emit("start",this.time+"");
     },
     syncTime:function(io,socket,parent){
+        console.log("syncTime");
         io.emit("reSyncTime",parent.time-0.4+"");
 
     },

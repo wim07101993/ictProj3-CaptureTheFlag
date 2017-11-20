@@ -5,4 +5,8 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dat
  */
 
 public class Answers {
+    public String Answer_ID;
+    public String Answer;
+    public String Question_ID;
+    public String Correct;
 }

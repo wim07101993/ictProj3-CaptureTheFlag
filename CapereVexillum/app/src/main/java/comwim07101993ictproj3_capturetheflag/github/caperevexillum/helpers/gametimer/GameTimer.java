@@ -16,6 +16,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
+
 /**
  * Created by Sanli on 12/10/2017.
  */
@@ -33,6 +35,8 @@ public class GameTimer {
     private String stringTimeOver;
     TextView textViewTime;
     OnGameTimerFinishedListener onGameTimerFinishedListener;
+    Socket socket;
+    private boolean timerStarted=false;
     /***
      *
      * @param textViewTime Give a textview that wich will have the timer as text
@@ -49,6 +53,7 @@ public class GameTimer {
             endDownCal.add(Calendar.SECOND,seconds);
             endDownCal.add(Calendar.MINUTE,timeInMinutes);
             DateEndTime = endDownCal.getTime();
+            timerStarted=true;
         }
     };
     public GameTimer(TextView textViewTime, float timeInMinutes){
@@ -58,8 +63,9 @@ public class GameTimer {
         int seconds = (int)(timeInMinutes- (int)timeInMinutes)*100;
         endDownCal.add(Calendar.SECOND,seconds);
         endDownCal.add(Calendar.MINUTE,(int)timeInMinutes);
-
-
+        socket =SocketInstance.socket();
+        socket.on("reSyncTime",syncTime);
+        socket.emit("syncTime","");
         DateEndTime = endDownCal.getTime();
 
 
@@ -109,8 +115,8 @@ public class GameTimer {
             }
             String strDate = sdf.format(dateTimeOver);
             String tijdOver =strDate;
-
-            textViewTime.setText(tijdOver);
+            if(timerStarted)
+                textViewTime.setText(tijdOver);
         }
     };
 
