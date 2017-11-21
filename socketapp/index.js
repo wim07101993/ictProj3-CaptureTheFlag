@@ -14,7 +14,7 @@ const io = require('socket.io')(server, {
 import timeClass from "./library/timesync"
 import flagsClass from "./library/flagsSync"
 import lobbyClass from "./library/lobbySync"
-
+let lobbies = [];
 io.on('connection', function(socket){
     console.log("connected");
     
@@ -22,7 +22,7 @@ io.on('connection', function(socket){
     
     let lobbyId=null;
     let duration = 10;
-    lobbyClass.addParent(this);
+    lobbyClass.addParent(this,lobbies);
     // time
     if(lobby!=null){
     socket.on("timeSetup",(lobbyID, duration) => {lobbyClass.setupTime(lobbyId, duration)});
@@ -34,6 +34,8 @@ io.on('connection', function(socket){
     socket.on("addFlag",(flag)=> flagsClass.addFlag(lobby, socket, flag));
     socket.on("updateFlag",(flag)=> flagsClass.updateFlag(lobby, socket, flag));
     socket.on("removeFlag",(flag)=> flagsClass.removeFlag(lobby, socket, flag));
+    //lobbyflagsync
+    socket.on("captureFlag",(flag)=>lobby.captureFlags(flag));
     }
 
     // lobby

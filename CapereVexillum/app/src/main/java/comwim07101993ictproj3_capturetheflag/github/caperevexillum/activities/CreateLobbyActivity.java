@@ -61,7 +61,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
     Emitter.Listener lobbyExists = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            showToast("Lobby name exists");
+          //  showToast("Lobby name exists");
         }
     };
 
@@ -82,18 +82,18 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
     Emitter.Listener playerNameUnavailable = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            showToast("Player name unavailable");
+           // showToast("Player name unavailable");
         }
     };
 
     private void showToast(final String msg){
         final CreateLobbyActivity context = this;
-        runOnUiThread(new Runnable() {
+       /* runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
 
