@@ -1,3 +1,5 @@
+import Lobby from "../db/lobby";
+
 export default {
     time:0,
     timeStart(io,socket,time){
@@ -29,6 +31,7 @@ export default {
             console.log("")
             parent.time = Math.floor(parent.time)-0.015;
             console.log("timeafter:", parent.time);
+            io.emit("endTimer", "Hier komt de score");
             return;
         }
         if((seconds%10)==0){

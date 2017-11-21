@@ -59,6 +59,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
     public float gameTime;
+    public String endLabel;
 
     // TODO Someone: create in socket
     public static final String MY_TEAM = Team.TEAM_ORANGE;
@@ -227,6 +228,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             Log.e("gameActivity",ex.getMessage());
         }
 
+        socket.on("endTimer", startEndActivityListener);
 
         //showQuiz(false);
        // makeAppFullScreen();
@@ -335,6 +337,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
         }
     };
+
     Handler startTimeHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -352,4 +355,18 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             });
         }
     };
+    Emitter.Listener startEndActivityListener = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            stateManager.set(StateManagerKey.GAME_ENDED, true);
+            endLabel = (String) args[0];
+            startEndActivity(endLabel);
+        }
+    };
+
+    private void startEndActivity(String msg) {
+        Intent i = new Intent(this, EndActivity.class);
+        i.putExtra("winnertext", msg);
+        startActivity(i);
+    }
 }
