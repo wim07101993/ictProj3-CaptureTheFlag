@@ -2,6 +2,7 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
@@ -137,15 +139,18 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     Emitter.Listener getPlayersResult = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            try{
             String players = (String) args[0];
             Gson gson = new Gson();
-            ArrayList<Player> playerList = gson.fromJson(players, new TypeToken<ArrayList<Player>>() {}.getType());
+            List<Player> playerList=gson.fromJson(players, new TypeToken<List<Player>>(){}.getType());
+            //List<Object> playerList=gson.fromJson(players, List.class);
 
             ArrayList<Player> teamGreen = new ArrayList<Player>();
             ArrayList<Player> teamOrange = new ArrayList<Player>();
             ArrayList<Player> noTeam = new ArrayList<Player>();
 
             for (Player p : playerList) {
+
                 switch (p.getTeam().getTeamname()) {
                     case "orange":
                         teamOrange.add(p);
@@ -163,6 +168,9 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
             updateUI(noTeam, noTeamListView);
             updateUI(teamOrange, teamOrangeListView);
             updateUI(teamGreen, teamGreenListView);
+            }catch(Exception ex){
+                Log.d("LobbyActivity","can't parse response");
+            }
         }
     };
 
@@ -227,7 +235,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
             }
         });
     }

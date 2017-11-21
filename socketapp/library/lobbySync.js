@@ -1,6 +1,6 @@
 import Lobby from '../db/lobby';
 import timeClass from './timeSync';
-const JSON = require('circular-json');
+//const JSON = require('circular-json');
 export default{
     lobbies:[],
     playersOrange:[],
@@ -10,8 +10,9 @@ export default{
     getLobbey(id){
         return this.lobbies.filter((lobby)=> {return lobby.id==(id)});
     },
-    addParent(parent){
+    addParent(parent,lobbies){
       this.parent=parent;
+      this.lobbies=lobbies;
     },
     createLobby(io, socket, playerName, lobbyName , password, time){
       let lobbyFilter = this.lobbies.filter((lobby) => {return lobby.name == lobbyName});
@@ -39,7 +40,7 @@ export default{
           socket.emit("playerNameUnavailable");
           console.log("playerNameUnavailable");
         }else{
-          resultLobby.addPlayer(playerName, resultLobby.teams[2],socket);
+          resultLobby.addPlayer(playerName,socket);
           socket.emit("getLobbyId", resultLobby.id);
           this.getPlayers(resultLobby.id, io);
         }
@@ -108,7 +109,7 @@ export default{
 
     joinTeam(lobbyID, team, playername, io){
       let lobby = this.lobbies[lobbyID];
-      
+      console.log(playername);
       let playerFilter = lobby.players.filter((player) => {return player.name == playername});
       
       if(playerFilter[0] != undefined){
@@ -118,6 +119,8 @@ export default{
 
         if(teamFilter[0] != undefined){
           let team = teamFilter[0];
+          let teamJson= JSON.stringify(team);
+
           player.team = team;
           console.log(player.name + " joined team " + player.team.teamname);
           this.getPlayers(lobbyID, io);

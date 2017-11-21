@@ -1,6 +1,7 @@
 import Flag from "../db/flags"
 export default {
     flags:[],
+    counter:null,
     askFlags: function(socket){
         socket.emit("syncFlags",JSON.stringify(this.flags));
     },
@@ -12,6 +13,9 @@ export default {
         console.log("flags captured");
         console.log(JSON.stringify(this.flags));
         io.emit("syncFlags",JSON.stringify(this.flags));
+        if(counter==null){
+            counter=setInterval(5000,this.syncflags)
+        }
     },
     updateFlag: function(io, socket, flag){
         let inputFlag = JSON.parse(flag);

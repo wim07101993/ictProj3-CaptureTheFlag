@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.Variables;
 
 /**
  * Created by georg on 16/11/2017.
@@ -44,7 +45,7 @@ public class DataService implements IDataService {
     public void getRandomQuestions(final Response.Listener<List<Quiz>> listener, final Response.ErrorListener errorListener, int amount, int category) {
 
 
-        createRequestAndAddToQueue(listener, errorListener, API_URL+GET_RANDOM+category+"/"+ amount);
+        createRequestAndAddToQueue(listener, errorListener, Variables.REST_API+GET_RANDOM+category+"/"+ amount);
     }
 
     private void createRequestAndAddToQueue(final Response.Listener<List<Quiz>> listener,

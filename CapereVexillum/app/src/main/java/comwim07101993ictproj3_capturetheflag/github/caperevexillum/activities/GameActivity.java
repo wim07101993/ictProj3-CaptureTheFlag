@@ -159,7 +159,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     @SuppressWarnings("UnusedAssignment")
     private void initBeaconScanner() {
 
-        if (USE_BLUETOOTH && BeaconScanner.isBLESupported(this)) {
+        if (false&&USE_BLUETOOTH && BeaconScanner.isBLESupported(this)) {
             BeaconScanner.askPermissions(this);
             BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (bluetoothManager != null) {

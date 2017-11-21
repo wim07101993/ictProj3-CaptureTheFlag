@@ -22,20 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.DbHandler;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataService;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuizFragment extends Fragment implements View.OnClickListener {
+public class QuizFragment2 extends Fragment implements View.OnClickListener {
 
 
     /* ---------------------------------------------------------- */
@@ -43,7 +43,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     /* ---------------------------------------------------------- */
     static final int CATEGORY = 1;
     static  final  String TAG = QuizFragment.class.getSimpleName();
-
+    DataService dataService;
 
     private View view;
     //lijst met buttons die getoond worden
@@ -64,7 +64,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
     private StateManager stateManager;
-    private DbHandler db_handler;
+
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -76,25 +76,43 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
+
+        dataService=new DataService(gameActivity);
+        setup();
         stateManager = gameActivity.getStateManager();
 
     }
 
     public void setup(){
         //locale waarde
-        db_handler = new DbHandler();
-        count = 0;
+
+        final Response.Listener  listener = new Response.Listener<List<Quiz>>() {
+            @Override
+            public void onResponse(List<Quiz> response) {
+                quizList = response;
+                //Eerste question afhalen
+                count = 0;
+                questionAndAnswer = quizList.get(count);
+                //buttons toevoegen aan layout
+                createButtons();
+            }
+        };
+        final Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, error.getMessage());
+            }
+        };
+        //TODO Georges statemanager.GET(MY_FLAGS);
+
         buttons = new ArrayList<>();
         nQuestions = 3;
         linearLayout = view.findViewById(R.id.buttonsLayout);;
 
         question = (TextView) view.findViewById(R.id.questionTextView);
+        dataService.getRandomQuestions(listener,errorListener,3,CATEGORY);
 
-        //Eerste question afhalen
-        questionAndAnswer = db_handler.getVraagEnAntwoord(count);
 
-        //buttons toevoegen aan layout
-        createButtons();
     }
 
     //buttons dynamish aanmaken aan de hand van aantal antwoorden
@@ -173,7 +191,8 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_quiz,container,false);
-        setup();
+        //setup();
+
         return view;
     }
 

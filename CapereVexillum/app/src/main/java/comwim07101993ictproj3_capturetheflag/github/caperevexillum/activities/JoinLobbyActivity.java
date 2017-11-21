@@ -86,7 +86,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void call(Object... args) {
                 // TODO Sven: show toast
-                showToast("Lobby not found");
+               // showToast("Lobby not found");
             }
         };
 
@@ -94,7 +94,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void call(Object... args) {
                 // TODO Sven: show toast
-                showToast("Player name unavailable");
+                //showToast("Player name unavailable");
             }
         };
 

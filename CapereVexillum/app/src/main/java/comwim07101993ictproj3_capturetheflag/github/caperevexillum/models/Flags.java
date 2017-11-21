@@ -77,7 +77,7 @@ public class Flags {
         registeredFlags.add(flag);
         Socket socket =SocketInstance.socket();
         String sendValue = gson.toJson(flag).toString();
-        socket.emit("addFlag", sendValue);
+        socket.emit("captureFlag", sendValue);
     }
 
     /**
