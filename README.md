@@ -6,7 +6,7 @@
 >* [X] sprint 0 onderzoek werk
 >* [X] sprint 1
 >* [X] sprint 2
->* [ ] sprint 3
+>* [X] sprint 3
 >* [ ] sprint 4
 
 ## Student
