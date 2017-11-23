@@ -1,6 +1,5 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,8 +14,6 @@ public class EndActivity extends AActivityWithStateManager implements View.OnCli
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
-
-    private StateManager stateManager;
 
     private Button leave;
     private Button restart;
