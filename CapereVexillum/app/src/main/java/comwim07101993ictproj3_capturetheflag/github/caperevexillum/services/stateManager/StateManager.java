@@ -54,6 +54,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         put(StateManagerKey.GAME_STARTED, new State(boolean.class, true, true));
         put(StateManagerKey.MY_FLAGS, new State(Flags.class, true, true));
         put(StateManagerKey.GAME_ENDED,new State(Boolean.class,true,false));
+        put(StateManagerKey.PLAYER_NAME,new State(String.class, true, true));
     }};
 
     private static final String SERVER_URL = "http://192.168.137.1:4040";
@@ -148,6 +149,8 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
                 break;
             case IS_HOST:
                 break;
+            case PLAYER_NAME:
+                break;
         }
 
         Object value = currentState.get(key);
@@ -202,6 +205,8 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
             case GAME_TIME:
                 break;
             case IS_HOST:
+                break;
+            case PLAYER_NAME:
                 break;
         }
 

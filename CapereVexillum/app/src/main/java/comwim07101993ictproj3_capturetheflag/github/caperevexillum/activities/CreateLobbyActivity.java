@@ -24,6 +24,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 
 public class CreateLobbyActivity extends AActivityWithStateManager implements View.OnClickListener  {
 
+    private StateManager stateManager;
+
     private EditText lobbyNameEditText, passwordEditText, timeEditText, playerNameEditText;
     private Button createLobbyButton;
     private String playerName, lobbyName, lobbyPassword, lobbyTime;
@@ -80,6 +82,11 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
             goToLobby.putExtra("playerName", playerName);
             goToLobby.putExtra("isHost", true);
             goToLobby.putExtra("lobbyID", lobbyID);
+
+            stateManager.set(StateManagerKey.PLAYER_NAME, playerName);
+            stateManager.set(StateManagerKey.IS_HOST, true);
+            stateManager.set(StateManagerKey.LOBBY_ID, lobbyID);
+
             startActivity(goToLobby);
         }
     };

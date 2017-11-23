@@ -78,6 +78,11 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
                 goToLobby.putExtra("playerName", playerNameEditText.getText().toString());
                 goToLobby.putExtra("isHost", false);
                 goToLobby.putExtra("lobbyID", lobbyID);
+
+                stateManager.set(StateManagerKey.PLAYER_NAME, playerNameEditText.getText().toString());
+                stateManager.set(StateManagerKey.IS_HOST, false);
+                stateManager.set(StateManagerKey.LOBBY_ID, lobbyID);
+
                 startActivity(goToLobby);
             }
         };
