@@ -11,26 +11,30 @@
 |
 */
 
+Route::get('/',"VragenController@ShowVragen")->middleware('auth');
+
 Route::group(['prefix' => '/vragen'], function() {
 
-    Route::get('/',"VragenController@ShowVragen");
+    Route::get('/',"VragenController@ShowVragen")->middleware('auth');
 
-    Route::post('/edit',"VragenController@UpdateVraag");
+    Route::post('/edit',"VragenController@UpdateVraag")->middleware('auth');
     
-    Route::get('/delete/{Question_ID}',"VragenController@DeleteVraag");
+    Route::get('/delete/{Question_ID}',"VragenController@DeleteVraag")->middleware('auth');
     
-    Route::post('/add', "VragenController@AddVraag");
+    Route::post('/add', "VragenController@AddVraag")->middleware('auth');
     
 });
 
 Route::group(['prefix' => '/antwoorden'], function() {
         
-    Route::get('/{Question_ID}',"VragenController@ShowAntwoorden");
+    Route::get('/{Question_ID}',"VragenController@ShowAntwoorden")->middleware('auth');
         
-    Route::post('/edit', "VragenController@UpdateAntwoord");
+    Route::post('/edit', "VragenController@UpdateAntwoord")->middleware('auth');
     
-    Route::get('/delete/{Answer_ID}',"VragenController@DeleteAntwoord");
+    Route::get('/delete/{Answer_ID}',"VragenController@DeleteAntwoord")->middleware('auth');
     
-    Route::post('/add', "VragenController@AddAntwoord");
+    Route::post('/add', "VragenController@AddAntwoord")->middleware('auth');
         
 });
+
+Auth::routes();

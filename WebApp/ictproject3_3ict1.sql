@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 23 nov 2017 om 00:57
+-- Gegenereerd op: 23 nov 2017 om 15:18
 -- Serverversie: 10.1.28-MariaDB
 -- PHP-versie: 7.1.11
 
@@ -40,10 +40,9 @@ CREATE TABLE `answer` (
 --
 
 INSERT INTO `answer` (`Answer_ID`, `Answer`, `Question_ID`, `Correct`) VALUES
-(1, 'Angst voor Sinterklaas', 1, 0),
-(2, 'Angst voor kleine ruimtes.', 1, 1),
+(1, 'Angst voor Sinterklaas.', 1, 1),
 (4, 'Ja', 2, 1),
-(5, 'Neen.', 2, 0);
+(5, 'Neen', 2, 0);
 
 -- --------------------------------------------------------
 
@@ -68,6 +67,18 @@ INSERT INTO `category` (`Category_ID`, `Name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Tabelstructuur voor tabel `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tabelstructuur voor tabel `question`
 --
 
@@ -81,8 +92,9 @@ CREATE TABLE `question` (
 --
 
 INSERT INTO `question` (`Question_ID`, `Question`) VALUES
-(1, 'Wat is Claustrofobie?'),
-(2, 'Is dit een Test?');
+(1, 'Wat is Claustrofobie'),
+(2, 'Is dit een Test?'),
+(3, 'Test?');
 
 -- --------------------------------------------------------
 
@@ -104,6 +116,29 @@ INSERT INTO `question_per_category` (`Question_Per_Category_ID`, `Question_ID`, 
 (1, 1, 1),
 (2, 1, 2);
 
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Gegevens worden geëxporteerd voor tabel `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Michiel', 'michiel.vanbergen@hotmail.com', '$2y$10$SDR13aSbBEZI2CjBq8y7s.nHJCXsCsNziFTusUhkAkMw07k6yfAF.', '9PdqMzzZyubX1MLT9tSNPOYaTq6Gxt5jhe51smvjUWkbWTRVrNkLN1WY3Ago', '2017-11-23 11:00:48', '2017-11-23 11:00:48');
+
 --
 -- Indexen voor geëxporteerde tabellen
 --
@@ -122,6 +157,12 @@ ALTER TABLE `category`
   ADD PRIMARY KEY (`Category_ID`);
 
 --
+-- Indexen voor tabel `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexen voor tabel `question`
 --
 ALTER TABLE `question`
@@ -134,6 +175,12 @@ ALTER TABLE `question_per_category`
   ADD PRIMARY KEY (`Question_Per_Category_ID`),
   ADD KEY `Kolom 2` (`Question_ID`),
   ADD KEY `Kolom 3` (`Category_ID`);
+
+--
+-- Indexen voor tabel `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT voor geëxporteerde tabellen
@@ -152,16 +199,28 @@ ALTER TABLE `category`
   MODIFY `Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT voor een tabel `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT voor een tabel `question`
 --
 ALTER TABLE `question`
-  MODIFY `Question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT voor een tabel `question_per_category`
 --
 ALTER TABLE `question_per_category`
   MODIFY `Question_Per_Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT voor een tabel `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Beperkingen voor geëxporteerde tabellen
