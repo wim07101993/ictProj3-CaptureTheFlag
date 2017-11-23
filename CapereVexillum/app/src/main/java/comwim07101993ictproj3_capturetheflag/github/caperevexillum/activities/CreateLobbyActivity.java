@@ -24,6 +24,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 
 public class CreateLobbyActivity extends AActivityWithStateManager implements View.OnClickListener  {
 
+
     private EditText lobbyNameEditText, passwordEditText, timeEditText, playerNameEditText;
     private Button createLobbyButton;
     private String playerName, lobbyName, lobbyPassword, lobbyTime;
@@ -55,6 +56,9 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         lobbyName = lobbyNameEditText.getText().toString();
         lobbyPassword = passwordEditText.getText().toString();
         lobbyTime = timeEditText.getText().toString();
+        stateManager.set(StateManagerKey.PLAYER_NAME, playerName);
+        stateManager.set(StateManagerKey.IS_HOST, true);
+        stateManager.set(StateManagerKey.LOBBY_ID, 0);
         socket.on("lobbyExists", lobbyExists);
         socket.on("getLobbyId", getLobbyId);
         socket.on("playerNameUnavailable", playerNameUnavailable);
@@ -74,7 +78,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
             // navigate
            // String test = (String) args[0];
             Intent goToLobby;
-            int lobbyID = (int) args[0];
+            Integer lobbyID = (Integer) args[0];
             goToLobby = new Intent(CreateLobbyActivity.this, LobbyActivity.class);
             // Navigate to lobby
             goToLobby.putExtra("playerName", playerName);
