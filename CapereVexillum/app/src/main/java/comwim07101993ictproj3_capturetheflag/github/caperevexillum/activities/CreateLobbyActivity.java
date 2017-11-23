@@ -3,6 +3,7 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,13 +42,15 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         createLobbyButton = (Button)findViewById(R.id.createLobby);
         createLobbyButton.setOnClickListener(this);
 
-        goToLobby = new Intent(this, LobbyActivity.class);
+
 
     }
 
 
     @Override
     public void onClick(View view) {
+        socket = SocketInstance.restartSocket();
+        goToLobby = new Intent(this, LobbyActivity.class);
         playerName = playerNameEditText.getText().toString();
         lobbyName = lobbyNameEditText.getText().toString();
         lobbyPassword = passwordEditText.getText().toString();
@@ -61,7 +64,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
     Emitter.Listener lobbyExists = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-          //  showToast("Lobby name exists");
+            showToast("Lobby name exists");
         }
     };
 
@@ -69,6 +72,8 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         @Override
         public void call(Object... args) {
             // navigate
+           // String test = (String) args[0];
+
             int lobbyID = (int) args[0];
 
             // Navigate to lobby
@@ -82,18 +87,23 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
     Emitter.Listener playerNameUnavailable = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-           // showToast("Player name unavailable");
+            showToast("Player name unavailable");
         }
     };
 
     private void showToast(final String msg){
         final CreateLobbyActivity context = this;
-       /* runOnUiThread(new Runnable() {
+
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
-               // Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                try {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                }catch(Exception ex){
+                    Log.d("Create lobby","error showing toast");
+                }
             }
-        });*/
+        });
     }
 
 

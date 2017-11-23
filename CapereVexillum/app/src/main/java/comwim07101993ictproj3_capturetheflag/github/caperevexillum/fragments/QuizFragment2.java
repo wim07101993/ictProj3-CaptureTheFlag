@@ -178,7 +178,7 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
     public void capturedFlag(){
         Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(GameActivity.MY_TEAM);
+        flag.CaptureAndCooldown(gameActivity.MY_TEAM);
         ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
 
         count=0;

@@ -92,7 +92,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
             socket.on("host", becomeHost);
             socket.on("start", startTimer);
             socket.on("reSyncTime", syncTime);
-            socket.on("syncFlags", syncFlags);
+          //  socket.on("syncFlags", syncFlags);
             socket.on("syncTeam", syncTeam);
 
         } catch (Exception ex) {
@@ -245,7 +245,7 @@ public class StateManager extends AbstractStateManager<StateManagerKey> {
         public void call(Object... args) {
             currentState.put(StateManagerKey.FLAGS, args[0]);
 
-            notifyListeners(StateManagerKey.FLAGS);
+         //   notifyListeners(StateManagerKey.FLAGS);
         }
     };
 

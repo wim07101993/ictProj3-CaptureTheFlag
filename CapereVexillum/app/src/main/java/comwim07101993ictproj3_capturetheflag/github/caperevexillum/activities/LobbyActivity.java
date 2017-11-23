@@ -16,10 +16,12 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Player;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 
 public class LobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
     // UI elements
@@ -34,7 +36,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
     // Socket (to be replaced with socket in background service??)
 
-
+    public String myTeam= Team.NO_TEAM;
     private Boolean isHost = true;
     private String playerName = "";
     private int lobbyID = 0;
@@ -66,6 +68,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         isHost = extras.getBoolean("isHost", false);
         lobbyID = extras.getInt("lobbyID", 0);
 
+
         // Set startbutton visible for host
         if (isHost) {
             startGameButton.setVisibility(View.VISIBLE);
@@ -74,7 +77,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         }
 
 
-            socket.on("timeStart", startGameActivityListener);
+            socket.on("startGame", startGameActivityListener);
             socket.on("getPlayersResult", getPlayersResult);
             socket.on("leaveLobby", leaveLobby);
             socket.emit("getPlayers", lobbyID);
@@ -83,6 +86,13 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
     @Override
     public void onClick(View view) {
+        if(lobbyID==0)
+        {
+            Bundle extras = getIntent().getExtras();
+            playerName = extras.getString("playerName", "PLAYERNAME_NOT_FOUND");
+            isHost = extras.getBoolean("isHost", false);
+            lobbyID = extras.getInt("lobbyID", 0);
+        }
         int id = view.getId();
 
         switch (id) {
@@ -143,7 +153,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
             String players = (String) args[0];
             Gson gson = new Gson();
             List<Player> playerList=gson.fromJson(players, new TypeToken<List<Player>>(){}.getType());
-            //List<Object> playerList=gson.fromJson(players, List.class);
+
 
             ArrayList<Player> teamGreen = new ArrayList<Player>();
             ArrayList<Player> teamOrange = new ArrayList<Player>();
@@ -163,6 +173,9 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                     case "no_team":
                         noTeam.add(p);
                         break;
+                }
+                if(p.getName().equals(playerName)){
+                    myTeam=p.getTeam().getTeamname();
                 }
             }
             updateUI(noTeam, noTeamListView);
@@ -189,13 +202,38 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     public LobbyActivity parent;
     public void startGameActivity(){
 
+
         Intent i = new Intent(this, GameActivity.class);
+        if(myTeam.equals(Team.NO_TEAM)){
+            Random rand = new Random();
+
+            int  n = rand.nextInt(50) + 1;
+            if(n<25){
+                myTeam=Team.TEAM_GREEN;
+            }else{
+                myTeam=Team.TEAM_ORANGE;
+            }
+        }
+        showToast("Your team is:"+myTeam);
+        i.putExtra("myTeam", myTeam);
         startActivity(i);
 
     }
     Emitter.Listener startGameActivityListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            try{
+                Gson gson = new Gson();
+                String request =(String) args[0];
+                Player[] players = gson.fromJson(request,Player[].class);
+                for(Player player : players){
+                    if(player.getName().equals(playerName)){
+                        myTeam=player.getTeam().getTeamname();
+                    }
+                }
+
+            }catch(Exception ex){}
+
             startGameActivity();
         }
     };
@@ -235,7 +273,12 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-               // Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+               try{
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+               }
+               catch(Exception err){
+                   Log.e("Lobby activity","show toast");
+               }
             }
         });
     }

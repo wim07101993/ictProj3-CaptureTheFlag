@@ -2,69 +2,93 @@ import Lobby from '../db/lobby';
 import timeClass from './timeSync';
 //const JSON = require('circular-json');
 export default{
-    lobbies:[],
+    
     playersOrange:[],
     playersGreen:[],
     playersNoTeam:[],
-    parent:null,
+    
     getLobbey(id){
+      try {
+        
         return this.lobbies.filter((lobby)=> {return lobby.id==(id)});
-    },
-    addParent(parent,lobbies){
-      this.parent=parent;
-      this.lobbies=lobbies;
-    },
-    createLobby(io, socket, playerName, lobbyName , password, time){
-      let lobbyFilter = this.lobbies.filter((lobby) => {return lobby.name == lobbyName});
-      console.log("creating lobby:"+lobbyName)
-      if(lobbyFilter[0] != undefined){
-        console.log("failed creating:"+lobbyName)
-        socket.emit("lobbyExists");
-      }else{
-        let lobby = new Lobby(this.lobbies.length, lobbyName, password, time, []);
-        this.lobbies.push(lobby);
-        console.log("created lobby: " + lobby.name + " - " + lobby.password + " - " + lobby.time);
-        this.joinLobby(io, socket, lobbyName, password, playerName);
+      } catch (error) {
+        
       }
     },
-
-    joinLobby(io, socket, lobbyName, lobbyPassword, playerName){
-      let lobby = this.lobbies.filter((lobby)=>{return (lobby.name==lobbyName && lobby.password == lobbyPassword)});
-      let resultLobby = lobby[0];
-      this.parent.lobby=resultLobby;
-      if(resultLobby != undefined){
-        let playerFilter = resultLobby.players.filter((player)=>{return player.name == playerName});
-        let resultPlayer = playerFilter[0];
-
-        if(resultPlayer != undefined){
-          socket.emit("playerNameUnavailable");
-          console.log("playerNameUnavailable");
+    createLobby(io, socket, playerName, lobbyName , password, time,lobbies){
+      try {
+        
+        let lobbyFilter = lobbies.filter((lobby) => {return lobby.name == lobbyName});
+        console.log("creating lobby:"+lobbyName)
+        if(lobbyFilter[0] != undefined){
+          console.log("failed creating:"+lobbyName)
+          socket.emit("lobbyExists");
         }else{
-          resultLobby.addPlayer(playerName,socket);
-          socket.emit("getLobbyId", resultLobby.id);
-          this.getPlayers(resultLobby.id, io);
+          let lobby = new Lobby(lobbies.length, lobbyName, password, time, []);
+          lobbies.push(lobby);
+          console.log("created lobby: " + lobby.name + " - " + lobby.password + " - " + lobby.time);
+          this.joinLobby(io, socket, lobbyName, password, playerName,lobbies);
         }
-      }else{
-        socket.emit("lobbyNotFound");
-        console.log("lobbyNotFound");
+      } catch (error) {
+        
       }
     },
 
-    leaveLobby(lobbyId, playerName, io){
-      let lobby = this.lobbies[lobbyId];
-
-      if(lobby != undefined){
-        let playerIndex = lobby.players.findIndex(player => player.name == playerName);
-      
-        if(playerIndex > -1){
-          lobby.players.splice(playerIndex, 1);
-          this.getPlayers(lobbyId, io);
+    joinLobby(io, socket, lobbyName, lobbyPassword, playerName,lobbies){
+      try {
+        
+        let lobby = lobbies.filter((lobby)=>{
+          
+          return (lobby.name==lobbyName && lobby.password == lobbyPassword)});
+        let resultLobby = lobby[0];
+        
+        
+        if(resultLobby != undefined){
+          let playerFilter = resultLobby.players.filter((player)=>{return player.name == playerName});
+          let resultPlayer = playerFilter[0];
+  
+          if(resultPlayer != undefined){
+            socket.emit("playerNameUnavailable");
+            console.log("playerNameUnavailable");
+          }else{
+            resultLobby.addPlayer(playerName,socket);
+            socket.emit("getLobbyId", resultLobby.id);
+            this.getPlayers(resultLobby.id, io,lobbies);
+            //set flag capture listener 
+            socket.on("captureFlag",(flag)=>resultLobby.captureFlags(flag));
+          }
+  
+        }else{
+          socket.emit("lobbyNotFound");
+          console.log("lobbyNotFound");
         }
+      } catch (error) {
+        
       }
     },
 
-    distributePlayers(lobbyID, io){
-        let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+    leaveLobby(lobbyId, playerName, io,lobbies){
+      try {
+        
+        let lobby = lobbies[lobbyId];
+  
+        if(lobby != undefined){
+          let playerIndex = lobby.players.findIndex(player => player.name == playerName);
+        
+          if(playerIndex > -1){
+            lobby.players.splice(playerIndex, 1);
+            this.getPlayers(lobbyId, io,lobbies);
+          }
+        }
+      } catch (error) {
+        
+      }
+    },
+
+    distributePlayers(lobbyID, io,lobbies){
+      try {
+        
+        let lobby = lobbies.filter((lobby)=>{return lobby.id == lobbyID});
         if (lobby[0] != undefined) {
           for (var player of lobby[0].players) {
             if (player.team.teamname == "orange") {
@@ -96,59 +120,91 @@ export default{
           }
           this.getPlayers(lobbyID, io);
         }
+      } catch (error) {
+        
+      }
     },
 
-    getPlayers(lobbyID, io){
-        let lobby = this.lobbies[lobbyID];
+    getPlayers(lobbyID, io,lobbies){
+      try {
+        
+        let lobby = lobbies[lobbyID];
         
         if(lobby != undefined){
           
           lobby.emit("getPlayersResult", JSON.stringify(lobby.players));
         }
+      } catch (error) {
+        console.log("error in lobbysync => getPlayers()")
+      }
+     
     },
 
-    joinTeam(lobbyID, team, playername, io){
-      let lobby = this.lobbies[lobbyID];
-      console.log(playername);
-      let playerFilter = lobby.players.filter((player) => {return player.name == playername});
-      
-      if(playerFilter[0] != undefined){
-        let player = playerFilter[0];
-
-        let teamFilter = lobby.teams.filter((t) => {return t.teamname == team});
-
-        if(teamFilter[0] != undefined){
-          let team = teamFilter[0];
-          let teamJson= JSON.stringify(team);
-
-          player.team = team;
-          console.log(player.name + " joined team " + player.team.teamname);
-          this.getPlayers(lobbyID, io);
+    joinTeam(lobbyID, team, playername, io,lobbies){
+      try {
+        
+        let lobby = lobbies[lobbyID];
+        console.log(playername);
+        let playerFilter = lobby.players.filter((player) => {return player.name == playername});
+        
+        if(playerFilter[0] != undefined){
+          let player = playerFilter[0];
+  
+          let teamFilter = lobby.teams.filter((t) => {return t.teamname == team});
+  
+          if(teamFilter[0] != undefined){
+            let team = teamFilter[0];
+            let teamJson= JSON.stringify(team);
+  
+            player.team = team;
+            console.log(player.name + " joined team " + player.team.teamname);
+            this.getPlayers(lobbyID, io,lobbies);
+          }
         }
+      } catch (error) {
+        
       }
     },
 
     setupTime(lobbyID, duration){
-      let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
-      if (lobby != undefined) {
-        lobby[0].time = duration;
+      try {
+        
+        let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+        if (lobby != undefined) {
+          lobby[0].time = duration;
+        }
+      } catch (error) {
+        
       }
     },
 
-    startTime(lobbyID, io, socket){
-      let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
-      if (lobby != undefined) {
-        console.log(io);
-        timeClass.timeStart(io, socket, lobby[0].time);
+    startTime(lobbyID, io, socket,lobbies){
+      try {
+        let lobby = lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+        if (lobby != undefined) {
+          console.log(io);
+          timeClass.timeStart(lobby[0], socket, lobby[0].time);
+
+          lobby[0].startScore();
+          lobby[0].emit("startGame",JSON.stringify( lobby[0].players));
+        }
+        
+      } catch (error) {
+        
       }
     },
 
-    hostLeft(io, lobbyID){
-      let lobby = this.lobbies.filter((lobby)=>{return lobby.id == lobbyID});
-      if (lobby != undefined) {
-        lobby=lobby[0];
-        lobby.emit("leaveLobby","");
-        this.lobbies.splice(lobbyID, 1);
+    hostLeft(io, lobbyID,lobbies){
+      try {
+        let lobby = lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+        if (lobby != undefined) {
+          lobby=lobby[0];
+          lobby.emit("leaveLobby","");
+          lobby.name="";
+        }
+        
+      } catch (error) {
+        
       }
       
     }

@@ -1,5 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
+import android.util.Log;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -80,10 +82,14 @@ public class Flag {
             //Sets this Flag's team alignment to the team that captured it
             team = teamIdentifier;
             //Sets this Flag to cooldown
+
+
+
         Calendar coolDownCal = Calendar.getInstance();
+        Date test=coolDownCal.getTime();
         coolDownCal.add(Calendar.SECOND,cooldownTime);
         cooldownTimer = coolDownCal.getTime();
-
+        Log.d("Flag","CooldownSet");
 
 
 
@@ -107,7 +113,7 @@ public class Flag {
 
         long cooldown = cooldownTimer.getTime();
         long now = nowTime.getTime();
-        return (now > cooldown);
+        return (now < cooldown);
     }
     public Date getCooldownTime() {
         return  cooldownTimer;

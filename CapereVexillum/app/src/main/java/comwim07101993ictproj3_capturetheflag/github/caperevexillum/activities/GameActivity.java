@@ -8,20 +8,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 
-import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -33,11 +29,13 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.Sco
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.OnGameTimerFinishedListener;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.IFlagSync;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.Variables;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.BeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.IBeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.MockBeaconScanner;
@@ -54,14 +52,14 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     private static final String TAG = GameActivity.class.getSimpleName();
 
-
+    Beacon currentBeacon;
     private static final boolean USE_BLUETOOTH = true;
     private static final int GAME_DURATION_IN_MINUTES = 30;
 
     public float gameTime;
 
     // TODO Someone: create in socket
-    public static final String MY_TEAM = Team.TEAM_ORANGE;
+    public  String MY_TEAM = Team.NO_TEAM;
 
     /* ------------------------- View elements ------------------------- */
 
@@ -87,6 +85,9 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
+    public String getTeam(){
+        return MY_TEAM;
+    }
 
     private void makeAppFullScreen() {
         // Hide UI first
@@ -158,14 +159,14 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     @SuppressWarnings("UnusedAssignment")
     private void initBeaconScanner() {
 
-        if (false&&USE_BLUETOOTH && BeaconScanner.isBLESupported(this)) {
+        if (USE_BLUETOOTH && BeaconScanner.isBLESupported(this)) {
             BeaconScanner.askPermissions(this);
             BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (bluetoothManager != null) {
                 BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
                 beaconScanner = new BeaconScanner(bluetoothAdapter);
             }
-        } else {
+        } else if(Variables.DEBUG){
             beaconScanner = new MockBeaconScanner();
         }
 
@@ -181,8 +182,9 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
 
         flags.setSyncFlagListener(this);
-
+        flags.startSocketListener();
         stateManager.set(StateManagerKey.FLAGS, flags);
+
     }
 
     private void initView() {
@@ -194,6 +196,8 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
 
         cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
+        Bundle extras = getIntent().getExtras();
+        MY_TEAM = extras.getString("myTeam", Team.NO_TEAM);
     }
     GameTimer gt;
     private void initGameTimer() {
@@ -222,6 +226,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         try{
             initView();
             initGameTimer();
+            initSocket();
 
         }catch(Exception ex){
             Log.e("gameActivity",ex.getMessage());
@@ -271,39 +276,60 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     @Override
     public void onBeaconFound(IBeacon beacon) {
+        if(currentBeacon!=null){
+            if(currentBeacon.equals(beacon)){
+                return;
+            }
+        }
 
-        if ((
-                beacon.getRelativeRssi() > SIGNAL_THRESHOLD
-                ||quizLayout.getVisibility() == View.VISIBLE
-                )) {
+        if (( beacon.getRelativeRssi() > SIGNAL_THRESHOLD||quizLayout.getVisibility() == View.VISIBLE)) {
             return;
         }
 
         Flag flag = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
+        if(flag!=null){
+            //it's a nested if because get team would return on null
+            //return if my team already has the flag
+            if(flag.getTeam().equals(MY_TEAM)){
+                hideCooldownFragment();
+                return;
+            }
+            //return if i can't capture the flag
+            if (flag.getCooldown()) {
+                showCooldownFragment(flag.getCooldownTime());
+                return;
+            }
+        }
 
-        if (flag != null && flag.getCooldown()) {
-            showCooldownFragment(flag.getCooldownTime());
-        } else {
-            //hideCooldownFragment();
             beaconWithCooldown = false;
-            quizFragment.setCurrentBeacon(beacon);
-
+            if(flag==null){
+                flag=new Flag(beacon);
+                flag.setTeam(Team.NO_TEAM);
+            }
+            quizFragment.setCurrentFlag(flag);
             if (!isStartQuizActivityOpen) {
                 Intent intent = new Intent(this, StartQuizActivity.class);
                 startActivityForResult(intent, START_QUIZ_ACTIVITY);
                 isStartQuizActivityOpen = true;
             }
-        }
+
     }
 
     /* ------------------------- syncFlags ------------------------- */
 
     @Override
     public void syncFlags() {
-        Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
-        int redFlags = flags.getFlagByTeam(Team.TEAM_ORANGE);
-        int greenFlags = flags.getFlagByTeam(Team.TEAM_GREEN);
-        scoreFragment.setScores(redFlags, greenFlags);
+
+                try{
+                    Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
+                    int redFlags = flags.getFlagByTeam(Team.TEAM_ORANGE);
+                    int greenFlags = flags.getFlagByTeam(Team.TEAM_GREEN);
+                    scoreFragment.setFlags(redFlags, greenFlags);
+                }
+                catch(Exception err){
+                    Log.e("Lobby activity","show toast");
+                }
+
     }
 
     /* ------------------------- Getters ------------------------- */

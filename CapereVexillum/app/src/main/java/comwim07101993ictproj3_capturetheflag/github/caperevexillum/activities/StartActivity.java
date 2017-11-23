@@ -29,7 +29,7 @@ public class StartActivity extends AActivityWithStateManager {
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stateManager.save();
+
                 Intent intent = new Intent(parent, JoinLobbyActivity.class);
                 startActivity(intent);
             }
@@ -38,7 +38,7 @@ public class StartActivity extends AActivityWithStateManager {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                stateManager.save();
+
                 Intent intent = new Intent(parent, CreateLobbyActivity.class);
                 startActivity(intent);
             }

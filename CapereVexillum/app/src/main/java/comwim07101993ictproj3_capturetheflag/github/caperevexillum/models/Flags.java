@@ -2,6 +2,8 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
@@ -48,21 +50,21 @@ public class Flags {
     Emitter.Listener resyncFlags = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-
+    try{
             String request = (String) args[0];
+            Log.d("resyncflags",request);
             Flag[] requestedFlags = gson.fromJson(request, Flag[].class);
             Vector<Flag> newFlags = new Vector(Arrays.asList(requestedFlags));
             registeredFlags = newFlags;
-            updateScoreInView.obtainMessage(1).sendToTarget();
-        }
-    };
-    Handler updateScoreInView = new Handler() {
+            //updateScoreInView.obtainMessage(1).sendToTarget();
+        flagSyncListener.syncFlags();
 
-        @Override
-        public void handleMessage(Message msg) {
-            flagSyncListener.syncFlags();
+    }catch (Exception ex){}
         }
     };
+
+
+
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
@@ -102,7 +104,7 @@ public class Flags {
             }
 
             //If the beaconMAC's match the function returns true
-            if (flag.team.equals(team)) {
+            if (flag.getBeaconMAC().equals(beacon.getAddress())) {
                 return flag;
             }
         }
