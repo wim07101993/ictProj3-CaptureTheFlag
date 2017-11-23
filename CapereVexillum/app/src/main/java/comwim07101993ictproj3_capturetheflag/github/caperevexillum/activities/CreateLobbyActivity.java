@@ -29,7 +29,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
     private EditText lobbyNameEditText, passwordEditText, timeEditText, playerNameEditText;
     private Button createLobbyButton;
     private String playerName, lobbyName, lobbyPassword, lobbyTime;
-    private Intent goToLobby;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
     @Override
     public void onClick(View view) {
         socket = SocketInstance.restartSocket();
-        goToLobby = new Intent(this, LobbyActivity.class);
+
         playerName = playerNameEditText.getText().toString();
         lobbyName = lobbyNameEditText.getText().toString();
         lobbyPassword = passwordEditText.getText().toString();
@@ -75,9 +75,9 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         public void call(Object... args) {
             // navigate
            // String test = (String) args[0];
-
+            Intent goToLobby;
             int lobbyID = (int) args[0];
-
+            goToLobby = new Intent(CreateLobbyActivity.this, LobbyActivity.class);
             // Navigate to lobby
             goToLobby.putExtra("playerName", playerName);
             goToLobby.putExtra("isHost", true);

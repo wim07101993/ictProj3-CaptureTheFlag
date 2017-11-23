@@ -138,6 +138,7 @@ public abstract class AbstractStateManager<TKey> implements IStateManager<TKey> 
         for (TKey key : currentState.keySet()) {
             Object value = get(key);
             try{
+                Object test = gson.toJson(value, Object.class);
             editor.putString(key.toString(), gson.toJson(value));
             }
             catch (Exception ex){
