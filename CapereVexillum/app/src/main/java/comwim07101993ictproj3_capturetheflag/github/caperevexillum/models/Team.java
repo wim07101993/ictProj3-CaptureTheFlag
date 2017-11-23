@@ -9,7 +9,7 @@ import java.util.Vector;
 public class Team {
     public static String TEAM_GREEN="green";
     public static String TEAM_ORANGE ="orange";
-    public static String NO_TEAM = "no team";
+    public static String NO_TEAM = "no_team";
 
     private String teamname;
     private int score;

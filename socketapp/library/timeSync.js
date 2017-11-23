@@ -1,12 +1,10 @@
-import Lobby from "../db/lobby";
-
 export default {
     time:0,
     timeStart(io,socket,time){
 
         this.time = time;
         
-        io.emit("timeStart",time+"");
+        //io.emit("timeStart",time+"");
         let parent = this;
         setInterval(function(){parent.calculateTime(parent,io,socket)},1000)
 
@@ -15,8 +13,13 @@ export default {
         socket.emit("start",this.time+"");
     },
     syncTime:function(io,socket,parent){
-        console.log("syncTime");
-        io.emit("reSyncTime",parent.time-0.4+"");
+        try {
+            console.log("resync complete")
+            io.emit("reSyncTime",parent.time-0.4+"");    
+        } catch (error) {
+            console.log("resync error")
+        }
+        
 
     },
     calculateTime(parent,io,socket){
@@ -26,12 +29,9 @@ export default {
        //sync every minute
 
        if((seconds<=1) && ( seconds>=0)){
-        console.log("");
-            console.log("time",parent.time);
-            console.log("")
+      
             parent.time = Math.floor(parent.time)-0.015;
-            console.log("timeafter:", parent.time);
-            io.emit("endTimer", "Hier komt de score");
+      
             return;
         }
         if((seconds%10)==0){

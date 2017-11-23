@@ -55,9 +55,10 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private Integer count;
     private Quiz questionAndAnswer;
     private GameActivity gameActivity;
-    private IBeacon currentBeacon;
-    private List<Quiz> quizList;
 
+    private List<Quiz> quizList;
+    private Flag currentFlag;
+    private String  myTeam;
     //layout settings
     LinearLayout linearLayout;
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -69,13 +70,16 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
-
-    public void setCurrentBeacon(IBeacon beacon){
-        currentBeacon = beacon;
+    public void setTeam(String myTeam){
+        this.myTeam=myTeam;
+    }
+    public void setCurrentFlag(Flag currentFlag) {
+        this.currentFlag = currentFlag;
     }
 
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
+        myTeam= gameActivity.MY_TEAM;
         stateManager = gameActivity.getStateManager();
 
     }
@@ -125,7 +129,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         if(button.getText()== questionAndAnswer.getJuisteAntwoord()){
             count++;
             if (nQuestions -1 >= count){
-                questionAndAnswer = quizList.get(count);
+                questionAndAnswer = db_handler.getVraagEnAntwoord(count);
 
                 createButtons();
             }
@@ -148,8 +152,11 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     public  void endQuiz(){
         count = 0;
         Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
-        Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(Team.NO_TEAM);
+
+
+        //flag.team=
+        currentFlag.CaptureAndCooldown(currentFlag.getTeam());
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(currentFlag);
 
         //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
         gameActivity.showQuiz(false);
@@ -159,9 +166,11 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     //zet de variabele terug tegoei
     public void capturedFlag(){
         Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
-        Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(GameActivity.MY_TEAM);
-        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        //Flag flag = new Flag(currentBeacon);
+        currentFlag.team=myTeam;
+        //flag.team=
+        currentFlag.CaptureAndCooldown(gameActivity.MY_TEAM);
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(currentFlag);
 
         count=0;
         gameActivity.showQuiz(false);

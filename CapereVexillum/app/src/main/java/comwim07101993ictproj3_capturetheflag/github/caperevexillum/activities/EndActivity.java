@@ -4,17 +4,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 
-public class EndActivity extends AppCompatActivity{
+public class EndActivity extends AppCompatActivity implements View.OnClickListener{
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
-    TextView winOrLoseLabel;
 
+    private Button goToStart;
+    private Button goToLobby;
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
@@ -24,11 +24,14 @@ public class EndActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end);
+    }
 
-        winOrLoseLabel = (TextView) findViewById(R.id.winOrLoseLabel);
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
 
-        Bundle extras = getIntent().getExtras();
-        String winOrLose = extras.getString("winnertext");
-        winOrLoseLabel.setText(winOrLose);
+    @Override
+    public void onClick(View view) {
+
     }
 }

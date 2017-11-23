@@ -32,7 +32,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
     private EditText playerNameEditText;
 
     private Button joinLobbyButton;
-
+    private Socket socket;
     private int lobbyID;
     private Intent goToLobby;
 
@@ -55,12 +55,12 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View view) {
         if (view.getId() == R.id.join_lobby_button) {
             if (view.getId() == R.id.join_lobby_button) {
-
-                SocketInstance.socket().emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText().toString());
+                socket = SocketInstance.restartSocket();
+                socket.emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText().toString());
                     // Link listener for server answer
-                SocketInstance.socket().on("getLobbyId", getLobbyId);
-                SocketInstance.socket().on("playerNameUnavailable", playerNameUnavailable);
-                SocketInstance.socket().on("lobbyNotFound", lobbyNotFound);
+                socket.on("getLobbyId", getLobbyId);
+                socket.on("playerNameUnavailable", playerNameUnavailable);
+                socket.on("lobbyNotFound", lobbyNotFound);
 
                     goToLobby = new Intent(this, LobbyActivity.class);
 
@@ -86,7 +86,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void call(Object... args) {
                 // TODO Sven: show toast
-               // showToast("Lobby not found");
+                showToast("Lobby not found");
             }
         };
 
@@ -94,7 +94,7 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void call(Object... args) {
                 // TODO Sven: show toast
-                //showToast("Player name unavailable");
+                showToast("Player name unavailable");
             }
         };
 
@@ -103,7 +103,11 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                try {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                }catch(Exception ex){
+                    Log.d("Create lobby","error showing toast");
+                }
             }
         });
     }

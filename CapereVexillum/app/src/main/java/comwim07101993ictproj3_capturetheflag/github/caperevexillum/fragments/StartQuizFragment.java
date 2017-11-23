@@ -54,8 +54,8 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener 
         super.onCreate(savedInstanceState);
 
         gameActivity = (GameActivity) getActivity();
-        Vibrator v = (Vibrator) gameActivity.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(1000);
+       // Vibrator v = (Vibrator) gameActivity.getSystemService(Context.VIBRATOR_SERVICE);
+        //v.vibrate(1000);
 
         // declarate the statemanager
 
