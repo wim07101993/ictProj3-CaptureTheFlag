@@ -63,6 +63,30 @@ public class StateManagerWithoutSocket
         sharedPreferences.edit().clear().apply();
     }
 
+    protected void checkIfTypesMatch(IStateManagerKey key, Object value) {
+        if (!int.class.isAssignableFrom(key.getValueClass())) {
+            String error = "Value " + value + " not of right type for key " + key + ".";
+            throw new IllegalArgumentException(error);
+        }
+    }
+
+    protected Map getMapForClass(Class c) {
+        if (ISerializable.class.isAssignableFrom(c)) {
+            return objects;
+        } else if (int.class.isAssignableFrom(c)) {
+            return ints;
+        } else if (long.class.isAssignableFrom(c)) {
+            return longs;
+        } else if (float.class.isAssignableFrom(c)) {
+            return floats;
+        } else if (String.class.isAssignableFrom(c)) {
+            return strings;
+        } else if (boolean.class.isAssignableFrom(c)) {
+            return booleans;
+        }
+        return null;
+    }
+
 
     /* ------------------------- LOAD ------------------------- */
 
@@ -307,14 +331,17 @@ public class StateManagerWithoutSocket
 
     @Override
     public void setSerializable(IStateManagerKey key, ISerializable value) {
+        checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(objects)) {
             objects = new HashMap<>();
         }
+
         updateState(key, objects, value);
     }
 
     @Override
     public void setInt(IStateManagerKey key, int value) {
+        checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(ints)) {
             ints = new HashMap<>();
         }
@@ -323,6 +350,7 @@ public class StateManagerWithoutSocket
 
     @Override
     public void setLong(IStateManagerKey key, long value) {
+        checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(longs)) {
             longs = new HashMap<>();
         }
@@ -331,6 +359,7 @@ public class StateManagerWithoutSocket
 
     @Override
     public void setFloat(IStateManagerKey key, float value) {
+        checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(floats)) {
             floats = new HashMap<>();
         }
@@ -339,6 +368,7 @@ public class StateManagerWithoutSocket
 
     @Override
     public void setString(IStateManagerKey key, String value) {
+        checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(strings)) {
             strings = new HashMap<>();
         }
@@ -347,6 +377,7 @@ public class StateManagerWithoutSocket
 
     @Override
     public void setBoolean(IStateManagerKey key, boolean value) {
+        checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(booleans)) {
             booleans = new HashMap<>();
         }

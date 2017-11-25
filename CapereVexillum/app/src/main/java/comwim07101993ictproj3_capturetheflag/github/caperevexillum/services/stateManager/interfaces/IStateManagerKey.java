@@ -11,5 +11,6 @@ public interface IStateManagerKey {
     Class getValueClass();
 
     ESocketOnKey getSocketOnKey();
-    ESocketEmitKey getSocketEmitKey();
+    ESocketEmitKey getSocketEmitAskKey();
+    ESocketEmitKey getSocketEmitPutKey();
 }

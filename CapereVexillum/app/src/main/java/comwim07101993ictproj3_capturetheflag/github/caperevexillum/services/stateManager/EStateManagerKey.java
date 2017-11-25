@@ -30,7 +30,7 @@ public enum EStateManagerKey implements IStateManagerKey {
         }
 
         @Override
-        public ESocketEmitKey getSocketEmitKey() {
+        public ESocketEmitKey getSocketEmitAskKey() {
             return ESocketEmitKey.ASK_TEAMS;
         }
 
@@ -47,7 +47,7 @@ public enum EStateManagerKey implements IStateManagerKey {
         }
 
         @Override
-        public ESocketEmitKey getSocketEmitKey() {
+        public ESocketEmitKey getSocketEmitAskKey() {
             return ESocketEmitKey.ASK_FLAGS;
         }
 
@@ -92,7 +92,7 @@ public enum EStateManagerKey implements IStateManagerKey {
         }
 
         @Override
-        public ESocketEmitKey getSocketEmitKey() {
+        public ESocketEmitKey getSocketEmitAskKey() {
             return ESocketEmitKey.ASK_TIME;
         }
 
@@ -161,8 +161,14 @@ public enum EStateManagerKey implements IStateManagerKey {
     public ESocketOnKey getSocketOnKey() {
         return null;
     }
+
     @Override
-    public ESocketEmitKey getSocketEmitKey() {
+    public ESocketEmitKey getSocketEmitAskKey() {
+        return null;
+    }
+
+    @Override
+    public ESocketEmitKey getSocketEmitPutKey() {
         return null;
     }
 }

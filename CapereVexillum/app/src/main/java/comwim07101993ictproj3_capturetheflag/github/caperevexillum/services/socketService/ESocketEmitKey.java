@@ -15,11 +15,6 @@ public enum ESocketEmitKey implements ISocketKey {
         public String getStringIdentifier() {
             return IDENTIFIER;
         }
-
-        @Override
-        public Class getValueClass() {
-            return null;
-        }
     },
 
     ASK_TEAMS {
@@ -28,11 +23,6 @@ public enum ESocketEmitKey implements ISocketKey {
         @Override
         public String getStringIdentifier() {
             return IDENTIFIER;
-        }
-
-        @Override
-        public Class getValueClass() {
-            return null;
         }
     },
 
@@ -43,11 +33,6 @@ public enum ESocketEmitKey implements ISocketKey {
         public String getStringIdentifier() {
             return IDENTIFIER;
         }
-
-        @Override
-        public Class getValueClass() {
-            return null;
-        }
     };
 
 
@@ -55,4 +40,11 @@ public enum ESocketEmitKey implements ISocketKey {
     public EMode getMode() {
         return EMode.EMIT;
     }
+
+    @Override
+    public Class getValueClass() {
+        return null;
+    }
+
+
 }
