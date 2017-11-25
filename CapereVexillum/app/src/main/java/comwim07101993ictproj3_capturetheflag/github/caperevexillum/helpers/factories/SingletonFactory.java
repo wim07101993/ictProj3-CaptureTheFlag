@@ -3,6 +3,8 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.fact
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ArrayHelpers;
+
 /**
  * Created by wimva on 25/11/2017.
  */
@@ -20,7 +22,11 @@ public abstract class SingletonFactory<T> implements ISingletonFactory<T> {
     public T get(Object... args) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         if (product == null) {
             try {
-                Constructor<T> constructor = productType.getConstructor(productType);
+                Constructor[] constructors = productType.getConstructors();
+                if(ArrayHelpers.IsNullOrEmpty(constructors)){
+                    throw new NoSuchMethodException();
+                }
+                Constructor<T> constructor = constructors[0];
                 product = constructor.newInstance(args);
             } catch (NoSuchMethodException e) {
                 String error = "Cannot get the constructor for type " + productType + ".";
