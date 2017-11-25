@@ -6,7 +6,7 @@ import java.util.List;
  * Created by wimva on 25/11/2017.
  */
 
-public class ListHelpers {
+public final class ListHelpers {
     public static boolean IsNullOrEmpty(List list) {
         return list == null || list.size() == 0;
     }
