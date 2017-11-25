@@ -17,11 +17,6 @@ public enum ESocketOnKey implements ISocketKey {
         public String getStringIdentifier() {
             return IDENTIFIER;
         }
-
-        @Override
-        public Class getValueClass() {
-            return null;
-        }
     },
 
     START {
@@ -30,11 +25,6 @@ public enum ESocketOnKey implements ISocketKey {
         @Override
         public String getStringIdentifier() {
             return IDENTIFIER;
-        }
-
-        @Override
-        public Class getValueClass() {
-            return null;
         }
     },
 
@@ -48,7 +38,7 @@ public enum ESocketOnKey implements ISocketKey {
 
         @Override
         public Class getValueClass() {
-            return float.class;
+            return Float.class;
         }
     },
 
@@ -83,5 +73,10 @@ public enum ESocketOnKey implements ISocketKey {
     @Override
     public EMode getMode() {
         return EMode.ON;
+    }
+
+    @Override
+    public Class getValueClass() {
+        return null;
     }
 }

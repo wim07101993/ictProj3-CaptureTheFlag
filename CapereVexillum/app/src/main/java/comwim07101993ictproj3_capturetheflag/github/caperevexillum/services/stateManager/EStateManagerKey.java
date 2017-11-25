@@ -74,21 +74,21 @@ public enum EStateManagerKey implements IStateManagerKey {
     SCORE {
         @Override
         public Class getValueClass() {
-            return long.class;
+            return Long.class;
         }
     },
 
     LOBBY_ID {
         @Override
         public Class getValueClass() {
-            return int.class;
+            return Integer.class;
         }
     },
 
     GAME_TIME {
         @Override
         public Class getValueClass() {
-            return float.class;
+            return Float.class;
         }
 
         @Override
@@ -105,7 +105,7 @@ public enum EStateManagerKey implements IStateManagerKey {
     GAME_STARTED {
         @Override
         public Class getValueClass() {
-            return boolean.class;
+            return Boolean.class;
         }
 
         @Override
@@ -124,7 +124,7 @@ public enum EStateManagerKey implements IStateManagerKey {
     GAME_ENDED {
         @Override
         public Class getValueClass() {
-            return boolean.class;
+            return Boolean.class;
         }
     },
 
@@ -138,7 +138,7 @@ public enum EStateManagerKey implements IStateManagerKey {
     IS_HOST {
         @Override
         public Class getValueClass() {
-            return boolean.class;
+            return Boolean.class;
         }
 
         @Override
