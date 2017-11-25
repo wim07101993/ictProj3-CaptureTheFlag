@@ -64,7 +64,7 @@ public class StateManagerWithoutSocket
     }
 
     protected void checkIfTypesMatch(IStateManagerKey key, Object value) {
-        if (!int.class.isAssignableFrom(key.getValueClass())) {
+        if (!value.getClass().isAssignableFrom(key.getValueClass())) {
             String error = "Value " + value + " not of right type for key " + key + ".";
             throw new IllegalArgumentException(error);
         }
