@@ -15,14 +15,15 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISeri
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.MapHelpers;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.ANotifier;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 /**
  * Created by wimva on 25/11/2017.
  */
 
 public class StateManagerWithoutSocket
-        extends ANotifier<EStateManagerKey>
-        implements IStateManager<EStateManagerKey> {
+        extends ANotifier<IStateManagerKey>
+        implements IStateManager<IStateManagerKey> {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -32,14 +33,14 @@ public class StateManagerWithoutSocket
 
     private SharedPreferences sharedPreferences;
 
-    private Map<EStateManagerKey, ISerializable> objects;
-    private Map<EStateManagerKey, Integer> ints;
-    private Map<EStateManagerKey, Long> longs;
-    private Map<EStateManagerKey, Float> floats;
-    private Map<EStateManagerKey, String> strings;
-    private Map<EStateManagerKey, Boolean> booleans;
+    protected Map<IStateManagerKey, ISerializable> objects;
+    protected Map<IStateManagerKey, Integer> ints;
+    protected Map<IStateManagerKey, Long> longs;
+    protected Map<IStateManagerKey, Float> floats;
+    protected Map<IStateManagerKey, String> strings;
+    protected Map<IStateManagerKey, Boolean> booleans;
 
-    private List<EStateManagerKey> registeredKeys;
+    private List<IStateManagerKey> registeredKeys;
 
 
     /* --------------------------------------------------------------- */
@@ -73,7 +74,7 @@ public class StateManagerWithoutSocket
 
         loadRegisteredKeys();
 
-        for (EStateManagerKey registeredKey : registeredKeys) {
+        for (IStateManagerKey registeredKey : registeredKeys) {
             load(registeredKey);
         }
 
@@ -89,7 +90,7 @@ public class StateManagerWithoutSocket
         }
     }
 
-    protected void load(EStateManagerKey key) {
+    protected void load(IStateManagerKey key) {
         Class c = key.getValueClass();
 
         if (ISerializable.class.isAssignableFrom(c)) {
@@ -107,7 +108,7 @@ public class StateManagerWithoutSocket
         }
     }
 
-    protected void loadObject(EStateManagerKey key, Class c) throws ClassCastException {
+    protected void loadObject(IStateManagerKey key, Class c) throws ClassCastException {
         if (MapHelpers.IsNullOrEmpty(objects)) {
             objects = new HashMap<>();
         }
@@ -125,7 +126,7 @@ public class StateManagerWithoutSocket
         }
     }
 
-    protected void loadInt(EStateManagerKey key) {
+    protected void loadInt(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(ints)) {
             ints = new HashMap<>();
         }
@@ -133,7 +134,7 @@ public class StateManagerWithoutSocket
         setInt(key, sharedPreferences.getInt(key.toString(), 0));
     }
 
-    protected void loadLong(EStateManagerKey key) {
+    protected void loadLong(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(longs)) {
             longs = new HashMap<>();
         }
@@ -141,7 +142,7 @@ public class StateManagerWithoutSocket
         setLong(key, sharedPreferences.getLong(key.toString(), 0));
     }
 
-    protected void loadFloat(EStateManagerKey key) {
+    protected void loadFloat(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(floats)) {
             floats = new HashMap<>();
         }
@@ -149,7 +150,7 @@ public class StateManagerWithoutSocket
         setFloat(key, sharedPreferences.getFloat(key.toString(), 0));
     }
 
-    protected void loadString(EStateManagerKey key) {
+    protected void loadString(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(strings)) {
             strings = new HashMap<>();
         }
@@ -157,7 +158,7 @@ public class StateManagerWithoutSocket
         setString(key, sharedPreferences.getString(key.toString(), null));
     }
 
-    protected void loadBoolean(EStateManagerKey key) {
+    protected void loadBoolean(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(booleans)) {
             booleans = new HashMap<>();
         }
@@ -193,7 +194,7 @@ public class StateManagerWithoutSocket
     protected void saveRegisteredKeys(@NonNull SharedPreferences.Editor editor) {
         Set<String> stringKeys = new HashSet<>();
 
-        for (EStateManagerKey key : registeredKeys) {
+        for (IStateManagerKey key : registeredKeys) {
             stringKeys.add(key.toString());
         }
 
@@ -205,7 +206,7 @@ public class StateManagerWithoutSocket
             return;
         }
 
-        for (EStateManagerKey key : objects.keySet()) {
+        for (IStateManagerKey key : objects.keySet()) {
             editor.putString(key.toString(), getISerializable(key).Serialize());
         }
     }
@@ -215,7 +216,7 @@ public class StateManagerWithoutSocket
             return;
         }
 
-        for (EStateManagerKey key : ints.keySet()) {
+        for (IStateManagerKey key : ints.keySet()) {
             editor.putInt(key.toString(), getInt(key));
         }
     }
@@ -225,7 +226,7 @@ public class StateManagerWithoutSocket
             return;
         }
 
-        for (EStateManagerKey key : longs.keySet()) {
+        for (IStateManagerKey key : longs.keySet()) {
             editor.putLong(key.toString(), getLong(key));
         }
     }
@@ -235,7 +236,7 @@ public class StateManagerWithoutSocket
             return;
         }
 
-        for (EStateManagerKey key : floats.keySet()) {
+        for (IStateManagerKey key : floats.keySet()) {
             editor.putFloat(key.toString(), getFloat(key));
         }
     }
@@ -245,7 +246,7 @@ public class StateManagerWithoutSocket
             return;
         }
 
-        for (EStateManagerKey key : strings.keySet()) {
+        for (IStateManagerKey key : strings.keySet()) {
             editor.putString(key.toString(), getString(key));
         }
     }
@@ -255,7 +256,7 @@ public class StateManagerWithoutSocket
             return;
         }
 
-        for (EStateManagerKey key : booleans.keySet()) {
+        for (IStateManagerKey key : booleans.keySet()) {
             editor.putBoolean(key.toString(), getBoolean(key));
         }
     }
@@ -264,37 +265,37 @@ public class StateManagerWithoutSocket
     /* ------------------------- GETTERS ------------------------- */
 
     @Override
-    public ISerializable getISerializable(EStateManagerKey key) {
+    public ISerializable getISerializable(IStateManagerKey key) {
         return getState(key, objects);
     }
 
     @Override
-    public Integer getInt(EStateManagerKey key) {
+    public Integer getInt(IStateManagerKey key) {
         return getState(key, ints);
     }
 
     @Override
-    public Long getLong(EStateManagerKey key) {
+    public Long getLong(IStateManagerKey key) {
         return getState(key, longs);
     }
 
     @Override
-    public Float getFloat(EStateManagerKey key) {
+    public Float getFloat(IStateManagerKey key) {
         return getState(key, floats);
     }
 
     @Override
-    public String getString(EStateManagerKey key) {
+    public String getString(IStateManagerKey key) {
         return getState(key, strings);
     }
 
     @Override
-    public Boolean getBoolean(EStateManagerKey key) {
+    public Boolean getBoolean(IStateManagerKey key) {
         return getState(key, booleans);
     }
 
     @Nullable
-    protected <T> T getState(EStateManagerKey key, Map<EStateManagerKey, T> map) {
+    protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) {
         if (MapHelpers.IsNullOrEmpty(map)) {
             return null;
         }
@@ -305,7 +306,7 @@ public class StateManagerWithoutSocket
     /* ------------------------- SETTERS ------------------------- */
 
     @Override
-    public void setSerializable(EStateManagerKey key, ISerializable value) {
+    public void setSerializable(IStateManagerKey key, ISerializable value) {
         if (MapHelpers.IsNullOrEmpty(objects)) {
             objects = new HashMap<>();
         }
@@ -313,7 +314,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public void setInt(EStateManagerKey key, int value) {
+    public void setInt(IStateManagerKey key, int value) {
         if (MapHelpers.IsNullOrEmpty(ints)) {
             ints = new HashMap<>();
         }
@@ -321,7 +322,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public void setLong(EStateManagerKey key, long value) {
+    public void setLong(IStateManagerKey key, long value) {
         if (MapHelpers.IsNullOrEmpty(longs)) {
             longs = new HashMap<>();
         }
@@ -329,7 +330,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public void setFloat(EStateManagerKey key, float value) {
+    public void setFloat(IStateManagerKey key, float value) {
         if (MapHelpers.IsNullOrEmpty(floats)) {
             floats = new HashMap<>();
         }
@@ -337,7 +338,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public void setString(EStateManagerKey key, String value) {
+    public void setString(IStateManagerKey key, String value) {
         if (MapHelpers.IsNullOrEmpty(strings)) {
             strings = new HashMap<>();
         }
@@ -345,14 +346,14 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public void setBoolean(EStateManagerKey key, boolean value) {
+    public void setBoolean(IStateManagerKey key, boolean value) {
         if (MapHelpers.IsNullOrEmpty(booleans)) {
             booleans = new HashMap<>();
         }
         updateState(key, booleans, value);
     }
 
-    protected <T> void updateState(EStateManagerKey key, Map<EStateManagerKey, T> map, T value) {
+    protected <T> void updateState(IStateManagerKey key, Map<IStateManagerKey, T> map, T value) {
         if (!registeredKeys.contains(key)) {
             registeredKeys.add(key);
         }
