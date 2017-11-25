@@ -117,6 +117,10 @@ class SocketService
         return serverPort;
     }
 
+    @Deprecated
+    public Socket getSocket() {
+        return socket;
+    }
 
     /* ------------------------- SETTERS ------------------------- */
 

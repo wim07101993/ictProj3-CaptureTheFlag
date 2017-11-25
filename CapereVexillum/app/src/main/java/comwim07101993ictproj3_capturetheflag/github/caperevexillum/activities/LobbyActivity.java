@@ -36,7 +36,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
     // Socket (to be replaced with socket in background service??)
 
-    public String myTeam= Team.NO_TEAM;
+    public String myTeam = Team.NO_TEAM;
     private Boolean isHost = true;
     private String playerName = "";
     private int lobbyID = 0;
@@ -77,17 +77,16 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         }
 
 
-            socket.on("startGame", startGameActivityListener);
-            socket.on("getPlayersResult", getPlayersResult);
-            socket.on("leaveLobby", leaveLobby);
-            socket.emit("getPlayers", lobbyID);
+        stateManager.getSocketService().getSocket().on("startGame", startGameActivityListener);
+        stateManager.getSocketService().getSocket().on("getPlayersResult", getPlayersResult);
+        stateManager.getSocketService().getSocket().on("leaveLobby", leaveLobby);
+        stateManager.getSocketService().getSocket().emit("getPlayers", lobbyID);
 
     }
 
     @Override
     public void onClick(View view) {
-        if(lobbyID==0)
-        {
+        if (lobbyID == 0) {
             Bundle extras = getIntent().getExtras();
             playerName = extras.getString("playerName", "PLAYERNAME_NOT_FOUND");
             isHost = extras.getBoolean("isHost", false);
@@ -115,33 +114,33 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     }
 
     private void joinTeamOrange() {
-        if (socket != null) {
-            socket.emit("joinTeam", lobbyID, "orange", playerName);
+        if (stateManager.getSocketService().getSocket() != null) {
+            stateManager.getSocketService().getSocket().emit("joinTeam", lobbyID, "orange", playerName);
         }
     }
 
     private void joinTeamGreen() {
-        if (socket != null) {
-            socket.emit("joinTeam", lobbyID, "green", playerName);
+        if (stateManager.getSocketService().getSocket() != null) {
+            stateManager.getSocketService().getSocket().emit("joinTeam", lobbyID, "green", playerName);
         }
     }
 
     private void startGame() {
 
 
-            socket.emit("startLobby", lobbyID);
+        stateManager.getSocketService().getSocket().emit("startLobby", lobbyID);
 
     }
 
     private void leaveLobby() {
         // Tell the socket that we're leaving this lobby
-        if (socket != null && socket.connected()) {
+        if (stateManager.getSocketService().getSocket() != null && stateManager.getSocketService().getSocket().connected()) {
             if (isHost) {
-                socket.emit("hostLeft", lobbyID);
+                stateManager.getSocketService().getSocket().emit("hostLeft", lobbyID);
             } else {
-                socket.emit("leaveLobby", lobbyID, playerName);
+                stateManager.getSocketService().getSocket().emit("leaveLobby", lobbyID, playerName);
             }
-            socket.disconnect();
+            stateManager.getSocketService().getSocket().disconnect();
         }
         finish();
     }
@@ -149,40 +148,41 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     Emitter.Listener getPlayersResult = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            try{
-            String players = (String) args[0];
-            Gson gson = new Gson();
-            List<Player> playerList=gson.fromJson(players, new TypeToken<List<Player>>(){}.getType());
+            try {
+                String players = (String) args[0];
+                Gson gson = new Gson();
+                List<Player> playerList = gson.fromJson(players, new TypeToken<List<Player>>() {
+                }.getType());
 
 
-            ArrayList<Player> teamGreen = new ArrayList<Player>();
-            ArrayList<Player> teamOrange = new ArrayList<Player>();
-            ArrayList<Player> noTeam = new ArrayList<Player>();
+                ArrayList<Player> teamGreen = new ArrayList<Player>();
+                ArrayList<Player> teamOrange = new ArrayList<Player>();
+                ArrayList<Player> noTeam = new ArrayList<Player>();
 
-            for (Player p : playerList) {
+                for (Player p : playerList) {
 
-                switch (p.getTeam().getTeamname()) {
-                    case "orange":
-                        teamOrange.add(p);
-                        break;
+                    switch (p.getTeam().getTeamname()) {
+                        case "orange":
+                            teamOrange.add(p);
+                            break;
 
-                    case "green":
-                        teamGreen.add(p);
-                        break;
+                        case "green":
+                            teamGreen.add(p);
+                            break;
 
-                    case "no_team":
-                        noTeam.add(p);
-                        break;
+                        case "no_team":
+                            noTeam.add(p);
+                            break;
+                    }
+                    if (p.getName().equals(playerName)) {
+                        myTeam = p.getTeam().getTeamname();
+                    }
                 }
-                if(p.getName().equals(playerName)){
-                    myTeam=p.getTeam().getTeamname();
-                }
-            }
-            updateUI(noTeam, noTeamListView);
-            updateUI(teamOrange, teamOrangeListView);
-            updateUI(teamGreen, teamGreenListView);
-            }catch(Exception ex){
-                Log.d("LobbyActivity","can't parse response");
+                updateUI(noTeam, noTeamListView);
+                updateUI(teamOrange, teamOrangeListView);
+                updateUI(teamGreen, teamGreenListView);
+            } catch (Exception ex) {
+                Log.d("LobbyActivity", "can't parse response");
             }
         }
     };
@@ -200,39 +200,42 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         }
     };
     public LobbyActivity parent;
-    public void startGameActivity(){
+
+    public void startGameActivity() {
 
 
         Intent i = new Intent(this, GameActivity.class);
-        if(myTeam.equals(Team.NO_TEAM)){
+        if (myTeam.equals(Team.NO_TEAM)) {
             Random rand = new Random();
 
-            int  n = rand.nextInt(50) + 1;
-            if(n<25){
-                myTeam=Team.TEAM_GREEN;
-            }else{
-                myTeam=Team.TEAM_ORANGE;
+            int n = rand.nextInt(50) + 1;
+            if (n < 25) {
+                myTeam = Team.TEAM_GREEN;
+            } else {
+                myTeam = Team.TEAM_ORANGE;
             }
         }
-        showToast("Your team is:"+myTeam);
+        showToast("Your team is:" + myTeam);
         i.putExtra("myTeam", myTeam);
         startActivity(i);
 
     }
+
     Emitter.Listener startGameActivityListener = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            try{
+            try {
                 Gson gson = new Gson();
-                String request =(String) args[0];
-                Player[] players = gson.fromJson(request,Player[].class);
-                for(Player player : players){
-                    if(player.getName().equals(playerName)){
-                        myTeam=player.getTeam().getTeamname();
+                String request = (String) args[0];
+                Player[] players = gson.fromJson(request, Player[].class);
+                for (Player player : players) {
+                    if (player.getName().equals(playerName)) {
+                        myTeam = player.getTeam().getTeamname();
                     }
                 }
 
-            }catch(Exception ex){}
+            } catch (Exception ex) {
+            }
 
             startGameActivity();
         }
@@ -273,12 +276,11 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-               try{
-                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-               }
-               catch(Exception err){
-                   Log.e("Lobby activity","show toast");
-               }
+                try {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                } catch (Exception err) {
+                    Log.e("Lobby activity", "show toast");
+                }
             }
         });
     }

@@ -6,9 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -21,10 +19,8 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
 
-
         joinButton = (Button) findViewById(R.id.joinLobbyButton);
         createButton = (Button) findViewById(R.id.createLobbyButton);
-
 
 
         joinButton.setOnClickListener(new View.OnClickListener() {

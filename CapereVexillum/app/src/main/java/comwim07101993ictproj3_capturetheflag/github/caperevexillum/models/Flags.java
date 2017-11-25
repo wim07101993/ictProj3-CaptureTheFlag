@@ -1,17 +1,16 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.Arrays;
 import java.util.Vector;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
@@ -21,7 +20,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sock
  * Created by Michiel on 12/10/2017.
  */
 
-public class Flags {
+public class Flags implements ISerializable {
+
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
@@ -29,8 +29,12 @@ public class Flags {
     /**
      * Property that keeps track of all the flags
      */
-    private Vector<Flag> registeredFlags = new Vector<Flag>();
+    private Vector<Flag> registeredFlags = new Vector<>();
+
     private IFlagSync flagSyncListener;
+
+
+
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
@@ -39,27 +43,27 @@ public class Flags {
      * Constructor creates an instance of Flags
      * no properties need to be set
      */
-
-
     public Flags() {/*Nothing to do here*/}
 
-    Gson gson = new Gson();
-    /* ----------------------------------------------------------- */
-    /* ------------------------- listeners ------------------------- */
-    /* ----------------------------------------------------------- */
+
+
+    /* ------------------------------------------------------------- */
+    /* ------------------------- LISTENERS ------------------------- */
+    /* -------------------------------------------))---------------- */
+
     Emitter.Listener resyncFlags = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-    try{
-            String request = (String) args[0];
-            Log.d("resyncflags",request);
-            Flag[] requestedFlags = gson.fromJson(request, Flag[].class);
-            Vector<Flag> newFlags = new Vector(Arrays.asList(requestedFlags));
-            registeredFlags = newFlags;
-            //updateScoreInView.obtainMessage(1).sendToTarget();
-        flagSyncListener.syncFlags();
+            try {
+                String request = (String) args[0];
+                Log.d("resyncflags", request);
+                Flag[] requestedFlags = new Gson().fromJson(request, Flag[].class);
+                registeredFlags = (Vector<Flag>) new Vector(Arrays.asList(requestedFlags));
+                //updateScoreInView.obtainMessage(1).sendToTarget();
+                flagSyncListener.syncFlags();
 
-    }catch (Exception ex){}
+            } catch (Exception ignored) {
+            }
         }
     };
 
@@ -75,10 +79,9 @@ public class Flags {
      * @param flag the flag to add
      */
     public void addFlag(Flag flag) {
-
         registeredFlags.add(flag);
-        Socket socket =SocketInstance.socket();
-        String sendValue = gson.toJson(flag).toString();
+        Socket socket = SocketInstance.socket();
+        String sendValue = new Gson().toJson(flag).toString();
         socket.emit("captureFlag", sendValue);
     }
 
@@ -113,6 +116,20 @@ public class Flags {
         return null;
     }
 
+    @Override
+    public String Serialize() {
+        return new Gson().toJson(registeredFlags);
+    }
+
+    @Override
+    public void Deserialize(String serializedObject) {
+        Vector<Flag> flags = new Gson().fromJson(serializedObject, new TypeToken<Vector<Flag>>() {
+        }.getType());
+
+        this.registeredFlags = flags;
+    }
+
+
     /* ------------------------- GETTERS ------------------------- */
 
     /**
@@ -122,13 +139,14 @@ public class Flags {
         return registeredFlags;
     }
 
+
+
     /* ------------------------- SETTERS ------------------------- */
 
     /**
      * @param registeredFlags the registeredFlags vector's content
      */
     public void setRegisteredFlags(Vector<Flag> registeredFlags) {
-
         this.registeredFlags = registeredFlags;
     }
 
@@ -162,4 +180,5 @@ public class Flags {
         Socket socket = SocketInstance.socket();
         socket.on("syncFlags", resyncFlags);
     }
+
 }

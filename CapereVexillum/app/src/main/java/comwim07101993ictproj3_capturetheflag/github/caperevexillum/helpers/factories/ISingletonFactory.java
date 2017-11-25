@@ -9,4 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 public interface ISingletonFactory<T> {
     T get(Object... args) throws IllegalAccessException, InvocationTargetException, InstantiationException;
     T get();
+
+    T createNew(Object... args) throws IllegalAccessException, InstantiationException, InvocationTargetException;
 }

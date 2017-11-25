@@ -1,5 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces;
 
+import com.github.nkzawa.socketio.client.Socket;
+
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.IListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.INotifier;
 
@@ -12,4 +14,7 @@ public interface ISocketService<TKey> extends INotifier<IListener<INotifier, TKe
 
     String getServerAddress();
     int getServerPort();
+
+    @Deprecated
+    Socket getSocket();
 }

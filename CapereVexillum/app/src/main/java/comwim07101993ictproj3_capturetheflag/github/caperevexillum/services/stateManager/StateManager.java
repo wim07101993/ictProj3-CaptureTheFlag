@@ -53,6 +53,15 @@ public class StateManager extends StateManagerWithoutSocket implements IListener
     public StateManager(SharedPreferences sharedPreferences) {
         super(sharedPreferences);
 
+        initSocket();
+    }
+
+
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
+
+    private void initSocket() {
         if (socketFactory == null) {
             socketFactory = new SocketFactory();
         }
@@ -64,11 +73,6 @@ public class StateManager extends StateManagerWithoutSocket implements IListener
             e.printStackTrace();
         }
     }
-
-
-    /* ----------------------------------------------------------- */
-    /* ------------------------- METHODS ------------------------- */
-    /* ----------------------------------------------------------- */
 
     // TODO WIM: WEAK POINT: TEST METHOD (args converter)
     @Override
@@ -87,6 +91,14 @@ public class StateManager extends StateManagerWithoutSocket implements IListener
         }
     }
 
+    public void restartSocket() {
+        try {
+            socketService = socketFactory.createNew(SERVER_ADDRESS, SERVER_PORT);
+            initSocket();
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
 
     /* ------------------------- GETTERS ------------------------- */
 
@@ -101,7 +113,7 @@ public class StateManager extends StateManagerWithoutSocket implements IListener
         return super.getState(key, map);
     }
 
-    public ISocketService<ISocketKey> getSocket() {
+    public ISocketService<ISocketKey> getSocketService() {
         return socketService;
     }
 

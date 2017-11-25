@@ -23,7 +23,7 @@ public interface IStateManager<TKey>
      * @param key is the key to get value of.
      * @return The value of the state behind of TKey key.
      */
-    ISerializable getISerializable(TKey key);
+    ISerializable getSerializable(TKey key);
 
     /**
      * get is supposed to return the state behind of TKey key.

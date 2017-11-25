@@ -1,7 +1,6 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,19 +9,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.Socket;
-
-import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.IStateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.OnStateChangedListener;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 
-public class CreateLobbyActivity extends AActivityWithStateManager implements View.OnClickListener  {
+public class CreateLobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
 
 
     private EditText lobbyNameEditText, passwordEditText, timeEditText, playerNameEditText;
@@ -35,14 +27,13 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_lobby);
 
-        playerNameEditText = (EditText)findViewById(R.id.playername_edittext);
-        lobbyNameEditText = (EditText)findViewById(R.id.lobbyname_edittext);
-        passwordEditText = (EditText)findViewById(R.id.lobbypassword_edittext);
-        timeEditText = (EditText)findViewById(R.id.lobbytime_edittext);
+        playerNameEditText = (EditText) findViewById(R.id.playername_edittext);
+        lobbyNameEditText = (EditText) findViewById(R.id.lobbyname_edittext);
+        passwordEditText = (EditText) findViewById(R.id.lobbypassword_edittext);
+        timeEditText = (EditText) findViewById(R.id.lobbytime_edittext);
 
-        createLobbyButton = (Button)findViewById(R.id.createLobby);
+        createLobbyButton = (Button) findViewById(R.id.createLobby);
         createLobbyButton.setOnClickListener(this);
-
 
 
     }
@@ -50,19 +41,20 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
 
     @Override
     public void onClick(View view) {
-        socket = SocketInstance.restartSocket();
+        stateManager.restartSocket();
+
 
         playerName = playerNameEditText.getText().toString();
         lobbyName = lobbyNameEditText.getText().toString();
         lobbyPassword = passwordEditText.getText().toString();
         lobbyTime = timeEditText.getText().toString();
-        stateManager.set(StateManagerKey.PLAYER_NAME, playerName);
-        stateManager.set(StateManagerKey.IS_HOST, true);
-        stateManager.set(StateManagerKey.LOBBY_ID, 0);
-        socket.on("lobbyExists", lobbyExists);
-        socket.on("getLobbyId", getLobbyId);
-        socket.on("playerNameUnavailable", playerNameUnavailable);
-        socket.emit("createLobby", playerName, lobbyName, lobbyPassword, lobbyTime);
+        stateManager.setString(EStateManagerKey.PLAYER_NAME, playerName);
+        stateManager.setBoolean(EStateManagerKey.IS_HOST, true);
+        stateManager.setInt(EStateManagerKey.LOBBY_ID, 0);
+        stateManager.getSocketService().getSocket().on("lobbyExists", lobbyExists);
+        stateManager.getSocketService().getSocket().on("getLobbyId", getLobbyId);
+        stateManager.getSocketService().getSocket().on("playerNameUnavailable", playerNameUnavailable);
+        stateManager.getSocketService().getSocket().emit("createLobby", playerName, lobbyName, lobbyPassword, lobbyTime);
     }
 
     Emitter.Listener lobbyExists = new Emitter.Listener() {
@@ -76,7 +68,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         @Override
         public void call(Object... args) {
             // navigate
-           // String test = (String) args[0];
+            // String test = (String) args[0];
             Intent goToLobby;
             Integer lobbyID = (Integer) args[0];
             goToLobby = new Intent(CreateLobbyActivity.this, LobbyActivity.class);
@@ -95,7 +87,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         }
     };
 
-    private void showToast(final String msg){
+    private void showToast(final String msg) {
         final CreateLobbyActivity context = this;
 
         runOnUiThread(new Runnable() {
@@ -103,8 +95,8 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
             public void run() {
                 try {
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                }catch(Exception ex){
-                    Log.d("Create lobby","error showing toast");
+                } catch (Exception ex) {
+                    Log.d("Create lobby", "error showing toast");
                 }
             }
         });

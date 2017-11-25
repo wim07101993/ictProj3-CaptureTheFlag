@@ -6,8 +6,7 @@ import android.widget.Button;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 
 public class EndActivity extends AActivityWithStateManager implements View.OnClickListener{
 
@@ -54,13 +53,13 @@ public class EndActivity extends AActivityWithStateManager implements View.OnCli
     }
 
     private void restartLobby() {
-        LobbyID = (Integer) stateManager.get(StateManagerKey.LOBBY_ID);
-        socket.emit("restartLobby", LobbyID);
+        LobbyID = (Integer) stateManager.getInt(EStateManagerKey.LOBBY_ID);
+        stateManager.getSocketService().getSocket().emit("restartLobby", LobbyID);
     }
 
     private void leaveLobby() {
-        LobbyID = (Integer) stateManager.get(StateManagerKey.LOBBY_ID);
-        playerName = (String) stateManager.get(StateManagerKey.PLAYER_NAME);
-        socket.emit("leaveLobby", LobbyID, playerName);
+        LobbyID = (Integer) stateManager.getInt(EStateManagerKey.LOBBY_ID);
+        playerName = (String) stateManager.getString(EStateManagerKey.PLAYER_NAME);
+        stateManager.getSocketService().getSocket().emit("leaveLobby", LobbyID, playerName);
     }
 }

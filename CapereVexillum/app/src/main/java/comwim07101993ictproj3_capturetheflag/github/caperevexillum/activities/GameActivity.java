@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 
@@ -40,8 +39,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beac
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.IBeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.MockBeaconScanner;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.OnScanListener;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 
 public class GameActivity extends AActivityWithStateManager implements OnScanListener, IFlagSync {
@@ -179,11 +178,11 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
 
 
-        Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
+        Flags flags = (Flags) stateManager.getSerializable(EStateManagerKey.FLAGS);
 
         flags.setSyncFlagListener(this);
         flags.startSocketListener();
-        stateManager.set(StateManagerKey.FLAGS, flags);
+        stateManager.setSerializable(EStateManagerKey.FLAGS, flags);
 
     }
 
@@ -286,7 +285,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             return;
         }
 
-        Flag flag = ((Flags) stateManager.get(StateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
+        Flag flag = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
         if(flag!=null){
             //it's a nested if because get team would return on null
             //return if my team already has the flag
@@ -321,7 +320,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     public void syncFlags() {
 
                 try{
-                    Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
+                    Flags flags = (Flags) stateManager.getSerializable(EStateManagerKey.FLAGS);
                     int redFlags = flags.getFlagByTeam(Team.TEAM_ORANGE);
                     int greenFlags = flags.getFlagByTeam(Team.TEAM_GREEN);
                     scoreFragment.setFlags(redFlags, greenFlags);
@@ -354,7 +353,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     Emitter.Listener startTimer = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            stateManager.set(StateManagerKey.GAME_STARTED, true);
+            stateManager.setBoolean(EStateManagerKey.GAME_STARTED, true);
             String request = (String) args[0];
             gameTime = Float.parseFloat(request);
             startTimeHandler.obtainMessage(1).sendToTarget();
@@ -368,12 +367,12 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             gameTimer.addListener(new OnGameTimerFinishedListener() {
                 @Override
                 public void OnGameTimerFinished() {
-                    Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
+                    Flags flags = (Flags) stateManager.getSerializable(EStateManagerKey.FLAGS);
                     Utils.toast(getApplicationContext(), "Game Finished, you have captured "
                             + flags.getRegisteredFlags().size() +
                             " flags");
                     timerTextView.setText(R.string.finished);
-                    stateManager.set(StateManagerKey.GAME_STARTED, false);
+                    stateManager.setBoolean(EStateManagerKey.GAME_STARTED, false);
                 }
             });
         }

@@ -2,16 +2,20 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+
 import java.util.Calendar;
 import java.util.Date;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 
 /**
  * Created by Michiel on 12/10/2017.
  */
-public class Flag {
+public class Flag implements ISerializable {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -20,14 +24,18 @@ public class Flag {
     /**
      * Property that keeps track of this Flag's beacon's MAC address
      */
+    @Expose
     private String beaconMAC;
 
     /**
      * Property that keeps track of whether this Flag is in cooldown or not
      */
-    private int cooldownTime=30;
+    @Expose
+    private int cooldownTime = 30;
+
     private Date cooldownTimer;
 
+    @Expose
     private boolean timerFixer = false;
     /**
      * Team identifier no team
@@ -37,7 +45,10 @@ public class Flag {
     /**
      * Property that keeps track of this specific Flag's Team alignment
      */
+    @Expose
     public String team;
+
+
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
@@ -58,9 +69,11 @@ public class Flag {
         //Sets the Team alignment to no team
         team = NO_TEAM;
         cooldownTimer = Calendar.getInstance().getTime();
-        cooldownTimer.setMinutes(cooldownTimer.getMinutes()+cooldownTime);
+        cooldownTimer.setMinutes(cooldownTimer.getMinutes() + cooldownTime);
 
     }
+
+
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -69,8 +82,6 @@ public class Flag {
     /**
      * Method enables cooldown for this Flag
      */
-
-
     /**
      * Method changes this Flag's team alignment
      * and activates cooldown for this Flag
@@ -79,20 +90,33 @@ public class Flag {
      */
     public void CaptureAndCooldown(String teamIdentifier) {
 
-            //Sets this Flag's team alignment to the team that captured it
-            team = teamIdentifier;
-            //Sets this Flag to cooldown
-
+        //Sets this Flag's team alignment to the team that captured it
+        team = teamIdentifier;
+        //Sets this Flag to cooldown
 
 
         Calendar coolDownCal = Calendar.getInstance();
-        Date test=coolDownCal.getTime();
-        coolDownCal.add(Calendar.SECOND,cooldownTime);
+        Date test = coolDownCal.getTime();
+        coolDownCal.add(Calendar.SECOND, cooldownTime);
         cooldownTimer = coolDownCal.getTime();
-        Log.d("Flag","CooldownSet");
+        Log.d("Flag", "CooldownSet");
 
 
+    }
 
+    @Override
+    public String Serialize() {
+        return new Gson().toJson(this);
+    }
+
+    @Override
+    public void Deserialize(String serializedObject) {
+        Flag This = new Gson().fromJson(serializedObject, Flag.class);
+
+        this.beaconMAC = This.beaconMAC;
+        this.cooldownTime = This.cooldownTime;
+        this.timerFixer = This.timerFixer;
+        this.team = This.team;
     }
 
 
@@ -115,9 +139,11 @@ public class Flag {
         long now = nowTime.getTime();
         return (now < cooldown);
     }
+
     public Date getCooldownTime() {
-        return  cooldownTimer;
+        return cooldownTimer;
     }
+
     /**
      * @return the Flag's team alignment
      */
@@ -134,12 +160,11 @@ public class Flag {
         this.beaconMAC = beacon.getAddress();
     }
 
-
-
     /**
      * @param team the Flag's team alignment
      */
     public void setTeam(String team) {
         this.team = team;
     }
+
 }

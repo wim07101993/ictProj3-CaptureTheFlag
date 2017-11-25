@@ -35,4 +35,10 @@ public abstract class SingletonFactory<T> implements ISingletonFactory<T> {
     public T get() {
         return product;
     }
+
+    @Override
+    public T createNew(Object... args) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        product = null;
+        return get(args);
+    }
 }

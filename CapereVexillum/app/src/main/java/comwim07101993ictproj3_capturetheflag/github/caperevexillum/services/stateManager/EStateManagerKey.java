@@ -81,7 +81,7 @@ public enum EStateManagerKey implements IStateManagerKey {
     LOBBY_ID {
         @Override
         public Class getValueClass() {
-            return String.class;
+            return int.class;
         }
     },
 

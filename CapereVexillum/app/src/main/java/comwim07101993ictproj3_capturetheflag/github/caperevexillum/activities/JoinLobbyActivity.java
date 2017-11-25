@@ -1,9 +1,8 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.content.Intent;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,16 +10,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
-import java.net.URISyntaxException;
-
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
 public class JoinLobbyActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -79,9 +74,9 @@ public class JoinLobbyActivity extends AppCompatActivity implements View.OnClick
                 goToLobby.putExtra("isHost", false);
                 goToLobby.putExtra("lobbyID", lobbyID);
 
-                stateManager.set(StateManagerKey.PLAYER_NAME, playerNameEditText.getText().toString());
-                stateManager.set(StateManagerKey.IS_HOST, false);
-                stateManager.set(StateManagerKey.LOBBY_ID, lobbyID);
+                stateManager.setString(EStateManagerKey.PLAYER_NAME, playerNameEditText.getText().toString());
+                stateManager.setBoolean(EStateManagerKey.IS_HOST, false);
+                stateManager.setInt(EStateManagerKey.LOBBY_ID, lobbyID);
 
                 startActivity(goToLobby);
             }

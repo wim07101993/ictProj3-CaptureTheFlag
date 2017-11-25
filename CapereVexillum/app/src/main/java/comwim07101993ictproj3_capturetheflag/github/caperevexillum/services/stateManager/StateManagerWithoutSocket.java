@@ -231,7 +231,7 @@ public class StateManagerWithoutSocket
         }
 
         for (IStateManagerKey key : objects.keySet()) {
-            editor.putString(key.toString(), getISerializable(key).Serialize());
+            editor.putString(key.toString(), getSerializable(key).Serialize());
         }
     }
 
@@ -289,7 +289,7 @@ public class StateManagerWithoutSocket
     /* ------------------------- GETTERS ------------------------- */
 
     @Override
-    public ISerializable getISerializable(IStateManagerKey key) {
+    public ISerializable getSerializable(IStateManagerKey key) {
         return getState(key, objects);
     }
 
