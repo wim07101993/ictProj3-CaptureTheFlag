@@ -6,7 +6,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.facto
  * Created by wimva on 25/11/2017.
  */
 
-public class SocketFactory extends SingletonFactory<SocketService> {
+public final class SocketFactory extends SingletonFactory<SocketService> {
 
     public SocketFactory() {
         super(SocketService.class);
