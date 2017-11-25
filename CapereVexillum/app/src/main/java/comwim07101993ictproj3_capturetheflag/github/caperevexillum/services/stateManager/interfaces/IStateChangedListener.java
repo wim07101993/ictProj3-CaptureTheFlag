@@ -1,6 +1,4 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
-
-import java.util.List;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.IListener;
 

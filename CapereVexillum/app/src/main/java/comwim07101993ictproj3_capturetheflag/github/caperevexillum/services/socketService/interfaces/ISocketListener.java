@@ -1,4 +1,4 @@
-package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService;
+package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.IListener;
 

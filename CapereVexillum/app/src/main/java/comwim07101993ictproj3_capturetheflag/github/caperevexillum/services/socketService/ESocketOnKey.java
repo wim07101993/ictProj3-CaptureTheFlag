@@ -1,6 +1,8 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 
 /**
  * Created by wimva on 25/11/2017.
@@ -47,6 +49,20 @@ public enum ESocketOnKey implements ISocketKey {
         @Override
         public Class getValueClass() {
             return float.class;
+        }
+    },
+
+    SYNC_FLAGS {
+        private static final String IDENTIFIER = "syncFlags";
+
+        @Override
+        public String getStringIdentifier() {
+            return IDENTIFIER;
+        }
+
+        @Override
+        public Class getValueClass() {
+            return Flag[].class;
         }
     },
 

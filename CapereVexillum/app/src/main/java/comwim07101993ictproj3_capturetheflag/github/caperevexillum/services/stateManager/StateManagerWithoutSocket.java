@@ -14,6 +14,7 @@ import java.util.Vector;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.MapHelpers;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.ANotifier;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 /**
  * Created by wimva on 25/11/2017.

@@ -10,6 +10,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Array
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.ANotifier;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.IListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.INotifier;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketService;
 
 /**
  * Created by wimva on 25/11/2017.
