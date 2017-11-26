@@ -53,7 +53,7 @@ class SocketService
     private void initSocket() {
         try {
             socket = IO.socket(serverIPAddress + ":" + serverPort);
-
+            socket.connect();
             registerListeners();
 
         } catch (URISyntaxException e) {
