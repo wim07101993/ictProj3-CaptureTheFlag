@@ -13,7 +13,7 @@ import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.MapHelpers;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.ANotifier;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
@@ -22,7 +22,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
  */
 
 public class StateManagerWithoutSocket
-        extends ANotifier<IStateManagerKey>
+        extends AObservable
         implements IStateManager<IStateManagerKey> {
 
     /* ---------------------------------------------------------- */
@@ -326,6 +326,12 @@ public class StateManagerWithoutSocket
         return map.get(key);
     }
 
+    @NonNull
+    @Override
+    public String getTAG() {
+        return TAG;
+    }
+
 
     /* ------------------------- SETTERS ------------------------- */
 
@@ -389,7 +395,9 @@ public class StateManagerWithoutSocket
             registeredKeys.add(key);
         }
 
-        map.put(key, value);
-        notifyListeners(key, value);
+        T oldValue = map.get(key);
+        T newValue = map.put(key, value);
+        StateChangedArgs<T> args = new StateChangedArgs<>(oldValue, newValue, key);
+        notifyObservers(args);
     }
 }

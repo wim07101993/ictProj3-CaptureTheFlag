@@ -1,11 +1,15 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
+import com.google.gson.Gson;
+
 import java.util.Arrays;
 import java.util.Vector;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ArrayHelpers;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketEmitKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
@@ -19,10 +23,19 @@ final class ArgsConverter {
         if (stateManagerKey == EStateManagerKey.TEAMS) {
             return Arrays.asList((Team[]) args);
         } else if (stateManagerKey == EStateManagerKey.FLAGS) {
-            Flag[] flagsArray = (Flag[]) args;
+            Object[] argsArray = (Object[]) args;
+            if (ArrayHelpers.IsNullOrEmpty(argsArray)) {
+                return new Flags();
+            }
 
-            Vector<Flag> flagsVector = new Vector<>(flagsArray.length);
-            flagsVector.addAll(Arrays.asList(flagsArray));
+            if (argsArray[0].equals("[]")) {
+                return new Flags();
+            }
+
+            Vector<Flag> flagsVector = new Vector<>(argsArray.length);
+            for (Object a : argsArray) {
+                flagsVector.add((Flag) a);
+            }
 
             Flags flags = new Flags();
             flags.setRegisteredFlags(flagsVector);
@@ -38,7 +51,9 @@ final class ArgsConverter {
     }
 
     static Object ConvertStateManagerStateToSocketArgs(ISocketKey socketKey, Object args) {
-        
+        if (socketKey == ESocketEmitKey.CAPTURE_FLAG){
+            return new Gson().toJson(args);
+        }
         return args;
     }
 

@@ -3,11 +3,11 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 import java.util.List;
 import java.util.Set;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketEmitKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketOnKey;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 /**
@@ -145,12 +145,24 @@ public enum EStateManagerKey implements IStateManagerKey {
         public ESocketOnKey getSocketOnKey() {
             return ESocketOnKey.HOST;
         }
+    },
+
+    CAPTURED_FLAG {
+        @Override
+        public Class getValueClass() {
+            return Flag.class;
+        }
+
+        @Override
+        public ESocketEmitKey getSocketEmitPutKey() {
+            return ESocketEmitKey.CAPTURE_FLAG;
+        }
     };
 
 
-    public static EStateManagerKey convertFromString(String stringKey){
-        for (EStateManagerKey key : EStateManagerKey.values()){
-            if (key.toString().equals(stringKey)){
+    public static EStateManagerKey convertFromString(String stringKey) {
+        for (EStateManagerKey key : EStateManagerKey.values()) {
+            if (key.toString().equals(stringKey)) {
                 return key;
             }
         }

@@ -5,12 +5,14 @@ import android.support.annotation.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.IListener;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.INotifier;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketEmitKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketFactory;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketValueChangedArgs;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketService;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
@@ -24,7 +26,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
  * The StateManagerKey enum is used as key for the abstract class.
  */
 
-public class StateManager extends StateManagerWithoutSocket implements IListener<INotifier, ISocketKey> {
+public class StateManager extends StateManagerWithoutSocket implements Observer {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -68,7 +70,7 @@ public class StateManager extends StateManagerWithoutSocket implements IListener
 
         try {
             socketService = socketFactory.get(SERVER_ADDRESS, SERVER_PORT);
-            socketService.addListener(this);
+            socketService.addObserver(this);
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
             e.printStackTrace();
         }
@@ -76,7 +78,14 @@ public class StateManager extends StateManagerWithoutSocket implements IListener
 
     // TODO WIM: WEAK POINT: TEST METHOD (args converter)
     @Override
-    public void notify(INotifier sender, ISocketKey socketKey, Object socketArgs) {
+    public void update(Observable observable, Object args) {
+        if (!(args instanceof SocketValueChangedArgs)){
+            return;
+        }
+
+        ISocketKey socketKey = ((SocketValueChangedArgs)args).getKey();
+        Object socketArgs = ((SocketValueChangedArgs)args).getArgs();
+
         for (IStateManagerKey stateManagerKey : EStateManagerKey.values()) {
             if (stateManagerKey.getSocketOnKey() == socketKey) {
                 super.updateState(
@@ -128,4 +137,5 @@ public class StateManager extends StateManagerWithoutSocket implements IListener
 
         super.updateState(key, map, value);
     }
+
 }

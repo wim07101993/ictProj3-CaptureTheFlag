@@ -1,21 +1,19 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.IListener;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.INotifier;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
 
 /**
  * Created by Wim Van Laer on 20/10/2017.
  * Last Updated by Wim Van Laer on 25/11/2017.
- *
+ * <p>
  * The IStateManager is an interface for a state manager. If you want an abstract with most of the
  * methods implemented you can use the AStateManager.
- *
+ * <p>
  * TKey is the type of the keys to identify the different states.
  */
 
-public interface IStateManager<TKey>
-        extends INotifier<IListener<INotifier, TKey>, TKey> {
+public interface IStateManager<TKey> extends IObservable {
 
     /**
      * get is supposed to return the state behind of TKey key.
@@ -132,4 +130,5 @@ public interface IStateManager<TKey>
      * clear is supposed to clear all the data stored on the device.
      */
     void clear();
+
 }

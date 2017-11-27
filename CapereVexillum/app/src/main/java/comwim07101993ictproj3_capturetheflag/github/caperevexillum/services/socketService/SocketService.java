@@ -1,5 +1,8 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService;
 
+import android.os.OperationCanceledException;
+import android.support.annotation.NonNull;
+
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -7,9 +10,7 @@ import com.github.nkzawa.socketio.client.Socket;
 import java.net.URISyntaxException;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ArrayHelpers;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.ANotifier;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.IListener;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.notifier.INotifier;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketService;
 
@@ -18,7 +19,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sock
  */
 
 class SocketService
-        extends ANotifier<ISocketKey>
+        extends AObservable
         implements ISocketService<ISocketKey> {
 
     /* ---------------------------------------------------------- */
@@ -54,6 +55,11 @@ class SocketService
         try {
             socket = IO.socket(serverIPAddress + ":" + serverPort);
             socket.connect();
+
+            if (!socket.connected()) {
+                throw new OperationCanceledException("No connecion with the server!");
+            }
+
             registerListeners();
 
         } catch (URISyntaxException e) {
@@ -69,9 +75,11 @@ class SocketService
                     Class c = key.getValueClass();
 
                     if (args.getClass().isAssignableFrom(c)) {
-                        notifyListeners(key, args);
+                        SocketValueChangedArgs socketValueChangedArgs = new SocketValueChangedArgs(key, args);
+                        notifyObservers(socketValueChangedArgs);
                     } else if (!ArrayHelpers.IsNullOrEmpty(args) && args[0].getClass().isAssignableFrom(c)) {
-                        notifyListeners(key, args[0]);
+                        SocketValueChangedArgs socketValueChangedArgs = new SocketValueChangedArgs(key, args[0]);
+                        notifyObservers(socketValueChangedArgs);
                     }
                 }
             });
@@ -97,14 +105,6 @@ class SocketService
         }
     }
 
-    @Override
-    public boolean addSpecificListener(IListener<INotifier, ISocketKey> listener, ISocketKey key) {
-        if (key.getMode() == ISocketKey.EMode.ON) {
-            return super.addSpecificListener(listener, key);
-        }
-        throw new UnsupportedOperationException("The key " + key.getStringIdentifier() + " does not support listening.");
-    }
-
     /* ------------------------- GETTERS ------------------------- */
 
     @Override
@@ -120,6 +120,12 @@ class SocketService
     @Deprecated
     public Socket getSocket() {
         return socket;
+    }
+
+    @NonNull
+    @Override
+    public String getTAG() {
+        return TAG;
     }
 
     /* ------------------------- SETTERS ------------------------- */
