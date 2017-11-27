@@ -11,7 +11,6 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Array
 
 public abstract class SingletonFactory<T> implements ISingletonFactory<T> {
 
-    private T product;
     private Class<T> productType;
 
     protected SingletonFactory(Class<T> productType) {
@@ -20,31 +19,35 @@ public abstract class SingletonFactory<T> implements ISingletonFactory<T> {
 
     @Override
     public T get(Object... args) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        if (product == null) {
+        if (getStaticProduct() == null) {
             try {
-                Constructor[] constructors = productType.getConstructors();
-                if(ArrayHelpers.IsNullOrEmpty(constructors)){
+                Constructor<T>[] constructors = (Constructor<T>[]) productType.getConstructors();
+                if (ArrayHelpers.IsNullOrEmpty(constructors)) {
                     throw new NoSuchMethodException();
                 }
                 Constructor<T> constructor = constructors[0];
-                product = constructor.newInstance(args);
+                setStaticProduct(constructor.newInstance(args));
             } catch (NoSuchMethodException e) {
                 String error = "Cannot get the constructor for type " + productType + ".";
                 throw new UnsupportedOperationException(error);
             }
         }
 
-        return product;
+        return getStaticProduct();
     }
 
     @Override
     public T get() {
-        return product;
+        return getStaticProduct();
     }
 
     @Override
     public T createNew(Object... args) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        product = null;
+        setStaticProduct(null);
         return get(args);
     }
+
+    protected abstract T getStaticProduct();
+
+    protected abstract void setStaticProduct(T value);
 }
