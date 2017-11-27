@@ -3,7 +3,6 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 import android.util.Log;
 
 import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -13,7 +12,6 @@ import java.util.Vector;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
 
 
 /**
@@ -31,7 +29,7 @@ public class Flags implements ISerializable {
      */
     private Vector<Flag> registeredFlags = new Vector<>();
 
-    private IFlagSync flagSyncListener;
+    // private IFlagSync flagSyncListener;
 
 
 
@@ -60,7 +58,7 @@ public class Flags implements ISerializable {
                 Flag[] requestedFlags = new Gson().fromJson(request, Flag[].class);
                 registeredFlags = (Vector<Flag>) new Vector(Arrays.asList(requestedFlags));
                 //updateScoreInView.obtainMessage(1).sendToTarget();
-                flagSyncListener.syncFlags();
+                //  flagSyncListener.syncFlags();
 
             } catch (Exception ignored) {
             }
@@ -80,9 +78,9 @@ public class Flags implements ISerializable {
      */
     public void addFlag(Flag flag) {
         registeredFlags.add(flag);
-        Socket socket = SocketInstance.socket();
-        String sendValue = new Gson().toJson(flag).toString();
-        socket.emit("captureFlag", sendValue);
+//        Socket socket = SocketInstance.socket();
+//        String sendValue = new Gson().toJson(flag);
+//        socket.emit("captureFlag", sendValue);
     }
 
     /**
@@ -171,14 +169,14 @@ public class Flags implements ISerializable {
         }
         return amountOfFlags;
     }
-
-    public void setSyncFlagListener(IFlagSync flagSyncListener) {
-        this.flagSyncListener = flagSyncListener;
-    }
-
-    public void startSocketListener() {
-        Socket socket = SocketInstance.socket();
-        socket.on("syncFlags", resyncFlags);
-    }
+//
+//    public void setSyncFlagListener(IFlagSync flagSyncListener) {
+//        this.flagSyncListener = flagSyncListener;
+//    }
+//
+//    public void startSocketListener() {
+//    //    Socket socket = SocketInstance.socket();
+//     //   socket.on("syncFlags", resyncFlags);
+//    }
 
 }

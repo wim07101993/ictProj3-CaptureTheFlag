@@ -150,9 +150,10 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
 
         //flag.team=
         currentFlag.CaptureAndCooldown(currentFlag.getTeam());
-        Flags flags = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS));
-        flags.addFlag(currentFlag);
-        stateManager.setSerializable(EStateManagerKey.FLAGS, flags);
+        stateManager.setSerializable(EStateManagerKey.CAPTURED_FLAG, currentFlag);
+//        Flags flags = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS));
+//        flags.addFlag(currentFlag);
+//        stateManager.setSerializable(EStateManagerKey.FLAGS, flags);
 
         gameActivity.showQuiz(false);
     }
@@ -165,9 +166,10 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
         currentFlag.team = myTeam;
         //flag.team=
         currentFlag.CaptureAndCooldown(gameActivity.MY_TEAM);
-        Flags flags = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS));
-        flags.addFlag(currentFlag);
-        stateManager.setSerializable(EStateManagerKey.FLAGS, flags);
+        stateManager.setSerializable(EStateManagerKey.CAPTURED_FLAG, currentFlag);
+        //Flags flags = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS));
+        //flags.addFlag(currentFlag);
+        //stateManager.setSerializable(EStateManagerKey.FLAGS, flags);
 
         count = 0;
         gameActivity.showQuiz(false);

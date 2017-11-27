@@ -33,6 +33,7 @@ public class Flag implements ISerializable {
     @Expose
     private int cooldownTime = 30;
 
+    @Expose
     private Date cooldownTimer;
 
     @Expose
@@ -117,6 +118,7 @@ public class Flag implements ISerializable {
         this.cooldownTime = This.cooldownTime;
         this.timerFixer = This.timerFixer;
         this.team = This.team;
+        this.cooldownTimer = This.cooldownTimer;
     }
 
 

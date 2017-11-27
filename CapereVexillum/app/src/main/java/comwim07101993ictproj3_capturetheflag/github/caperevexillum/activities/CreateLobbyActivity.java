@@ -41,7 +41,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
 
     @Override
     public void onClick(View view) {
-        stateManager.restartSocket();
+        //stateManager.restartSocket();
 
 
         playerName = playerNameEditText.getText().toString();
