@@ -44,7 +44,8 @@ public abstract class SingletonFactory<T> implements ISingletonFactory<T> {
         for (Constructor<T> constructor : constructors) {
             try {
                 product = constructor.newInstance(args);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            } catch (IllegalArgumentException | InstantiationException |
+                    IllegalAccessException | InvocationTargetException e) {
                 exception = e;
             }
         }
