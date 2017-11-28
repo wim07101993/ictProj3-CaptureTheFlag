@@ -1,6 +1,5 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService;
 
-import android.os.OperationCanceledException;
 import android.support.annotation.NonNull;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -56,10 +55,6 @@ class SocketService
             socket = IO.socket(serverIPAddress + ":" + serverPort);
             socket.connect();
 
-            if (!socket.connected()) {
-                throw new OperationCanceledException("No connecion with the server!");
-            }
-
             registerListeners();
 
         } catch (URISyntaxException e) {
@@ -84,6 +79,11 @@ class SocketService
                 }
             });
         }
+    }
+
+    @Override
+    public void connect() {
+        socket.connect();
     }
 
     @Override
@@ -115,6 +115,11 @@ class SocketService
     @Override
     public int getServerPort() {
         return serverPort;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return socket.connected();
     }
 
     @Deprecated

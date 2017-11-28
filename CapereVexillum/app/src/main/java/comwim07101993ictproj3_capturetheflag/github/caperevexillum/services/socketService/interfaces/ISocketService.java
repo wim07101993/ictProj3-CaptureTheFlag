@@ -11,8 +11,13 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.obser
 public interface ISocketService<TKey> extends IObservable {
     void Send(TKey key, Object value);
 
+    void connect();
+
     String getServerAddress();
+
     int getServerPort();
+
+    boolean isConnected();
 
     @Deprecated
     Socket getSocket();

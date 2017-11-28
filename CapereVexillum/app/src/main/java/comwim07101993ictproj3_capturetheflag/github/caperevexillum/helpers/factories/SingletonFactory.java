@@ -18,21 +18,10 @@ public abstract class SingletonFactory<T> implements ISingletonFactory<T> {
     }
 
     @Override
-    public T get(Object... args) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public T get(Object... args) throws Exception {
         if (getStaticProduct() == null) {
-            try {
-                Constructor<T>[] constructors = (Constructor<T>[]) productType.getConstructors();
-                if (ArrayHelpers.IsNullOrEmpty(constructors)) {
-                    throw new NoSuchMethodException();
-                }
-                Constructor<T> constructor = constructors[0];
-                setStaticProduct(constructor.newInstance(args));
-            } catch (NoSuchMethodException e) {
-                String error = "Cannot get the constructor for type " + productType + ".";
-                throw new UnsupportedOperationException(error);
-            }
+            createNew(args);
         }
-
         return getStaticProduct();
     }
 
@@ -42,8 +31,32 @@ public abstract class SingletonFactory<T> implements ISingletonFactory<T> {
     }
 
     @Override
-    public T createNew(Object... args) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        setStaticProduct(null);
+    public T createNew(Object... args) throws Exception {
+        T product = null;
+
+        Constructor<T>[] constructors = (Constructor<T>[]) productType.getConstructors();
+
+        if (ArrayHelpers.IsNullOrEmpty(constructors)) {
+            throw new NoSuchMethodException("Cannot get the constructor for type " + productType + ".");
+        }
+
+        Exception exception = null;
+        for (Constructor<T> constructor : constructors) {
+            try {
+                product = constructor.newInstance(args);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                exception = e;
+            }
+        }
+
+        if (product == null) {
+            if (exception != null) {
+                throw exception;
+            }
+            throw new Exception("Something went wrong while creatin an instance of " + productType.getSimpleName());
+        }
+
+        setStaticProduct(product);
         return get(args);
     }
 
