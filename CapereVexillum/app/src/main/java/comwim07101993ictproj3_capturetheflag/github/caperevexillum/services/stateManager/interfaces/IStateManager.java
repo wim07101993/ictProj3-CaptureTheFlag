@@ -70,7 +70,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    void setSerializable(TKey key, ISerializable value);
+    <T extends ISerializable> T setSerializable(TKey key, T value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
@@ -78,7 +78,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    void setInt(TKey key, int value);
+    int setInt(TKey key, int value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
@@ -86,7 +86,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    void setLong(TKey key, long value);
+    long setLong(TKey key, long value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
@@ -94,7 +94,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    void setFloat(TKey key, float value);
+    float setFloat(TKey key, float value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
@@ -102,7 +102,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    void setString(TKey key, String value);
+    String setString(TKey key, String value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
@@ -110,7 +110,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    void setBoolean(TKey key, boolean value);
+    boolean setBoolean(TKey key, boolean value);
 
     /**
      * save is supposed to save the current state to a database.

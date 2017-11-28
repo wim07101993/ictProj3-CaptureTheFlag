@@ -9,13 +9,24 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 
 public class StateChangedArgs<T> extends ValueChangedArgs<T> {
     private IStateManagerKey key;
+    private Object nestedArgs;
 
     StateChangedArgs(T oldValue, T newValue, IStateManagerKey key) {
         super(oldValue, newValue);
         this.key = key;
     }
 
+    StateChangedArgs(T oldValue, T newValue, IStateManagerKey key, Object nestedArgs) {
+        super(oldValue, newValue);
+        this.key = key;
+        this.nestedArgs = nestedArgs;
+    }
+
     public IStateManagerKey getKey() {
         return key;
+    }
+
+    public Object getNestedArgs() {
+        return nestedArgs;
     }
 }

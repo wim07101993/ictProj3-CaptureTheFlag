@@ -3,7 +3,6 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 import com.google.gson.Gson;
 
 import java.util.Arrays;
-import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ArrayHelpers;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
@@ -32,13 +31,11 @@ final class ArgsConverter {
                 return new Flags();
             }
 
-            Vector<Flag> flagsVector = new Vector<>(argsArray.length);
+            Flags flags = new Flags();
             for (Object a : argsArray) {
-                flagsVector.add((Flag) a);
+                flags.add((Flag) a);
             }
 
-            Flags flags = new Flags();
-            flags.setRegisteredFlags(flagsVector);
             return flags;
 
         } else if (stateManagerKey == EStateManagerKey.GAME_STARTED) {
@@ -51,7 +48,7 @@ final class ArgsConverter {
     }
 
     static Object ConvertStateManagerStateToSocketArgs(ISocketKey socketKey, Object args) {
-        if (socketKey == ESocketEmitKey.CAPTURE_FLAG){
+        if (socketKey == ESocketEmitKey.CAPTURE_FLAG) {
             return new Gson().toJson(args);
         }
         return args;

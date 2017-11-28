@@ -1,19 +1,25 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
 import android.content.SharedPreferences;
+import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.security.Key;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.Set;
 import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.MapHelpers;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObservable;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObserver;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.ObservableListArgs;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
@@ -41,6 +47,8 @@ public class StateManagerWithoutSocket
     protected Map<IStateManagerKey, Boolean> booleans;
 
     private List<IStateManagerKey> registeredKeys;
+
+    private Map<Key, AObserver> observers;
 
 
     /* --------------------------------------------------------------- */
@@ -336,61 +344,86 @@ public class StateManagerWithoutSocket
     /* ------------------------- SETTERS ------------------------- */
 
     @Override
-    public void setSerializable(IStateManagerKey key, ISerializable value) {
+    public <T extends ISerializable> T setSerializable(final IStateManagerKey key, T value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(objects)) {
             objects = new HashMap<>();
         }
 
-        updateState(key, objects, value);
+        if (!registeredKeys.contains(key)) {
+            registeredKeys.add(key);
+        }
+
+        final T oldValue = (T) objects.get(key);
+        final T newValue = (T) objects.put(key, value);
+
+
+        if (newValue instanceof Observable || newValue instanceof IObservable || newValue instanceof ObservableList) {
+            AObserver observer = observers.get(key);
+            if (observer == null) {
+                observer = new StateObserver(key);
+            }
+
+            if (newValue instanceof Observable) {
+                ((Observable) newValue).addObserver(observer);
+            } else if (newValue instanceof IObservable) {
+                ((IObservable) newValue).addObserver(observer);
+            } else if (newValue instanceof ObservableList) {
+                ((ObservableList) newValue).addOnListChangedCallback(observer);
+            }
+        }
+
+        StateChangedArgs<T> args = new StateChangedArgs<>(oldValue, newValue, key);
+        notifyObservers(args);
+        return newValue;
     }
 
     @Override
-    public void setInt(IStateManagerKey key, int value) {
+    public int setInt(IStateManagerKey key, int value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(ints)) {
             ints = new HashMap<>();
         }
-        updateState(key, ints, value);
+        return updateState(key, ints, value);
     }
 
     @Override
-    public void setLong(IStateManagerKey key, long value) {
+    public long setLong(IStateManagerKey key, long value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(longs)) {
             longs = new HashMap<>();
         }
-        updateState(key, longs, value);
+        return updateState(key, longs, value);
     }
 
     @Override
-    public void setFloat(IStateManagerKey key, float value) {
+    public float setFloat(IStateManagerKey key, float value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(floats)) {
             floats = new HashMap<>();
         }
-        updateState(key, floats, value);
+        return updateState(key, floats, value);
     }
 
     @Override
-    public void setString(IStateManagerKey key, String value) {
+    public String setString(IStateManagerKey key, String value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(strings)) {
             strings = new HashMap<>();
         }
-        updateState(key, strings, value);
+        return updateState(key, strings, value);
     }
 
     @Override
-    public void setBoolean(IStateManagerKey key, boolean value) {
+    public boolean setBoolean(IStateManagerKey key, boolean value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(booleans)) {
             booleans = new HashMap<>();
         }
-        updateState(key, booleans, value);
+        return updateState(key, booleans, value);
     }
 
-    protected <T> void updateState(IStateManagerKey key, Map<IStateManagerKey, T> map, T value) {
+    protected <T> T updateState(IStateManagerKey key, Map<IStateManagerKey, T> map, T value) {
         if (!registeredKeys.contains(key)) {
             registeredKeys.add(key);
         }
@@ -399,5 +432,60 @@ public class StateManagerWithoutSocket
         T newValue = map.put(key, value);
         StateChangedArgs<T> args = new StateChangedArgs<>(oldValue, newValue, key);
         notifyObservers(args);
+        return newValue;
+    }
+
+
+    /* -------------------------------------------------------------- */
+    /* ------------------------- SUBCLASSES ------------------------- */
+    /* -------------------------------------------------------------- */
+
+    class StateObserver extends AObserver {
+
+        private final IStateManagerKey key;
+
+
+        StateObserver(IStateManagerKey key) {
+            this.key = key;
+        }
+
+        @Override
+        public void onChanged(ObservableList observableList) {
+            notifyObservers(new StateChangedArgs(null, observableList, key,
+                    new ObservableListArgs(observableList)));
+        }
+
+        @Override
+        public void onItemRangeChanged(ObservableList observableList, int start, int count) {
+            notifyObservers(
+                    new StateChangedArgs(null, observableList, key,
+                            new ObservableListArgs(observableList, ObservableListArgs.Mode.RANGE_CHANGED, start, count)));
+        }
+
+        @Override
+        public void onItemRangeInserted(ObservableList observableList, int start, int count) {
+            notifyObservers(
+                    new StateChangedArgs(null, observableList, key,
+                            new ObservableListArgs(observableList, ObservableListArgs.Mode.RANGE_CHANGED, start, count)));
+        }
+
+        @Override
+        public void onItemRangeMoved(ObservableList observableList, int from, int to, int count) {
+            notifyObservers(
+                    new StateChangedArgs(null, observableList, key,
+                            new ObservableListArgs(observableList, from, to, count)));
+        }
+
+        @Override
+        public void onItemRangeRemoved(ObservableList observableList, int start, int count) {
+            notifyObservers(
+                    new StateChangedArgs(null, observableList, key,
+                            new ObservableListArgs(observableList, ObservableListArgs.Mode.RANGE_REMOVED, start, count)));
+        }
+
+        @Override
+        public void update(Observable observable, Object args) {
+            notifyObservers(new StateChangedArgs<>(null, observable, key, args));
+        }
     }
 }

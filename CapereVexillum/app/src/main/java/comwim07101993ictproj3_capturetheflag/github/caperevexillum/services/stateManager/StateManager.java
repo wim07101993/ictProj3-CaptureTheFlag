@@ -129,13 +129,13 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
     /* ------------------------- SETTERS ------------------------- */
 
     @Override
-    protected <T> void updateState(IStateManagerKey key, Map<IStateManagerKey, T> map, T value) {
+    protected <T> T updateState(IStateManagerKey key, Map<IStateManagerKey, T> map, T value) {
         ESocketEmitKey putKey = key.getSocketEmitPutKey();
         if (putKey != null) {
             socketService.Send(putKey, ArgsConverter.ConvertStateManagerStateToSocketArgs(putKey, value));
         }
 
-        super.updateState(key, map, value);
+        return super.updateState(key, map, value);
     }
 
 }
