@@ -2,14 +2,13 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketEmitKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketFactory;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketValueChangedArgs;
@@ -34,11 +33,6 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
 
     private static final String TAG = GameActivity.class.getSimpleName();
 
-    private static final String SERVER_ADDRESS = "http://192.168.137.1";
-    private static final int SERVER_PORT = 4040;
-
-    private static final int GAME_DURATION_IN_MINUTES = 30;
-
     private ISocketService<ISocketKey> socketService;
     private static SocketFactory socketFactory;
 
@@ -49,10 +43,19 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
 
     /**
      * StateManager is the constructor for the class StateManager.
+     */
+    StateManager() {
+        super();
+
+        initSocket();
+    }
+
+    /**
+     * StateManager is the constructor for the class StateManager.
      *
      * @param sharedPreferences the shared preferences to load and save the current state from and to.
      */
-    public StateManager(SharedPreferences sharedPreferences) {
+    StateManager(SharedPreferences sharedPreferences) {
         super(sharedPreferences);
 
         initSocket();
@@ -69,22 +72,24 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
         }
 
         try {
-            socketService = socketFactory.get(SERVER_ADDRESS, SERVER_PORT);
+            socketService = socketFactory.get(
+                    getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
+                    getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
             socketService.addObserver(this);
-        } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.w(TAG, e.getMessage());
         }
     }
 
     // TODO WIM: WEAK POINT: TEST METHOD (args converter)
     @Override
     public void update(Observable observable, Object args) {
-        if (!(args instanceof SocketValueChangedArgs)){
+        if (!(args instanceof SocketValueChangedArgs)) {
             return;
         }
 
-        ISocketKey socketKey = ((SocketValueChangedArgs)args).getKey();
-        Object socketArgs = ((SocketValueChangedArgs)args).getArgs();
+        ISocketKey socketKey = ((SocketValueChangedArgs) args).getKey();
+        Object socketArgs = ((SocketValueChangedArgs) args).getArgs();
 
         for (IStateManagerKey stateManagerKey : EStateManagerKey.values()) {
             if (stateManagerKey.getSocketOnKey() == socketKey) {
@@ -102,10 +107,12 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
 
     public void restartSocket() {
         try {
-            socketService = socketFactory.createNew(SERVER_ADDRESS, SERVER_PORT);
-            initSocket();
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
+            socketService = socketFactory.createNew(
+                    getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
+                    getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
+            socketService.addObserver(this);
+        } catch (Exception e) {
+            Log.w(TAG, e.getMessage());
         }
     }
 
@@ -115,7 +122,7 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
     @Override
     protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) {
         ESocketEmitKey askKey = key.getSocketEmitAskKey();
-        if (askKey != null) {
+        if (askKey != null && socketService.isConnected()) {
             socketService.Send(askKey, null);
         }
 
@@ -125,6 +132,8 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
     public ISocketService<ISocketKey> getSocketService() {
         return socketService;
     }
+
+
 
     /* ------------------------- SETTERS ------------------------- */
 

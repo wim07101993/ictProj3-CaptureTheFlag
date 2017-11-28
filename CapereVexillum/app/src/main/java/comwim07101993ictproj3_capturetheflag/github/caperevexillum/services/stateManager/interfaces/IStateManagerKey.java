@@ -13,4 +13,6 @@ public interface IStateManagerKey {
     ESocketOnKey getSocketOnKey();
     ESocketEmitKey getSocketEmitAskKey();
     ESocketEmitKey getSocketEmitPutKey();
+
+    Object getDefaultValue();
 }

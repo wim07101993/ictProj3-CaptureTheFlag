@@ -16,6 +16,7 @@ import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.MapHelpers;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObserver;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
@@ -55,7 +56,11 @@ public class StateManagerWithoutSocket
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    public StateManagerWithoutSocket(SharedPreferences sharedPreferences) {
+    StateManagerWithoutSocket() {
+        registeredKeys = new Vector<>();
+    }
+
+    StateManagerWithoutSocket(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
         registeredKeys = new Vector<>();
     }
@@ -329,7 +334,11 @@ public class StateManagerWithoutSocket
     @Nullable
     protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) {
         if (MapHelpers.IsNullOrEmpty(map)) {
-            return null;
+            return (T)key.getDefaultValue();
+        }
+
+        if (!map.containsKey(key)){
+            return (T)key.getDefaultValue();
         }
         return map.get(key);
     }
@@ -342,6 +351,11 @@ public class StateManagerWithoutSocket
 
 
     /* ------------------------- SETTERS ------------------------- */
+
+    @Override
+    public void SetSharedPreferences(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
 
     @Override
     public <T extends ISerializable> T setSerializable(final IStateManagerKey key, T value) {
@@ -379,7 +393,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public int setInt(IStateManagerKey key, int value) {
+    public Integer setInt(IStateManagerKey key, Integer value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(ints)) {
             ints = new HashMap<>();
@@ -388,7 +402,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public long setLong(IStateManagerKey key, long value) {
+    public Long setLong(IStateManagerKey key, Long value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(longs)) {
             longs = new HashMap<>();
@@ -397,7 +411,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public float setFloat(IStateManagerKey key, float value) {
+    public Float setFloat(IStateManagerKey key, Float value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(floats)) {
             floats = new HashMap<>();
@@ -415,7 +429,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public boolean setBoolean(IStateManagerKey key, boolean value) {
+    public Boolean setBoolean(IStateManagerKey key, Boolean value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(booleans)) {
             booleans = new HashMap<>();
@@ -428,11 +442,10 @@ public class StateManagerWithoutSocket
             registeredKeys.add(key);
         }
 
-        T oldValue = map.get(key);
-        T newValue = map.put(key, value);
-        StateChangedArgs<T> args = new StateChangedArgs<>(oldValue, newValue, key);
+        T oldValue = map.put(key, value);
+        StateChangedArgs<T> args = new StateChangedArgs<>(oldValue, value, key);
         notifyObservers(args);
-        return newValue;
+        return oldValue;
     }
 
 

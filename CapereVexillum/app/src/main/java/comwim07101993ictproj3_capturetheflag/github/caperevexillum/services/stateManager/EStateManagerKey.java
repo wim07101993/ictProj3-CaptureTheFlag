@@ -3,6 +3,7 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 import java.util.List;
 import java.util.Set;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
@@ -147,6 +148,42 @@ public enum EStateManagerKey implements IStateManagerKey {
         }
     },
 
+    SOCKET_SERVER_ADDRESS {
+        @Override
+        public Class getValueClass() {
+            return String.class;
+        }
+
+        @Override
+        public Object getDefaultValue() {
+            return "http://192.168.137.1";
+        }
+    },
+
+    SOCKET_PORT_NUMBER {
+        @Override
+        public Class getValueClass() {
+            return Integer.class;
+        }
+
+        @Override
+        public Object getDefaultValue() {
+            return 4040;
+        }
+    },
+
+    GAME_DURATION {
+        @Override
+        public Class getValueClass() {
+            return Integer.class;
+        }
+
+        @Override
+        public Object getDefaultValue() {
+            return 30;
+        }
+    },
+
     CAPTURED_FLAG {
         @Override
         public Class getValueClass() {
@@ -183,4 +220,11 @@ public enum EStateManagerKey implements IStateManagerKey {
     public ESocketEmitKey getSocketEmitPutKey() {
         return null;
     }
+
+    @Override
+    public Object getDefaultValue() {
+        return PrimitiveDefaults.getDefaultValue(getValueClass());
+    }
+
+
 }

@@ -1,5 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces;
 
+import android.content.SharedPreferences;
+
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
 
@@ -64,6 +66,8 @@ public interface IStateManager<TKey> extends IObservable {
     Boolean getBoolean(TKey key);
 
 
+    void SetSharedPreferences(SharedPreferences sharedPreferences);
+
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
      *
@@ -78,7 +82,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    int setInt(TKey key, int value);
+    Integer setInt(TKey key, Integer value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
@@ -86,7 +90,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    long setLong(TKey key, long value);
+    Long setLong(TKey key, Long value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
@@ -94,7 +98,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    float setFloat(TKey key, float value);
+    Float setFloat(TKey key, Float value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
@@ -110,7 +114,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    boolean setBoolean(TKey key, boolean value);
+    Boolean setBoolean(TKey key, Boolean value);
 
     /**
      * save is supposed to save the current state to a database.
