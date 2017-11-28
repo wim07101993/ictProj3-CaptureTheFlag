@@ -6,9 +6,7 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beaco
 
 public abstract class ABeacon implements IBeacon {
 
-    /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
-    /* ---------------------------------------------------------- */
 
     // signal strength
     private int rssi;
@@ -16,11 +14,8 @@ public abstract class ABeacon implements IBeacon {
     // transmission power of the beacon
     private int power;
 
-    /* ----------------------------------------------------------- */
-    /* ------------------------- METHODS ------------------------- */
-    /* ----------------------------------------------------------- */
 
-    /* ------------------------- GETTERS ------------------------- */
+    /* ------------------------- METHODS ------------------------- */
 
     /**
      * @return signal strength of the beacon
@@ -63,8 +58,6 @@ public abstract class ABeacon implements IBeacon {
      * @return the MAC-address of the Beacon
      */
     public abstract String getAddress();
-
-    /* ------------------------- SETTERS ------------------------- */
 
     /**
      * Sets the value of the rssi.
