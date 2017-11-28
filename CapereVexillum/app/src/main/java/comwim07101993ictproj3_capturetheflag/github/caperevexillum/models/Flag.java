@@ -38,6 +38,7 @@ public class Flag implements ISerializable {
 
     @Expose
     private boolean timerFixer = false;
+
     /**
      * Team identifier no team
      */
@@ -71,7 +72,6 @@ public class Flag implements ISerializable {
         team = NO_TEAM;
         cooldownTimer = Calendar.getInstance().getTime();
         cooldownTimer.setMinutes(cooldownTimer.getMinutes() + cooldownTime);
-
     }
 
 
@@ -90,19 +90,13 @@ public class Flag implements ISerializable {
      * @param teamIdentifier team that captured the flag
      */
     public void CaptureAndCooldown(String teamIdentifier) {
-
         //Sets this Flag's team alignment to the team that captured it
         team = teamIdentifier;
         //Sets this Flag to cooldown
-
-
         Calendar coolDownCal = Calendar.getInstance();
-        Date test = coolDownCal.getTime();
         coolDownCal.add(Calendar.SECOND, cooldownTime);
         cooldownTimer = coolDownCal.getTime();
         Log.d("Flag", "CooldownSet");
-
-
     }
 
     @Override

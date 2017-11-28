@@ -287,7 +287,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             return;
         }
 
-        Flag flag = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).findFlag(beacon, MY_TEAM);
+        Flag flag = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).find(beacon);
         if (flag != null) {
             //it's a nested if because get team would return on null
             //return if my team already has the flag
@@ -354,7 +354,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
                 public void OnGameTimerFinished() {
                     Flags flags = (Flags) stateManager.getSerializable(EStateManagerKey.FLAGS);
                     Utils.toast(getApplicationContext(), "Game Finished, you have captured "
-                            + flags.getRegisteredFlags().size() +
+                            + flags.size() +
                             " flags");
                     timerTextView.setText(R.string.finished);
                     stateManager.setBoolean(EStateManagerKey.GAME_STARTED, false);
@@ -374,8 +374,8 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         if (key == EStateManagerKey.FLAGS) {
             try {
                 Flags flags = (Flags) stateManager.getSerializable(EStateManagerKey.FLAGS);
-                int redFlags = flags.getFlagByTeam(Team.TEAM_ORANGE);
-                int greenFlags = flags.getFlagByTeam(Team.TEAM_GREEN);
+                int redFlags = flags.getNumberOfFlagsOfTeam(Team.TEAM_ORANGE);
+                int greenFlags = flags.getNumberOfFlagsOfTeam(Team.TEAM_GREEN);
                 scoreFragment.setFlags(redFlags, greenFlags);
             } catch (Exception err) {
                 Log.e("Lobby activity", "show toast");

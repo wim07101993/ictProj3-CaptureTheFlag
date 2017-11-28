@@ -179,7 +179,7 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(gameActivity.MY_TEAM);
         Flags flags = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS));
-        flags.addFlag(flag);
+        flags.add(flag);
         stateManager.setSerializable(EStateManagerKey.FLAGS, flags);
 
         count = 0;

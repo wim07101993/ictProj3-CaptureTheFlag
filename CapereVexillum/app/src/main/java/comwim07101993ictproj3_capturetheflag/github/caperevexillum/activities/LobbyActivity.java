@@ -161,7 +161,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
                 for (Player p : playerList) {
 
-                    switch (p.getTeam().getTeamname()) {
+                    switch (p.getTeam().getTeamName()) {
                         case "orange":
                             teamOrange.add(p);
                             break;
@@ -175,7 +175,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                             break;
                     }
                     if (p.getName().equals(playerName)) {
-                        myTeam = p.getTeam().getTeamname();
+                        myTeam = p.getTeam().getTeamName();
                     }
                 }
                 updateUI(noTeam, noTeamListView);
@@ -230,7 +230,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                 Player[] players = gson.fromJson(request, Player[].class);
                 for (Player player : players) {
                     if (player.getName().equals(playerName)) {
-                        myTeam = player.getTeam().getTeamname();
+                        myTeam = player.getTeam().getTeamName();
                     }
                 }
 

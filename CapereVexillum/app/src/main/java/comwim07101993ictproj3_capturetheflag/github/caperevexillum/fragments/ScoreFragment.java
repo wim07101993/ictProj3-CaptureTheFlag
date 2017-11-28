@@ -81,12 +81,12 @@ public class ScoreFragment extends Fragment {
             String red="1";
             String green="1";
             for(Team team : teams){
-                if(team.getTeamname().equals("orange")){
+                if(team.getTeamName().equals("orange")){
                     red = team.getScore()+"";
                     if(red.equals("0"))
                         red ="1";
                 }
-                if(team.getTeamname().equals("green")){
+                if(team.getTeamName().equals("green")){
                     green = team.getScore()+"";
                     if(green.equals("0"))
                         green="1";

@@ -1,10 +1,14 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
+import com.google.gson.Gson;
+
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
+
 /**
  * Created by wimva on 9/11/2017.
  */
 
-public class LobbySettings {
+public class LobbySettings implements ISerializable {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -30,6 +34,19 @@ public class LobbySettings {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
+    @Override
+    public String Serialize() {
+        return new Gson().toJson(this);
+    }
+
+    @Override
+    public void Deserialize(String serializedObject) {
+        LobbySettings This = new Gson().fromJson(serializedObject, LobbySettings.class);
+        lobbyName = This.getLobbyName();
+        lobbyPassword = This.getLobbyPassword();
+        totalGameTime = This.getTotalGameTime();
+    }
+
     /* ------------------------- GETTERS ------------------------- */
 
     public String getLobbyName() {
@@ -43,21 +60,5 @@ public class LobbySettings {
     public float getTotalGameTime() {
         return totalGameTime;
     }
-
-
-    /* ------------------------- SETTERS ------------------------- */
-
-    public void setLobbyName(String lobbyName) {
-        this.lobbyName = lobbyName;
-    }
-
-    public void setLobbyPassword(String lobbyPassword) {
-        this.lobbyPassword = lobbyPassword;
-    }
-
-    public void setTotalGameTime(float totalGameTime) {
-        this.totalGameTime = totalGameTime;
-    }
-
 
 }
