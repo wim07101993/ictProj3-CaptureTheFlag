@@ -15,4 +15,5 @@ public interface IStateManagerKey {
     ESocketEmitKey getSocketEmitPutKey();
 
     Object getDefaultValue();
+    boolean needsToBeStored();
 }
