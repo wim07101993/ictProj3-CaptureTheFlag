@@ -5,7 +5,6 @@ import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.security.Key;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.MapHelpers;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObserver;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
@@ -40,16 +38,16 @@ public class StateManagerWithoutSocket
 
     private SharedPreferences sharedPreferences;
 
-    protected Map<IStateManagerKey, ISerializable> objects;
-    protected Map<IStateManagerKey, Integer> ints;
-    protected Map<IStateManagerKey, Long> longs;
-    protected Map<IStateManagerKey, Float> floats;
-    protected Map<IStateManagerKey, String> strings;
-    protected Map<IStateManagerKey, Boolean> booleans;
+    private Map<IStateManagerKey, ISerializable> objects;
+    private Map<IStateManagerKey, Integer> ints;
+    private Map<IStateManagerKey, Long> longs;
+    private Map<IStateManagerKey, Float> floats;
+    private Map<IStateManagerKey, String> strings;
+    private Map<IStateManagerKey, Boolean> booleans;
 
     private List<IStateManagerKey> registeredKeys;
 
-    private Map<Key, AObserver> observers;
+    private Map<IStateManagerKey, AObserver> observers;
 
 
     /* --------------------------------------------------------------- */
@@ -76,14 +74,14 @@ public class StateManagerWithoutSocket
         sharedPreferences.edit().clear().apply();
     }
 
-    protected void checkIfTypesMatch(IStateManagerKey key, Object value) {
+    private void checkIfTypesMatch(IStateManagerKey key, Object value) {
         if (!value.getClass().isAssignableFrom(key.getValueClass())) {
             String error = "Value " + value + " not of right type for key " + key + ".";
             throw new IllegalArgumentException(error);
         }
     }
 
-    protected Map getMapForClass(Class c) {
+    Map getMapForClass(Class c) {
         if (ISerializable.class.isAssignableFrom(c)) {
             return objects;
         } else if (int.class.isAssignableFrom(c)) {
@@ -118,7 +116,7 @@ public class StateManagerWithoutSocket
         return true;
     }
 
-    protected void loadRegisteredKeys() {
+    private void loadRegisteredKeys() {
         Set<String> stringKeys = new HashSet<>();
         stringKeys = sharedPreferences.getStringSet(EStateManagerKey.REGISTERED_KEYS.toString(), stringKeys);
 
@@ -127,7 +125,7 @@ public class StateManagerWithoutSocket
         }
     }
 
-    protected void load(IStateManagerKey key) {
+    private void load(IStateManagerKey key) {
         Class c = key.getValueClass();
 
         if (ISerializable.class.isAssignableFrom(c)) {
@@ -145,7 +143,7 @@ public class StateManagerWithoutSocket
         }
     }
 
-    protected void loadObject(IStateManagerKey key, Class c) throws ClassCastException {
+    private void loadObject(IStateManagerKey key, Class c) throws ClassCastException {
         if (MapHelpers.IsNullOrEmpty(objects)) {
             objects = new HashMap<>();
         }
@@ -163,7 +161,7 @@ public class StateManagerWithoutSocket
         }
     }
 
-    protected void loadInt(IStateManagerKey key) {
+    private void loadInt(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(ints)) {
             ints = new HashMap<>();
         }
@@ -171,7 +169,7 @@ public class StateManagerWithoutSocket
         setInt(key, sharedPreferences.getInt(key.toString(), 0));
     }
 
-    protected void loadLong(IStateManagerKey key) {
+    private void loadLong(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(longs)) {
             longs = new HashMap<>();
         }
@@ -179,7 +177,7 @@ public class StateManagerWithoutSocket
         setLong(key, sharedPreferences.getLong(key.toString(), 0));
     }
 
-    protected void loadFloat(IStateManagerKey key) {
+    private void loadFloat(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(floats)) {
             floats = new HashMap<>();
         }
@@ -187,7 +185,7 @@ public class StateManagerWithoutSocket
         setFloat(key, sharedPreferences.getFloat(key.toString(), 0));
     }
 
-    protected void loadString(IStateManagerKey key) {
+    private void loadString(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(strings)) {
             strings = new HashMap<>();
         }
@@ -195,7 +193,7 @@ public class StateManagerWithoutSocket
         setString(key, sharedPreferences.getString(key.toString(), null));
     }
 
-    protected void loadBoolean(IStateManagerKey key) {
+    private void loadBoolean(IStateManagerKey key) {
         if (MapHelpers.IsNullOrEmpty(booleans)) {
             booleans = new HashMap<>();
         }
@@ -228,73 +226,81 @@ public class StateManagerWithoutSocket
         return true;
     }
 
-    protected void saveRegisteredKeys(@NonNull SharedPreferences.Editor editor) {
+    private void saveRegisteredKeys(@NonNull SharedPreferences.Editor editor) {
         Set<String> stringKeys = new HashSet<>();
 
         for (IStateManagerKey key : registeredKeys) {
-            stringKeys.add(key.toString());
+            if (key.needsToBeStored()) {
+                stringKeys.add(key.toString());
+            }
         }
 
         editor.putStringSet(EStateManagerKey.REGISTERED_KEYS.toString(), stringKeys);
     }
 
-    protected void saveObjects(@NonNull SharedPreferences.Editor editor) {
-        if (MapHelpers.IsNullOrEmpty(objects)) {
-            return;
-        }
-
-        for (IStateManagerKey key : objects.keySet()) {
-            editor.putString(key.toString(), getSerializable(key).Serialize());
-        }
+    private void saveObjects(@NonNull SharedPreferences.Editor editor) {
+        putInEditor(editor, objects, new ISharedPreferenceSaver() {
+            @Override
+            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+                editor.putString(key.toString(), getSerializable(key).Serialize());
+            }
+        });
     }
 
-    protected void saveInts(@NonNull SharedPreferences.Editor editor) {
-        if (MapHelpers.IsNullOrEmpty(ints)) {
-            return;
-        }
-
-        for (IStateManagerKey key : ints.keySet()) {
-            editor.putInt(key.toString(), getInt(key));
-        }
+    private void saveInts(@NonNull SharedPreferences.Editor editor) {
+        putInEditor(editor, ints, new ISharedPreferenceSaver() {
+            @Override
+            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+                editor.putInt(key.toString(), getInt(key));
+            }
+        });
     }
 
-    protected void saveLongs(@NonNull SharedPreferences.Editor editor) {
-        if (MapHelpers.IsNullOrEmpty(longs)) {
-            return;
-        }
-
-        for (IStateManagerKey key : longs.keySet()) {
-            editor.putLong(key.toString(), getLong(key));
-        }
+    private void saveLongs(@NonNull SharedPreferences.Editor editor) {
+        putInEditor(editor, longs, new ISharedPreferenceSaver() {
+            @Override
+            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+                editor.putLong(key.toString(), getLong(key));
+            }
+        });
     }
 
-    protected void saveFloats(@NonNull SharedPreferences.Editor editor) {
-        if (MapHelpers.IsNullOrEmpty(floats)) {
-            return;
-        }
-
-        for (IStateManagerKey key : floats.keySet()) {
-            editor.putFloat(key.toString(), getFloat(key));
-        }
+    private void saveFloats(@NonNull SharedPreferences.Editor editor) {
+        putInEditor(editor, floats, new ISharedPreferenceSaver() {
+            @Override
+            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+                editor.putFloat(key.toString(), getFloat(key));
+            }
+        });
     }
 
-    protected void saveStrings(@NonNull SharedPreferences.Editor editor) {
-        if (MapHelpers.IsNullOrEmpty(strings)) {
-            return;
-        }
-
-        for (IStateManagerKey key : strings.keySet()) {
-            editor.putString(key.toString(), getString(key));
-        }
+    private void saveStrings(@NonNull SharedPreferences.Editor editor) {
+        putInEditor(editor, strings, new ISharedPreferenceSaver() {
+            @Override
+            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+                editor.putString(key.toString(), getString(key));
+            }
+        });
     }
 
-    protected void saveBooleans(@NonNull SharedPreferences.Editor editor) {
-        if (MapHelpers.IsNullOrEmpty(booleans)) {
+    private void saveBooleans(@NonNull SharedPreferences.Editor editor) {
+        putInEditor(editor, booleans, new ISharedPreferenceSaver() {
+            @Override
+            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+                editor.putBoolean(key.toString(), getBoolean(key));
+            }
+        });
+    }
+
+    private <T> void putInEditor(SharedPreferences.Editor editor, Map<IStateManagerKey, T> map, ISharedPreferenceSaver saver) {
+        if (MapHelpers.IsNullOrEmpty(map)) {
             return;
         }
 
-        for (IStateManagerKey key : booleans.keySet()) {
-            editor.putBoolean(key.toString(), getBoolean(key));
+        for (IStateManagerKey key : map.keySet()) {
+            if (key.needsToBeStored()) {
+                saver.putFunction(editor, key);
+            }
         }
     }
 
@@ -334,11 +340,11 @@ public class StateManagerWithoutSocket
     @Nullable
     protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) {
         if (MapHelpers.IsNullOrEmpty(map)) {
-            return (T)key.getDefaultValue();
+            return (T) key.getDefaultValue();
         }
 
-        if (!map.containsKey(key)){
-            return (T)key.getDefaultValue();
+        if (!map.containsKey(key)) {
+            return (T) key.getDefaultValue();
         }
         return map.get(key);
     }
@@ -358,38 +364,32 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public <T extends ISerializable> T setSerializable(final IStateManagerKey key, T value) {
+    public <T extends ISerializable> ISerializable setSerializable(final IStateManagerKey key, T value) {
         checkIfTypesMatch(key, value);
-        if (MapHelpers.IsNullOrEmpty(objects)) {
+        if (objects == null) {
             objects = new HashMap<>();
         }
 
-        if (!registeredKeys.contains(key)) {
-            registeredKeys.add(key);
-        }
+        if (value instanceof Observable || value instanceof IObservable || value instanceof ObservableList) {
+            if (observers == null){
+                observers = new HashMap<>();
+            }
 
-        final T oldValue = (T) objects.get(key);
-        final T newValue = (T) objects.put(key, value);
-
-
-        if (newValue instanceof Observable || newValue instanceof IObservable || newValue instanceof ObservableList) {
             AObserver observer = observers.get(key);
             if (observer == null) {
                 observer = new StateObserver(key);
             }
 
-            if (newValue instanceof Observable) {
-                ((Observable) newValue).addObserver(observer);
-            } else if (newValue instanceof IObservable) {
-                ((IObservable) newValue).addObserver(observer);
-            } else if (newValue instanceof ObservableList) {
-                ((ObservableList) newValue).addOnListChangedCallback(observer);
+            if (value instanceof Observable) {
+                ((Observable) value).addObserver(observer);
+            } else if (value instanceof IObservable) {
+                ((IObservable) value).addObserver(observer);
+            } else if (value instanceof ObservableList) {
+                ((ObservableList) value).addOnListChangedCallback(observer);
             }
         }
 
-        StateChangedArgs<T> args = new StateChangedArgs<>(oldValue, newValue, key);
-        notifyObservers(args);
-        return newValue;
+        return updateState(key, objects, value);
     }
 
     @Override
@@ -500,5 +500,9 @@ public class StateManagerWithoutSocket
         public void update(Observable observable, Object args) {
             notifyObservers(new StateChangedArgs<>(null, observable, key, args));
         }
+    }
+
+    private interface ISharedPreferenceSaver {
+        void putFunction(SharedPreferences.Editor editor, IStateManagerKey key);
     }
 }

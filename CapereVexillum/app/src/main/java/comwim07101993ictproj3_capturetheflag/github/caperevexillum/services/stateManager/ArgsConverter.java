@@ -8,7 +8,6 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Array
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketEmitKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
@@ -48,10 +47,7 @@ final class ArgsConverter {
     }
 
     static Object ConvertStateManagerStateToSocketArgs(ISocketKey socketKey, Object args) {
-        if (socketKey == ESocketEmitKey.CAPTURE_FLAG) {
-            return new Gson().toJson(args);
-        }
-        return args;
+        return new Gson().toJson(args);
     }
 
 }

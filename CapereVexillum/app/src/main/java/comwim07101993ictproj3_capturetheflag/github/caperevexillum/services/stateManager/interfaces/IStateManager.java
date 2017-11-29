@@ -74,7 +74,7 @@ public interface IStateManager<TKey> extends IObservable {
      * @param key   is the key to setLong the value of.
      * @param value is the value to setLong the state to.
      */
-    <T extends ISerializable> T setSerializable(TKey key, T value);
+    <T extends ISerializable> ISerializable setSerializable(TKey key, T value);
 
     /**
      * setLong is supposed to setLong the state of the TKey key with the value value.
