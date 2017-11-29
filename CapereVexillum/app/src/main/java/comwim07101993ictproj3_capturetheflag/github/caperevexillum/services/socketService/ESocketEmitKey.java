@@ -1,6 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 
 /**
@@ -42,6 +43,18 @@ public enum ESocketEmitKey implements ISocketKey {
         @Override
         public String getStringIdentifier() {
             return IDENTIFIER;
+        }
+
+        @Override
+        public Class getValueClass() {
+            return String.class;
+        }
+    },
+
+    SOCKET_SETTINGS {
+        @Override
+        public String getStringIdentifier() {
+            return "createLobbyNew";
         }
 
         @Override
