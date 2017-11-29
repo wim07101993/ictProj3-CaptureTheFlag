@@ -8,7 +8,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 
-public class EndActivity extends AActivityWithStateManager implements View.OnClickListener{
+public class EndActivity extends AActivityWithStateManager implements View.OnClickListener {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
@@ -37,9 +37,10 @@ public class EndActivity extends AActivityWithStateManager implements View.OnCli
         restart.setOnClickListener(this);
     }
 
-    /* ----------------------------------------------------------- */
-    /* ------------------------- METHODS ------------------------- */
-    /* ----------------------------------------------------------- */
+    @Override
+    protected String getTAG() {
+        return TAG;
+    }
 
     @Override
     public void onClick(View view) {
