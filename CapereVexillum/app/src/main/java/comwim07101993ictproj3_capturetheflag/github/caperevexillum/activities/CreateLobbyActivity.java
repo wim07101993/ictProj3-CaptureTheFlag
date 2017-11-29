@@ -60,6 +60,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         @Override
         public void call(Object... args) {
             showToast("Lobby name exists");
+        }
 
         protected String getTAG() {
             return TAG;
