@@ -14,19 +14,23 @@ public class LobbySettings implements ISerializable {
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    private String lobbyName;
-    private String lobbyPassword;
+    private String name;
+    private String password;
     private float totalGameTime;
+    private String hostName;
+    private int id;
 
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    public LobbySettings(String lobbyName, String lobbyPassword, float totalGameTime) {
-        this.lobbyName = lobbyName;
-        this.lobbyPassword = lobbyPassword;
+    public LobbySettings(String lobbyName, String lobbyPassword, float totalGameTime, String hostName) {
+        this.name = lobbyName;
+        this.password = lobbyPassword;
         this.totalGameTime = totalGameTime;
+        this.hostName = hostName;
+        id = -1;
     }
 
 
@@ -42,23 +46,33 @@ public class LobbySettings implements ISerializable {
     @Override
     public void Deserialize(String serializedObject) {
         LobbySettings This = new Gson().fromJson(serializedObject, LobbySettings.class);
-        lobbyName = This.getLobbyName();
-        lobbyPassword = This.getLobbyPassword();
-        totalGameTime = This.getTotalGameTime();
+        name = This.name;
+        password = This.password;
+        totalGameTime = This.totalGameTime;
+        hostName = This.hostName;
+        id = This.id;
     }
 
     /* ------------------------- GETTERS ------------------------- */
 
-    public String getLobbyName() {
-        return lobbyName;
+    public String getName() {
+        return name;
     }
 
-    public String getLobbyPassword() {
-        return lobbyPassword;
+    public String getPassword() {
+        return password;
     }
 
     public float getTotalGameTime() {
         return totalGameTime;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public int getId() {
+        return id;
     }
 
 }
