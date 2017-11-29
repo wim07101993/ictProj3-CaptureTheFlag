@@ -16,6 +16,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 
 public class CreateLobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
 
+    private static final String TAG = CreateLobbyActivity.class.getSimpleName();
 
     private EditText lobbyNameEditText, passwordEditText, timeEditText, playerNameEditText;
     private Button createLobbyButton;
@@ -61,6 +62,8 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         @Override
         public void call(Object... args) {
             showToast("Lobby name exists");
+    protected String getTAG() {
+        return TAG;
         }
     };
 
@@ -103,6 +106,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
     }
 
 
+    };
 }
 
 
