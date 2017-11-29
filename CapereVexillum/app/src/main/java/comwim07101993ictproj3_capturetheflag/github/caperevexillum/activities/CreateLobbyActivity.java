@@ -2,11 +2,9 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 
@@ -62,8 +60,9 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         @Override
         public void call(Object... args) {
             showToast("Lobby name exists");
-    protected String getTAG() {
-        return TAG;
+
+        protected String getTAG() {
+            return TAG;
         }
     };
 
@@ -90,23 +89,11 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         }
     };
 
-    private void showToast(final String msg) {
-        final CreateLobbyActivity context = this;
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                } catch (Exception ex) {
-                    Log.d("Create lobby", "error showing toast");
-                }
-            }
-        });
+    @Override
+    protected String getTAG() {
+        return TAG;
     }
 
-
-    };
 }
 
 

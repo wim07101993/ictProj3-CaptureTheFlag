@@ -14,14 +14,16 @@ public class EndActivity extends AActivityWithStateManager implements View.OnCli
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
+    private static final String TAG = EndActivity.class.getSimpleName();
+
     private Button leave;
     private Button restart;
     private Integer LobbyID = 0;
     private String playerName;
 
-    /* --------------------------------------------------------------- */
-    /* ------------------------- CONSTRUCTOR ------------------------- */
-    /* --------------------------------------------------------------- */
+    /* ----------------------------------------------------------- */
+    /* ------------------------- METHODS ------------------------- */
+    /* ----------------------------------------------------------- */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

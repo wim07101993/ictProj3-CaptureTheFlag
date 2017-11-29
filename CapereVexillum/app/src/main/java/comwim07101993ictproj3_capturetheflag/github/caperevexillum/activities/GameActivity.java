@@ -322,6 +322,11 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         return stateManager;
     }
 
+    @Override
+    protected String getTAG() {
+        return TAG;
+    }
+
 
     /* ------------------------------------------------------------- */
     /* ------------------------- LISTENERS ------------------------- */

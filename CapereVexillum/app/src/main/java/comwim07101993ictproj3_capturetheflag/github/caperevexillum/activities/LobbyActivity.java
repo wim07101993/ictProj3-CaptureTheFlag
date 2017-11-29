@@ -30,6 +30,8 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     private Button startGameButton;
     private Button leaveLobbyButton;
 
+    private static final String TAG = LobbyActivity.class.getSimpleName();
+
     private ListView teamOrangeListView;
     private ListView teamGreenListView;
     private ListView noTeamListView;
