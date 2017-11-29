@@ -4,10 +4,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
-import java.lang.reflect.InvocationTargetException;
-
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
@@ -66,16 +64,12 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
             try {
                 stateManager = stateManagerFactory.get(
                         PreferenceManager.getDefaultSharedPreferences(this));
+
+                if (!clearSharedPreferences) {
+                    stateManager.load();
+                }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
-            }
-
-            if (!stateManager.getSocketService().isConnected()) {
-                Utils.toast(this, "Could not connect to server");
-            }
-
-            if (!clearSharedPreferences) {
-                stateManager.load();
             }
         }
 
@@ -91,5 +85,21 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     public StateManager getStateManager() {
         return stateManager;
     }
+
+    public void showToast(final String message) {
+        final AppCompatActivity context = this;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.w(getTAG(), "Error while making toast" + e.getMessage());
+                }
+            }
+        });
+    }
+
+    protected abstract String getTAG();
 
 }

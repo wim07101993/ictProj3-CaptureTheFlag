@@ -81,7 +81,11 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         stateManager.getSocketService().getSocket().on("getPlayersResult", getPlayersResult);
         stateManager.getSocketService().getSocket().on("leaveLobby", leaveLobby);
         stateManager.getSocketService().getSocket().emit("getPlayers", lobbyID);
+    }
 
+    @Override
+    protected String getTAG() {
+        return TAG;
     }
 
     @Override
@@ -269,19 +273,5 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
             }
         });
 
-    }
-
-    private void showToast(final String msg) {
-        final LobbyActivity context = this;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                } catch (Exception err) {
-                    Log.e("Lobby activity", "show toast");
-                }
-            }
-        });
     }
 }
