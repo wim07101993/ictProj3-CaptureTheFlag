@@ -61,10 +61,6 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         public void call(Object... args) {
             showToast("Lobby name exists");
         }
-
-        protected String getTAG() {
-            return TAG;
-        }
     };
 
     Emitter.Listener getLobbyId = new Emitter.Listener() {
