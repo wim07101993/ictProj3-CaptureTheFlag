@@ -51,7 +51,14 @@ public enum ESocketEmitKey implements ISocketKey {
         }
     },
 
-    SOCKET_SETTINGS {
+    JOIN_LOBBY {
+        @Override
+        public String getStringIdentifier() {
+            return "joinLobby";
+        }
+    },
+
+    LOBBY_SETTINGS {
         @Override
         public String getStringIdentifier() {
             return "createLobbyNew";

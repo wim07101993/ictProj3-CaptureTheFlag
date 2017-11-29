@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.google.gson.Gson;
@@ -22,13 +21,9 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Player;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 
 public class LobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
-    // UI elements
-    private Button joinTeamGreenButton;
-    private Button joinTeamOrangeButton;
-    private Button startGameButton;
-    private Button leaveLobbyButton;
 
     private static final String TAG = LobbyActivity.class.getSimpleName();
 
@@ -36,53 +31,32 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     private ListView teamGreenListView;
     private ListView noTeamListView;
 
-    // Socket (to be replaced with socket in background service??)
-
-    public String myTeam = Team.NO_TEAM;
-    private Boolean isHost = true;
-    private String playerName = "";
-    private int lobbyID = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
-        // Link UI with code
-        joinTeamGreenButton = (Button) findViewById(R.id.teamGreenJoinButton);
-        joinTeamOrangeButton = (Button) findViewById(R.id.teamOrangeJoinButton);
-        startGameButton = (Button) findViewById(R.id.startButton);
-        leaveLobbyButton = (Button) findViewById(R.id.leaveButton);
-
         teamOrangeListView = (ListView) findViewById(R.id.teamOrangeListView);
         teamGreenListView = (ListView) findViewById(R.id.teamGreenListView);
         noTeamListView = (ListView) findViewById(R.id.noTeamListView);
 
-        // Set listener for all buttons to this
-        joinTeamGreenButton.setOnClickListener(this);
-        joinTeamOrangeButton.setOnClickListener(this);
+        findViewById(R.id.teamGreenJoinButton).setOnClickListener(this);
+        findViewById(R.id.teamOrangeJoinButton).setOnClickListener(this);
+        findViewById(R.id.leaveButton).setOnClickListener(this);
+        Button startGameButton = (Button) findViewById(R.id.startButton);
         startGameButton.setOnClickListener(this);
-        leaveLobbyButton.setOnClickListener(this);
-
-        // Get data from intent
-        Bundle extras = getIntent().getExtras();
-        playerName = extras.getString("playerName", "PLAYERNAME_NOT_FOUND");
-        isHost = extras.getBoolean("isHost", false);
-        lobbyID = extras.getInt("lobbyID", 0);
-
 
         // Set startbutton visible for host
-        if (isHost) {
+        if (stateManager.getBoolean(EStateManagerKey.IS_HOST)) {
             startGameButton.setVisibility(View.VISIBLE);
         } else {
             startGameButton.setVisibility(View.INVISIBLE);
         }
 
-
         stateManager.getSocketService().getSocket().on("startGame", startGameActivityListener);
         stateManager.getSocketService().getSocket().on("getPlayersResult", getPlayersResult);
         stateManager.getSocketService().getSocket().on("leaveLobby", leaveLobby);
-        stateManager.getSocketService().getSocket().emit("getPlayers", lobbyID);
+        stateManager.getSocketService().getSocket().emit("getPlayers", stateManager.getInt(EStateManagerKey.LOBBY_ID));
     }
 
     @Override
@@ -92,21 +66,14 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
     @Override
     public void onClick(View view) {
-        if (lobbyID == 0) {
-            Bundle extras = getIntent().getExtras();
-            playerName = extras.getString("playerName", "PLAYERNAME_NOT_FOUND");
-            isHost = extras.getBoolean("isHost", false);
-            lobbyID = extras.getInt("lobbyID", 0);
-        }
         int id = view.getId();
-
         switch (id) {
             case R.id.teamGreenJoinButton:
-                joinTeamGreen();
+                joinTeam(Team.TEAM_GREEN);
                 break;
 
             case R.id.teamOrangeJoinButton:
-                joinTeamOrange();
+                joinTeam(Team.TEAM_ORANGE);
                 break;
 
             case R.id.startButton:
@@ -119,32 +86,29 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         }
     }
 
-    private void joinTeamOrange() {
+    private void joinTeam(String team) {
         if (stateManager.getSocketService().getSocket() != null) {
-            stateManager.getSocketService().getSocket().emit("joinTeam", lobbyID, "orange", playerName);
-        }
-    }
-
-    private void joinTeamGreen() {
-        if (stateManager.getSocketService().getSocket() != null) {
-            stateManager.getSocketService().getSocket().emit("joinTeam", lobbyID, "green", playerName);
+            stateManager.getSocketService().getSocket().emit(
+                    "joinTeam",
+                    stateManager.getInt(EStateManagerKey.LOBBY_ID),
+                    "orange",
+                    stateManager.getString(EStateManagerKey.PLAYER_NAME));
         }
     }
 
     private void startGame() {
-
-
-        stateManager.getSocketService().getSocket().emit("startLobby", lobbyID);
-
+        stateManager.getSocketService().getSocket().emit(
+                "startLobby",
+                stateManager.getInt(EStateManagerKey.LOBBY_ID));
     }
 
     private void leaveLobby() {
         // Tell the socket that we're leaving this lobby
         if (stateManager.getSocketService().getSocket() != null && stateManager.getSocketService().getSocket().connected()) {
-            if (isHost) {
-                stateManager.getSocketService().getSocket().emit("hostLeft", lobbyID);
+            if (stateManager.getBoolean(EStateManagerKey.IS_HOST)) {
+                stateManager.getSocketService().getSocket().emit("hostLeft", stateManager.getInt(EStateManagerKey.LOBBY_ID));
             } else {
-                stateManager.getSocketService().getSocket().emit("leaveLobby", lobbyID, playerName);
+                stateManager.getSocketService().getSocket().emit("leaveLobby", stateManager.getInt(EStateManagerKey.LOBBY_ID), stateManager.getString(EStateManagerKey.PLAYER_NAME));
             }
             stateManager.getSocketService().getSocket().disconnect();
         }
@@ -161,9 +125,9 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                 }.getType());
 
 
-                ArrayList<Player> teamGreen = new ArrayList<Player>();
-                ArrayList<Player> teamOrange = new ArrayList<Player>();
-                ArrayList<Player> noTeam = new ArrayList<Player>();
+                ArrayList<Player> teamGreen = new ArrayList<>();
+                ArrayList<Player> teamOrange = new ArrayList<>();
+                ArrayList<Player> noTeam = new ArrayList<>();
 
                 for (Player p : playerList) {
 
@@ -180,8 +144,8 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                             noTeam.add(p);
                             break;
                     }
-                    if (p.getName().equals(playerName)) {
-                        myTeam = p.getTeam().getTeamName();
+                    if (p.getName().equals(stateManager.getString(EStateManagerKey.PLAYER_NAME))) {
+                        stateManager.setString(EStateManagerKey.MY_TEAM, p.getTeam().getTeamName());
                     }
                 }
                 updateUI(noTeam, noTeamListView);
@@ -211,18 +175,19 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
 
         Intent i = new Intent(this, GameActivity.class);
-        if (myTeam.equals(Team.NO_TEAM)) {
+        String team = stateManager.getString(EStateManagerKey.MY_TEAM);
+        if (team.equals(EStateManagerKey.MY_TEAM.getDefaultValue())) {
             Random rand = new Random();
 
             int n = rand.nextInt(50) + 1;
             if (n < 25) {
-                myTeam = Team.TEAM_GREEN;
+                stateManager.setString(EStateManagerKey.MY_TEAM, Team.TEAM_GREEN);
             } else {
-                myTeam = Team.TEAM_ORANGE;
+                stateManager.setString(EStateManagerKey.MY_TEAM, Team.TEAM_ORANGE);
             }
         }
-        showToast("Your team is:" + myTeam);
-        i.putExtra("myTeam", myTeam);
+        showToast("Your team is:" + team);
+        i.putExtra("myTeam", team);
         startActivity(i);
 
     }
@@ -235,12 +200,12 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                 String request = (String) args[0];
                 Player[] players = gson.fromJson(request, Player[].class);
                 for (Player player : players) {
-                    if (player.getName().equals(playerName)) {
-                        myTeam = player.getTeam().getTeamName();
+                    if (player.getName().equals(stateManager.getString(EStateManagerKey.PLAYER_NAME))) {
+                        stateManager.setString(EStateManagerKey.MY_TEAM, player.getTeam().getTeamName());
                     }
                 }
 
-            } catch (Exception ex) {
+            } catch (Exception ignored) {
             }
 
             startGameActivity();
@@ -248,14 +213,10 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     };
 
     private void updateUI(ArrayList<Player> playerList, final ListView listView) {
-        // get the items for the feed
-        ArrayList<Player> players = playerList;
-
         // create a List of Map<String, ?> objects
-        ArrayList<HashMap<String, String>> data =
-                new ArrayList<HashMap<String, String>>();
-        for (Player player : players) {
-            HashMap<String, String> map = new HashMap<String, String>();
+        ArrayList<HashMap<String, String>> data = new ArrayList<>();
+        for (Player player : playerList) {
+            HashMap<String, String> map = new HashMap<>();
             map.put("player", player.getName());
             data.add(map);
         }

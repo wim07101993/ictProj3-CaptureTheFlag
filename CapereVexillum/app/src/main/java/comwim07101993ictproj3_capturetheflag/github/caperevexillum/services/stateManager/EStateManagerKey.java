@@ -116,6 +116,28 @@ public enum EStateManagerKey implements IStateManagerKey {
         public Class getValueClass() {
             return Integer.class;
         }
+
+        @Override
+        public ESocketOnKey getSocketOnKey() {
+            return ESocketOnKey.GET_LOBBY_ID;
+        }
+    },
+
+    LOBBY_NAME {
+        @Override
+        public Class getValueClass() {
+            return String.class;
+        }
+
+        @Override
+        public boolean needsToBeStored() {
+            return false;
+        }
+
+        @Override
+        public ESocketEmitKey getSocketEmitPutKey() {
+            return ESocketEmitKey.JOIN_LOBBY;
+        }
     },
 
     LOBBY_SETTINGS {
@@ -131,7 +153,7 @@ public enum EStateManagerKey implements IStateManagerKey {
 
         @Override
         public ESocketEmitKey getSocketEmitPutKey() {
-            return ESocketEmitKey.SOCKET_SETTINGS;
+            return ESocketEmitKey.LOBBY_SETTINGS;
         }
 
         @Override
