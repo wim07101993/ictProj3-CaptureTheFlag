@@ -31,6 +31,7 @@ export default class{
           parent.AddLobbyListeners(socket);
         });
         socket.on("getPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket,this.lobbies));
+        socket.on("restartLobby", (lobbyID) => lobbyClass.restart(lobbyID));
     }
     //void
     AddLobbyListeners(socket){
