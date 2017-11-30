@@ -11,20 +11,17 @@ import java.util.Vector;
  */
 
 public abstract class AObservable extends Observable {
-    @NonNull
-    public abstract String getTAG();
 
-    private boolean changed = false;
-    private Vector obs;
+    private Vector<Observer> obs;
 
     /**
      * Construct an Observable with zero Observers.
      */
-
-    public AObservable() {
-        obs = new Vector();
+    protected AObservable() {
+        obs = new Vector<>();
     }
 
+    @Override
     /**
      * Adds an observer to the set of observers for this object, provided
      * that it is not the same as some observer already in the set.
@@ -42,6 +39,7 @@ public abstract class AObservable extends Observable {
         }
     }
 
+    @Override
     /**
      * Deletes an observer from the set of observers of this object.
      * Passing <CODE>null</CODE> to this method will have no effect.
@@ -50,26 +48,6 @@ public abstract class AObservable extends Observable {
      */
     public synchronized void deleteObserver(Observer o) {
         obs.removeElement(o);
-    }
-
-    /**
-     * If this object has changed, as indicated by the
-     * <code>hasChanged</code> method, then notify all of its observers
-     * and then call the <code>clearChanged</code> method to
-     * indicate that this object has no longer changed.
-     * <p>
-     * Each observer has its <code>update</code> method called with two
-     * arguments: this observable object and <code>null</code>. In other
-     * words, this method is equivalent to:
-     * <blockquote><tt>
-     * notifyObservers(null)</tt></blockquote>
-     *
-     * @see java.util.Observable#clearChanged()
-     * @see java.util.Observable#hasChanged()
-     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
-     */
-    public void notifyObservers() {
-        notifyObservers(null);
     }
 
     /**
@@ -86,6 +64,7 @@ public abstract class AObservable extends Observable {
      * @see java.util.Observable#hasChanged()
      * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
+    @Override
     public void notifyObservers(Object arg) {
         /*
          * a temporary array buffer, used as a snapshot of the state of
@@ -117,44 +96,9 @@ public abstract class AObservable extends Observable {
     /**
      * Clears the observer list so that this object no longer has any observers.
      */
+    @Override
     public synchronized void deleteObservers() {
         obs.removeAllElements();
-    }
-
-    /**
-     * Marks this <tt>Observable</tt> object as having been changed; the
-     * <tt>hasChanged</tt> method will now return <tt>true</tt>.
-     */
-    protected synchronized void setChanged() {
-        changed = true;
-    }
-
-    /**
-     * Indicates that this object has no longer changed, or that it has
-     * already notified all of its observers of its most recent change,
-     * so that the <tt>hasChanged</tt> method will now return <tt>false</tt>.
-     * This method is called automatically by the
-     * <code>notifyObservers</code> methods.
-     *
-     * @see java.util.Observable#notifyObservers()
-     * @see java.util.Observable#notifyObservers(java.lang.Object)
-     */
-    protected synchronized void clearChanged() {
-        changed = false;
-    }
-
-    /**
-     * Tests if this object has changed.
-     *
-     * @return <code>true</code> if and only if the <code>setChanged</code>
-     * method has been called more recently than the
-     * <code>clearChanged</code> method on this object;
-     * <code>false</code> otherwise.
-     * @see java.util.Observable#clearChanged()
-     * @see java.util.Observable#setChanged()
-     */
-    public synchronized boolean hasChanged() {
-        return changed;
     }
 
     /**
@@ -162,7 +106,11 @@ public abstract class AObservable extends Observable {
      *
      * @return the number of observers of this object.
      */
+    @Override
     public synchronized int countObservers() {
         return obs.size();
     }
+
+    @NonNull
+    public abstract String getTAG();
 }
