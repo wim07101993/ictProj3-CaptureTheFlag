@@ -65,6 +65,10 @@
             </tbody>
         </table>
         <script>
+
+        document.getElementById("categorieënTab").className = " ";
+        document.getElementById("vragenTab").className = "active";
+        
          var antwoorden= <?php echo json_encode( $antwoorden) ?> ;
          var question_id= <?php echo json_encode( $question_id) ?>;
          var csrf='<?php echo csrf_field()?>';
