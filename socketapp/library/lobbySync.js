@@ -26,7 +26,9 @@ export default{
         console.log("creating lobby:"+lobbyName)
         if(lobbyFilter[0] != undefined){
           console.log("failed creating:"+lobbyName)
-          socket.emit("lobbyExists");
+          settings["name"]=null;
+          socket.emit("wasLobbyCreated", JSON.stringify(settings) );
+          
         }else{
           let lobby = new Lobby(lobbies.length, lobbyName, password, time, []);
           lobbies.push(lobby);
@@ -55,8 +57,10 @@ export default{
           let resultPlayer = playerFilter[0];
   
           if(resultPlayer != undefined){
-            socket.emit("playerNameUnavailable");
-            console.log("playerNameUnavailable");
+            settings["id"]=resultLobby.id;
+            settings["hostName"] = null;
+            resultLobby.addPlayer(playerName,socket);
+            socket.emit("wasLobbyCreated", JSON.stringify(settings) );
           }else{
             settings["id"]=resultLobby.id;
             resultLobby.addPlayer(playerName,socket);
