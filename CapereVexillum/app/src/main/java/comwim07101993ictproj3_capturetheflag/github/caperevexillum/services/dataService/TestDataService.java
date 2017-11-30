@@ -28,7 +28,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.Vari
  */
 
 public class TestDataService implements TestIDataService {
-    private static final String SERVER_IP = "10.0.2.2";
+
     //Virtual devices connect to local host through 10.0.2.2
 
     private static final String GET_ALL = "GET/Vragen";
@@ -44,7 +44,7 @@ public class TestDataService implements TestIDataService {
     public void getRandomQuestions(final Response.Listener<List<Quiz1>> listener, final Response.ErrorListener errorListener, int amount, int category) {
 
 
-        createRequestAndAddToQueue(listener, errorListener, Variables.REST_API+GET_RANDOM+category+"/"+ amount);
+        createRequestAndAddToQueue(listener, errorListener, Variables.SERVER_IP+GET_RANDOM+category+"/"+ amount);
     }
 
     private void createRequestAndAddToQueue(final Response.Listener<List<Quiz1>> listener,
@@ -60,21 +60,14 @@ public class TestDataService implements TestIDataService {
             @Override
             public void onResponse(String response) {
                 try {
-
-                    // convert response to sheet music and notify listener
-
                     Type collectionType = new TypeToken<List<Quiz1>>() {
                     }.getType();
                     Log.d("string",response);
                     List<Quiz1> boxSearchCollection = new Gson().fromJson(response, collectionType);
                     for (Answers a1 : boxSearchCollection.get(0).getAnswers()
                          ) {
-                        Log.d("boxy", a1.getAnswer());
+                        Log.d("answer", a1.getAnswer());
                     }
-
-                    //List<Quiz> boxSearchCollection = new Gson().fromJson(response, collectionType);
-
-
                     listener.onResponse(boxSearchCollection);
                 } catch (Exception e) {
                     // if an error occurred, notify listener

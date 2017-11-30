@@ -14,7 +14,7 @@ public class DebugActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
-        quizLayout = (RelativeLayout) findViewById(R.id.quizLayout2);
+        quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
         quizLayout.setVisibility(View.VISIBLE);
 
     }
