@@ -2,15 +2,14 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.b
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-
-import com.github.nkzawa.socketio.client.Socket;
+import android.util.Log;
+import android.widget.Toast;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManagerFactory;
 
 /**
  * Created by wimva on 17/11/2017.
@@ -22,8 +21,10 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
+    private static final String TAG = AActivityWithStateManager.class.getSimpleName();
+
     protected StateManager stateManager;
-    protected Socket socket ;
+    protected StateManagerFactory stateManagerFactory;
 
 
     /* ----------------------------------------------------------- */
@@ -49,19 +50,26 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
         initStateManager();
     }
 
-    protected void initStateManager(){
+    protected void initStateManager() {
         initStateManager(false);
     }
 
     protected void initStateManager(boolean clearSharedPreferences) {
 
         if (stateManager == null) {
-            stateManager = new StateManager(
-                    PreferenceManager.getDefaultSharedPreferences(this)
-            );
+            if (stateManagerFactory == null) {
+                stateManagerFactory = new StateManagerFactory();
+            }
 
-            if (!clearSharedPreferences) {
-                stateManager.load();
+            try {
+                stateManager = stateManagerFactory.get(
+                        PreferenceManager.getDefaultSharedPreferences(this));
+
+                if (!clearSharedPreferences) {
+                    stateManager.load();
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage());
             }
         }
 
@@ -69,19 +77,29 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
             stateManager.clear();
         }
 
-        if (stateManager.get(StateManagerKey.FLAGS) == null) {
-            stateManager.set(StateManagerKey.FLAGS, new Flags());
+        if (stateManager.getSerializable(EStateManagerKey.FLAGS) == null) {
+            stateManager.setSerializable(EStateManagerKey.FLAGS, new Flags());
         }
-
-        socket = stateManager.getSocket();
     }
 
     public StateManager getStateManager() {
         return stateManager;
     }
 
-    public Socket getSocket() {
-        return socket;
+    public void showToast(final String message) {
+        final AppCompatActivity context = this;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.w(getTAG(), "Error while making toast" + e.getMessage());
+                }
+            }
+        });
     }
+
+    protected abstract String getTAG();
 
 }

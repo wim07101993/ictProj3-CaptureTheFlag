@@ -1,28 +1,38 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
+import com.google.gson.Gson;
+
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
+
 /**
  * Created by wimva on 9/11/2017.
  */
 
-public class LobbySettings {
+public class LobbySettings implements ISerializable {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    private String lobbyName;
-    private String lobbyPassword;
+    private String name;
+    private String password;
     private float totalGameTime;
+    private String hostName;
+    private int id;
 
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    public LobbySettings(String lobbyName, String lobbyPassword, float totalGameTime) {
-        this.lobbyName = lobbyName;
-        this.lobbyPassword = lobbyPassword;
+    public LobbySettings(){}
+
+    public LobbySettings(String lobbyName, String lobbyPassword, float totalGameTime, String hostName) {
+        this.name = lobbyName;
+        this.password = lobbyPassword;
         this.totalGameTime = totalGameTime;
+        this.hostName = hostName;
+        id = -1;
     }
 
 
@@ -30,34 +40,41 @@ public class LobbySettings {
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
 
-    /* ------------------------- GETTERS ------------------------- */
-
-    public String getLobbyName() {
-        return lobbyName;
+    @Override
+    public String Serialize() {
+        return new Gson().toJson(this);
     }
 
-    public String getLobbyPassword() {
-        return lobbyPassword;
+    @Override
+    public void Deserialize(String serializedObject) {
+        LobbySettings This = new Gson().fromJson(serializedObject, LobbySettings.class);
+        name = This.name;
+        password = This.password;
+        totalGameTime = This.totalGameTime;
+        hostName = This.hostName;
+        id = This.id;
+    }
+
+    /* ------------------------- GETTERS ------------------------- */
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public float getTotalGameTime() {
         return totalGameTime;
     }
 
-
-    /* ------------------------- SETTERS ------------------------- */
-
-    public void setLobbyName(String lobbyName) {
-        this.lobbyName = lobbyName;
+    public String getHostName() {
+        return hostName;
     }
 
-    public void setLobbyPassword(String lobbyPassword) {
-        this.lobbyPassword = lobbyPassword;
+    public int getId() {
+        return id;
     }
-
-    public void setTotalGameTime(float totalGameTime) {
-        this.totalGameTime = totalGameTime;
-    }
-
 
 }

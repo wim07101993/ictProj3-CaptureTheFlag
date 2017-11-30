@@ -5,7 +5,6 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beaco
  */
 
 public interface IBeacon {
-     /* ------------------------- GETTERS ------------------------- */
 
     /**
      * @return signal strength of the beacon
@@ -13,9 +12,23 @@ public interface IBeacon {
     int getRssi();
 
     /**
+     * Sets the value of the rssi.
+     *
+     * @param rssi
+     */
+    void setRssi(int rssi);
+
+    /**
      * @return sort of batterypower??? (used to find the relative RSSI)
      */
     int getPower();
+
+    /**
+     * Sets the value of the power (used to find the relative RSSI).
+     *
+     * @param power
+     */
+    void setPower(int power);
 
     /**
      * getRelativeRssi is a method to calculate the relative rssi.
@@ -30,20 +43,4 @@ public interface IBeacon {
      * @return the MAC-address of the Beacon
      */
     String getAddress();
-
-    /* ------------------------- SETTERS ------------------------- */
-
-    /**
-     * Sets the value of the rssi.
-     *
-     * @param rssi
-     */
-    void setRssi(int rssi);
-
-    /**
-     * Sets the value of the power (used to find the relative RSSI).
-     *
-     * @param power
-     */
-    void setPower(int power);
 }

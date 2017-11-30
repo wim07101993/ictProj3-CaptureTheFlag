@@ -22,7 +22,6 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketInstance;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 
 
@@ -69,9 +68,8 @@ public class ScoreFragment extends Fragment {
         amountFlagsRedView = (TextView) view.findViewById(R.id.aantalFlagsRood);
         amountFlagsGreenView = (TextView) view.findViewById(R.id.aantalFlagsGroen);
         scoreBalanceProgressbar = (ProgressBar) view.findViewById(R.id.scoreVerhoudingProgressBar);
-        socket = SocketInstance.socket();
-        socket.on("syncTeamScore",syncScoreListenner);
         stateManager = gameActivity.getStateManager();
+        stateManager.getSocketService().getSocket().on("syncTeamScore",syncScoreListenner);
         return view;
     }
     Emitter.Listener syncScoreListenner = new Emitter.Listener() {
@@ -83,12 +81,12 @@ public class ScoreFragment extends Fragment {
             String red="1";
             String green="1";
             for(Team team : teams){
-                if(team.getTeamname().equals("orange")){
+                if(team.getTeamName().equals("orange")){
                     red = team.getScore()+"";
                     if(red.equals("0"))
                         red ="1";
                 }
-                if(team.getTeamname().equals("green")){
+                if(team.getTeamName().equals("green")){
                     green = team.getScore()+"";
                     if(green.equals("0"))
                         green="1";

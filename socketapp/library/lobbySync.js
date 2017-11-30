@@ -16,27 +16,36 @@ export default{
         
       }
     },
-    createLobby(io, socket, playerName, lobbyName , password, time,lobbies){
+    createLobby(io, socket,incomingSettings,lobbies){
       try {
-        
+        let settings = JSON.parse(incomingSettings);
+        let playerName = settings["hostName"];
+        let lobbyName = settings["name"];
+        let password = settings["password"];
+        let time = settings["totalGameTime"];
         let lobbyFilter = lobbies.filter((lobby) => {return lobby.name == lobbyName});
         console.log("creating lobby:"+lobbyName)
         if(lobbyFilter[0] != undefined){
           console.log("failed creating:"+lobbyName)
-          socket.emit("lobbyExists");
+          settings["name"]=null;
+          socket.emit("wasLobbyCreated", JSON.stringify(settings) );
+          
         }else{
           let lobby = new Lobby(lobbies.length, lobbyName, password, time, []);
           lobbies.push(lobby);
           console.log("created lobby: " + lobby.name + " - " + lobby.password + " - " + lobby.time);
-          this.joinLobby(io, socket, lobbyName, password, playerName,lobbies);
+          this.joinLobby(io, socket, settings,lobbies);
         }
       } catch (error) {
         
       }
     },
 
-    joinLobby(io, socket, lobbyName, lobbyPassword, playerName,lobbies){
+    joinLobby(io, socket, settings,lobbies){
       try {
+        let playerName = settings["hostName"];
+        let lobbyName = settings["name"];
+        let lobbyPassword = settings["password"];
         
         let lobby = lobbies.filter((lobby)=>{
           
@@ -49,11 +58,14 @@ export default{
           let resultPlayer = playerFilter[0];
   
           if(resultPlayer != undefined){
-            socket.emit("playerNameUnavailable");
-            console.log("playerNameUnavailable");
-          }else{
+            settings["id"]=resultLobby.id;
+            settings["hostName"] = null;
             resultLobby.addPlayer(playerName,socket);
-            socket.emit("getLobbyId", resultLobby.id);
+            socket.emit("wasLobbyCreated", JSON.stringify(settings) );
+          }else{
+            settings["id"]=resultLobby.id;
+            resultLobby.addPlayer(playerName,socket);
+            socket.emit("wasLobbyCreated", JSON.stringify(settings) );
             this.getPlayers(resultLobby.id, io,lobbies);
             //set flag capture listener 
             socket.on("captureFlag",(flag)=>resultLobby.captureFlags(flag));
