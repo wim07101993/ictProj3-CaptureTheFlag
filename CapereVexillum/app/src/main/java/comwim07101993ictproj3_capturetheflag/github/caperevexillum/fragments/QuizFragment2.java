@@ -113,6 +113,7 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
     public void setup(){
         buttons = new ArrayList<>();
         nQuestions = 3;
+        //todo nQuestions = equal to amount flags team has in statemanager
         linearLayout = view.findViewById(R.id.buttonsLayout);;
         question = (TextView) view.findViewById(R.id.questionTextView);
         dataService.getRandomQuestions(listener,errorListener,nQuestions,CATEGORY);
@@ -142,11 +143,6 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
         //als de question juist is toon dan de volgende
         //of als alle vragen zijn geweest ga naar de functie capturedFlag
         //anders ga naar de functie einde quiz
-        Log.d("checkAnsweredQuestion",button.getText()+"");
-        Log.d("checkAnsweredQuestion",button.getId()+"");
-        Log.d("questionAndAnswer",questionAndAnswer.getAnswer(button.getId())+"");
-        Log.d("checkAnsweredQuestion",questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect());
-
         if(questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect().equals("1")){
             Log.d("questionAndAnswer",questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect());
             count++;

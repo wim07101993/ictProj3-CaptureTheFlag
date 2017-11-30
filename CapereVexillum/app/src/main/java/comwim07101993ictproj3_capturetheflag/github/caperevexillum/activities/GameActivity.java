@@ -109,6 +109,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         isStartQuizActivityOpen = false;
         if (showQuestion) {
             mainLayout.setVisibility(View.INVISIBLE);
+            quizFragment2.getQuestions();
             quizLayout.setVisibility(View.VISIBLE);
 
         } else {
