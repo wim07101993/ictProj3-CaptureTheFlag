@@ -11,7 +11,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.
  * Created by georg on 16/11/2017.
  */
 
-public interface TestIDataService {
+public interface IDataServiceApi {
     void getRandomQuestions(final Response.Listener<List<Quiz1>> listener, final Response.ErrorListener errorListener, int amount, int category);
 
 }

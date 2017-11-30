@@ -22,16 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Answers;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz1;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataService;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.TestDataService;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataServiceApi;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
@@ -46,7 +41,7 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
     /* ---------------------------------------------------------- */
     static final int CATEGORY = 1;
     static  final  String TAG = QuizFragment2.class.getSimpleName();
-    TestDataService dataService;
+    DataServiceApi dataService;
 
     private View view;
     private List<Button> buttons;
@@ -101,7 +96,7 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
 
-        dataService=new TestDataService(gameActivity);
+        dataService=new DataServiceApi(gameActivity);
         stateManager = gameActivity.getStateManager();
         setup();
 
@@ -224,7 +219,7 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_quiz2,container,false);
-        dataService=new TestDataService(getActivity());
+        dataService=new DataServiceApi(getActivity());
 
         setup();
 

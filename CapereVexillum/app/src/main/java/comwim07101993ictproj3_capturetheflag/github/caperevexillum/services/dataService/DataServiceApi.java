@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.Vari
  * Created by georg on 16/11/2017.
  */
 
-public class TestDataService implements TestIDataService {
+public class DataServiceApi implements IDataServiceApi {
 
     //Virtual devices connect to local host through 10.0.2.2
 
@@ -36,7 +35,7 @@ public class TestDataService implements TestIDataService {
 
     private RequestQueue queue;
 
-    public TestDataService(Context context) {
+    public DataServiceApi(Context context) {
         queue = Volley.newRequestQueue(context);
     }
 

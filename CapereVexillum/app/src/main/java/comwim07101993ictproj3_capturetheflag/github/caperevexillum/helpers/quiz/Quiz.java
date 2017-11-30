@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Sanli on 17/10/2017.
  */
-
+@Deprecated
 public class Quiz {
     private String vraag;
     private String juisteAntwoord;

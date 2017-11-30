@@ -13,14 +13,12 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Answers;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz1;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.TestDataService;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataServiceApi;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -32,12 +30,12 @@ import static junit.framework.Assert.assertEquals;
 public class DataServiceTest {
     private List<Quiz1> dataQuiz = new ArrayList<>();
     private List<Answers> answers = new ArrayList<>();
-    TestDataService dataService ;
+    DataServiceApi dataService ;
 
     @Test
     public void getData() throws Exception {
         Context appContext = InstrumentationRegistry.getTargetContext();
-        dataService = new TestDataService(appContext);
+        dataService = new DataServiceApi(appContext);
         // Context of the app under test.
         //{"Question_ID":2,"Question":"Wie is de 45ste president van de verenigde staten.","Answers":[{"Answer_ID":5,"Answer":"George W. Bush","Question_ID":2,"Correct":0},{"Answer_ID":6,"Answer":"Barack Obama","Question_ID":2,"Correct":0},{"Answer_ID":7,"Answer":"Donald Trump","Question_ID":2,"Correct":1}]}
                 //String Answer, Boolean Correct
@@ -72,7 +70,7 @@ public class DataServiceTest {
     @Test
     public void getData2() throws Exception {
         Context appContext = InstrumentationRegistry.getTargetContext();
-        dataService = new TestDataService(appContext);
+        dataService = new DataServiceApi(appContext);
         // Context of the app under test.
         //{"Question_ID":2,"Question":"Wie is de 45ste president van de verenigde staten.","Answers":[{"Answer_ID":5,"Answer":"George W. Bush","Question_ID":2,"Correct":0},{"Answer_ID":6,"Answer":"Barack Obama","Question_ID":2,"Correct":0},{"Answer_ID":7,"Answer":"Donald Trump","Question_ID":2,"Correct":1}]}
         //String Answer, Boolean Correct

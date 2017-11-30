@@ -35,6 +35,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 /**
  * A simple {@link Fragment} subclass.
  */
+@Deprecated
 public class QuizFragment extends Fragment implements View.OnClickListener {
 
 

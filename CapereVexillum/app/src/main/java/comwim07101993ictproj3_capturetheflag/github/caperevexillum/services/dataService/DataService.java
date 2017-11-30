@@ -27,7 +27,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.Vari
 /**
  * Created by georg on 16/11/2017.
  */
-
+@Deprecated
 public class DataService implements IDataService {
     private static final String SERVER_IP = "10.0.2.2";
     //Virtual devices connect to local host through 10.0.2.2
