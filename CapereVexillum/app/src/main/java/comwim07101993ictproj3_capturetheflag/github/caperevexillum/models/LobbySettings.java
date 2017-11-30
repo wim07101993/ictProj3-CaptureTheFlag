@@ -25,6 +25,8 @@ public class LobbySettings implements ISerializable {
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
+    public LobbySettings(){}
+
     public LobbySettings(String lobbyName, String lobbyPassword, float totalGameTime, String hostName) {
         this.name = lobbyName;
         this.password = lobbyPassword;

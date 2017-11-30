@@ -81,6 +81,13 @@ public enum ESocketOnKey implements ISocketKey {
         public Class getValueClass() {
             return Team[].class;
         }
+    },
+
+    GET_LOBBY_ID {
+        @Override
+        public String getStringIdentifier() {
+            return "getLobbyId";
+        }
     };
 
     @Override
