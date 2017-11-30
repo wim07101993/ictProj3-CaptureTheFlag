@@ -26,13 +26,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-<<<<<<< HEAD:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/OnlineQuizFragment.java
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataServiceApi;
-=======
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataService;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
->>>>>>> WimSandBox:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/QuizFragment2.java
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 
 /**
@@ -45,18 +40,13 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
     static final int CATEGORY = 1;
-<<<<<<< HEAD:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/OnlineQuizFragment.java
-    static  final  String TAG = OnlineQuizFragment.class.getSimpleName();
+    static final String TAG = OnlineQuizFragment.class.getSimpleName();
     DataServiceApi dataService;
-=======
-    static final String TAG = QuizFragment.class.getSimpleName();
-    DataService dataService;
->>>>>>> WimSandBox:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/QuizFragment2.java
 
     private View view;
     private List<Button> buttons;
     private Flag currentFlag;
-    private String  myTeam;
+    private String myTeam;
     private TextView question;
     private Integer nQuestions;
     private Integer count;
@@ -72,14 +62,15 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
 
     private StateManager stateManager;
 
-    public void setTeam(String myTeam){
-        this.myTeam=myTeam;
+    public void setTeam(String myTeam) {
+        this.myTeam = myTeam;
     }
+
     public void setCurrentFlag(Flag currentFlag) {
         this.currentFlag = currentFlag;
     }
 
-    final Response.Listener  listener = new Response.Listener<List<Quiz>>() {
+    final Response.Listener listener = new Response.Listener<List<Quiz>>() {
         @Override
         public void onResponse(List<Quiz> response) {
             quiz = response;
@@ -91,7 +82,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     final Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG, error+"");
+            Log.e(TAG, error + "");
         }
     };
 
@@ -106,77 +97,32 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     public void addActivity(GameActivity gameActivity) {
         this.gameActivity = gameActivity;
 
-<<<<<<< HEAD:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/OnlineQuizFragment.java
-        dataService=new DataServiceApi(gameActivity);
-=======
-        dataService = new DataService(gameActivity);
-        setup();
->>>>>>> WimSandBox:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/QuizFragment2.java
+        dataService = new DataServiceApi(gameActivity);
         stateManager = gameActivity.getStateManager();
         setup();
 
     }
-    public void getQuestions(){
-        dataService.getRandomQuestions(listener,errorListener,nQuestions,CATEGORY);
+
+    public void getQuestions() {
+        dataService.getRandomQuestions(listener, errorListener, nQuestions, CATEGORY);
     }
 
-<<<<<<< HEAD:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/OnlineQuizFragment.java
-    public void setup(){
+    public void setup() {
         buttons = new ArrayList<>();
         nQuestions = 3;
         //todo nQuestions = equal to amount flags team has in statemanager
-        linearLayout = view.findViewById(R.id.buttonsLayout);;
-        question = (TextView) view.findViewById(R.id.questionTextView);
-        dataService.getRandomQuestions(listener,errorListener,nQuestions,CATEGORY);
-    }
-
-    //buttons dynamish aanmaken aan de hand van aantal antwoorden
-    private void createButtons(){
-        question.setText(questionAndAnswer.getQuestion());
-        linearLayout.removeAllViews();
-
-        for(int i = 0; i< questionAndAnswer.getAnswers().size(); i++ ){
-=======
-    public void setup() {
-        //locale waarde
-
-        final Response.Listener listener = new Response.Listener<List<Quiz>>() {
-            @Override
-            public void onResponse(List<Quiz> response) {
-                quizList = response;
-                //Eerste question afhalen
-                count = 0;
-                questionAndAnswer = quizList.get(count);
-                //buttons toevoegen aan layout
-                createButtons();
-            }
-        };
-        final Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, error.getMessage());
-            }
-        };
-        //TODO Georges statemanager.GET(MY_FLAGS);
-
-        buttons = new ArrayList<>();
-        nQuestions = 3;
         linearLayout = view.findViewById(R.id.buttonsLayout);
         ;
-
         question = (TextView) view.findViewById(R.id.questionTextView);
-        dataService.getRandomQuestions(listener, errorListener, 3, CATEGORY);
-
-
+        dataService.getRandomQuestions(listener, errorListener, nQuestions, CATEGORY);
     }
 
     //buttons dynamish aanmaken aan de hand van aantal antwoorden
     private void createButtons() {
-        question.setText(questionAndAnswer.getVraag());
+        question.setText(questionAndAnswer.getQuestion());
         linearLayout.removeAllViews();
 
-        for (int i = 0; i < questionAndAnswer.getAantalAntwoorden() - 1; i++) {
->>>>>>> WimSandBox:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/QuizFragment2.java
+        for (int i = 0; i < questionAndAnswer.getAnswers().size(); i++) {
             Button button = new Button(getActivity());
             button.setText(questionAndAnswer.getAnswer(i).getAnswer());
             button.setTextSize(14);
@@ -191,28 +137,15 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     }
 
     //kijkt of de antwoorden juist zijn en returnt true or false
-<<<<<<< HEAD:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/OnlineQuizFragment.java
-    boolean checkAnswerQuestion(Button button){
-        //als de question juist is toon dan de volgende
-        //of als alle vragen zijn geweest ga naar de functie capturedFlag
-        //anders ga naar de functie einde quiz
-        if(questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect().equals("1")){
-            Log.d("questionAndAnswer",questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect());
-            count++;
-            if ((nQuestions -1) >= count){
-                questionAndAnswer = quiz.get(count);
-=======
     boolean checkAnswerQuestion(Button button) {
-
         //als de question juist is toon dan de volgende
         //of als alle vragen zijn geweest ga naar de functie capturedFlag
         //anders ga naar de functie einde quiz
-        if (button.getText() == questionAndAnswer.getJuisteAntwoord()) {
+        if (questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect().equals("1")) {
+            Log.d("questionAndAnswer", questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect());
             count++;
-            if (nQuestions - 1 >= count) {
-                questionAndAnswer = quizList.get(count);
-
->>>>>>> WimSandBox:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/QuizFragment2.java
+            if ((nQuestions - 1) >= count) {
+                questionAndAnswer = quiz.get(count);
                 createButtons();
             } else {
                 //Quiz capture and cooldown
@@ -229,9 +162,9 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     /* originele quizfragment2 enquiz en capturedflag
     //zet variabele terug normaal en toont een melding dat het antwoord fout was
     //het toont een nieuwe question en zet de antwoorden erbij
-    public void endQuiz() {
+    public  void endQuiz(){
         count = 0;
-        Toast.makeText(gameActivity.getApplicationContext(), "You failed to capture the flag", Toast.LENGTH_SHORT).show();
+        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(Team.NO_TEAM);
         ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
@@ -240,15 +173,13 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
 
     //geeft een melding dat de vragen juist waren en de vlag overgenomen is
     //zet de variabele terug tegoei
-    public void capturedFlag() {
-        Toast.makeText(gameActivity.getApplicationContext(), "You captured the flag", Toast.LENGTH_SHORT).show();
+    public void capturedFlag(){
+        Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(gameActivity.MY_TEAM);
-        Flags flags = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS));
-        flags.add(flag);
-        stateManager.setSerializable(EStateManagerKey.FLAGS, flags);
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
 
-        count = 0;
+        count=0;
         gameActivity.showQuiz(false);
 
     }
@@ -256,48 +187,42 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     //zet variabele terug normaal en toont een melding dat het antwoord fout was
     //het toont een nieuwe question en zet de antwoorden erbij
 
-    public  void endQuiz(){
+    public void endQuiz() {
         count = 0;
-        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
+        Toast.makeText(gameActivity.getApplicationContext(), "You failed to capture the flag", Toast.LENGTH_SHORT).show();
 
 
         //flag.team=
         currentFlag.CaptureAndCooldown(currentFlag.getTeam());
-        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(currentFlag);
+        ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).add(currentFlag);
         //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
         gameActivity.showQuiz(false);
     }
 
     //geeft een melding dat de vragen juist waren en de vlag overgenomen is
     //zet de variabele terug tegoei
-    public void capturedFlag(){
-        Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
+    public void capturedFlag() {
+        Toast.makeText(gameActivity.getApplicationContext(), "You captured the flag", Toast.LENGTH_SHORT).show();
         //Flag flag = new Flag(currentBeacon);
-        currentFlag.team=myTeam;
+        currentFlag.team = myTeam;
         //flag.team=
         currentFlag.CaptureAndCooldown(gameActivity.MY_TEAM);
-        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(currentFlag);
+        ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).add(currentFlag);
 
-        count=0;
+        count = 0;
         gameActivity.showQuiz(false);
 
     }
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-<<<<<<< HEAD:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/OnlineQuizFragment.java
-        view = inflater.inflate(R.layout.fragment_online_quiz,container,false);
-        dataService=new DataServiceApi(getActivity());
+        view = inflater.inflate(R.layout.fragment_online_quiz, container, false);
+        dataService = new DataServiceApi(getActivity());
 
         setup();
-=======
-        view = inflater.inflate(R.layout.fragment_quiz, container, false);
-        //setup();
->>>>>>> WimSandBox:CapereVexillum/app/src/main/java/comwim07101993ictproj3_capturetheflag/github/caperevexillum/fragments/QuizFragment2.java
 
         return view;
     }
@@ -312,11 +237,3 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
 
     }
 }
-
-
-
-
-
-
-
-

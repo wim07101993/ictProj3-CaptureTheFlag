@@ -284,7 +284,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             }
         }
 
-        if (( beacon.getRelativeRssi() > SIGNAL_THRESHOLD||quizLayout2.getVisibility() == View.VISIBLE)) {
+        if ((beacon.getRelativeRssi() > SIGNAL_THRESHOLD || quizLayout2.getVisibility() == View.VISIBLE)) {
             return;
         }
 
@@ -303,40 +303,12 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             }
         }
 
-            beaconWithCooldown = false;
-            if(flag==null){
-                flag=new Flag(beacon);
-                flag.setTeam(Team.NO_TEAM);
-            }
-            onlineQuizFragment.setCurrentFlag(flag);
-            if (!isStartQuizActivityOpen) {
-                Intent intent = new Intent(this, StartQuizActivity.class);
-                startActivityForResult(intent, START_QUIZ_ACTIVITY);
-                isStartQuizActivityOpen = true;
-            }
-
-    }
-
-    /* ------------------------- syncFlags ------------------------- */
-
-    @Override
-    public void syncFlags() {
-
-                try{
-                    Flags flags = (Flags) stateManager.get(StateManagerKey.FLAGS);
-                    int redFlags = flags.getFlagByTeam(Team.TEAM_ORANGE);
-                    int greenFlags = flags.getFlagByTeam(Team.TEAM_GREEN);
-                    scoreFragment.setFlags(redFlags, greenFlags);
-                }
-                catch(Exception err){
-                    Log.e("Lobby activity","show toast");
-                }
         beaconWithCooldown = false;
         if (flag == null) {
             flag = new Flag(beacon);
             flag.setTeam(Team.NO_TEAM);
         }
-        quizFragment.setCurrentFlag(flag);
+        onlineQuizFragment.setCurrentFlag(flag);
         if (!isStartQuizActivityOpen) {
             Intent intent = new Intent(this, StartQuizActivity.class);
             startActivityForResult(intent, START_QUIZ_ACTIVITY);
@@ -344,6 +316,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         }
 
     }
+
 
     /* ------------------------- Getters ------------------------- */
 
@@ -391,7 +364,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
                             + flags.size() +
                             " flags");
                     timerTextView.setText(R.string.finished);
-                    stateManager.set(StateManagerKey.GAME_STARTED, false);
+                    stateManager.setBoolean(EStateManagerKey.GAME_STARTED, false);
                     startEndActivity();
                     stateManager.setBoolean(EStateManagerKey.GAME_STARTED, false);
                 }
@@ -402,7 +375,8 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     private void startEndActivity() {
         Intent endIntent = new Intent(this, EndActivity.class);
         startActivity(endIntent);
-=======
+    }
+
     @Override
     public void update(Observable observable, Object args) {
         if (!(args instanceof StateChangedArgs)) {
@@ -421,6 +395,5 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
                 Log.e("Lobby activity", "show toast");
             }
         }
->>>>>>> WimSandBox
     }
 }

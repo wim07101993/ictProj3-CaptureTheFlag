@@ -6,7 +6,6 @@ import android.widget.Button;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 
 public class EndActivity extends AActivityWithStateManager implements View.OnClickListener {
