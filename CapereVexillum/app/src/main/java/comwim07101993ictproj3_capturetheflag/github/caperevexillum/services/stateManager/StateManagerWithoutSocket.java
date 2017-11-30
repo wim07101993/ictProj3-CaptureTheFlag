@@ -154,8 +154,8 @@ public class StateManagerWithoutSocket
 
         try {
             ISerializable serializable = (ISerializable) c.newInstance();
-            serializable.Deserialize(
-                    sharedPreferences.getString(key.toString(), serializable.Serialize()));
+            serializable.deserialize(
+                    sharedPreferences.getString(key.toString(), serializable.serialize()));
 
             setSerializable(key, serializable);
         } catch (InstantiationException e) {
@@ -246,7 +246,7 @@ public class StateManagerWithoutSocket
         putInEditor(editor, objects, new ISharedPreferenceSaver() {
             @Override
             public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
-                editor.putString(key.toString(), getSerializable(key).Serialize());
+                editor.putString(key.toString(), getSerializable(key).serialize());
             }
         });
     }

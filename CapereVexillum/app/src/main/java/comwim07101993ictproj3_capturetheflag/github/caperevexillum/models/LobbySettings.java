@@ -41,12 +41,12 @@ public class LobbySettings implements ISerializable {
     /* ----------------------------------------------------------- */
 
     @Override
-    public String Serialize() {
+    public String serialize() {
         return new Gson().toJson(this);
     }
 
     @Override
-    public void Deserialize(String serializedObject) {
+    public void deserialize(String serializedObject) {
         LobbySettings This = new Gson().fromJson(serializedObject, LobbySettings.class);
         name = This.name;
         password = This.password;
@@ -77,4 +77,25 @@ public class LobbySettings implements ISerializable {
         return id;
     }
 
+    /* ------------------------- SETTERS ------------------------- */
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setTotalGameTime(float totalGameTime) {
+        this.totalGameTime = totalGameTime;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

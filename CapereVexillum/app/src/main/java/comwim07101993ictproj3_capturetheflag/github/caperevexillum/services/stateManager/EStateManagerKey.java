@@ -264,7 +264,41 @@ public enum EStateManagerKey implements IStateManagerKey {
         public Object getDefaultValue() {
             return 30;
         }
-    },;
+    },
+
+    USE_MOCK_SOCKET_SERVICE {
+        @Override
+        public Class getValueClass() {
+            return Boolean.class;
+        }
+
+        @Override
+        public boolean needsToBeStored() {
+            return false;
+        }
+
+        @Override
+        public Object getDefaultValue() {
+            return true;
+        }
+    },
+
+    USE_MOCK_BEACON_SERVICE {
+        @Override
+        public Class getValueClass() {
+            return Boolean.class;
+        }
+
+        @Override
+        public boolean needsToBeStored() {
+            return false;
+        }
+
+        @Override
+        public Object getDefaultValue() {
+            return true;
+        }
+    };
 
 
     public static EStateManagerKey convertFromString(String stringKey) {

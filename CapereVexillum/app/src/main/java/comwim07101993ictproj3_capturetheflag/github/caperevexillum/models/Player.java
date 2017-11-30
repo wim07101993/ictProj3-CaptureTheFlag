@@ -26,12 +26,12 @@ public class Player implements ISerializable{
     /* ------------------------- METHODS ------------------------- */
 
     @Override
-    public String Serialize() {
+    public String serialize() {
         return new Gson().toJson(this);
     }
 
     @Override
-    public void Deserialize(String serializedObject) {
+    public void deserialize(String serializedObject) {
         Player This = new Gson().fromJson(serializedObject, Player.class);
 
         name = This.name;

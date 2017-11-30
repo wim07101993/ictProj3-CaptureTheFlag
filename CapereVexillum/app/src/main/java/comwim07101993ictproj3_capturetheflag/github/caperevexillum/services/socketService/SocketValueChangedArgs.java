@@ -10,7 +10,7 @@ public class SocketValueChangedArgs {
     private ISocketKey key;
     private Object args;
 
-    SocketValueChangedArgs(ISocketKey key, Object args) {
+    public SocketValueChangedArgs(ISocketKey key, Object args) {
         this.key = key;
         this.args = args;
     }

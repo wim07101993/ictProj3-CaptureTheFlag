@@ -18,12 +18,12 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon
 public class Flags extends ObservableArrayList<Flag> implements ISerializable {
 
     @Override
-    public String Serialize() {
+    public String serialize() {
         return new Gson().toJson(this);
     }
 
     @Override
-    public void Deserialize(String serializedObject) {
+    public void deserialize(String serializedObject) {
         ObservableArrayList<Flag> flags = new Gson().fromJson(serializedObject, new TypeToken<ObservableArrayList<Flag>>() {
         }.getType());
 

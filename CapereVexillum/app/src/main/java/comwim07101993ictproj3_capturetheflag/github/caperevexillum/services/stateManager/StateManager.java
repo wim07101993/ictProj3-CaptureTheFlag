@@ -12,8 +12,10 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.Ga
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketEmitKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketFactory;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketValueChangedArgs;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketFactory;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketService;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.mock.MockSocketFactory;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 /**
@@ -34,7 +36,7 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
     private static final String TAG = GameActivity.class.getSimpleName();
 
     private ISocketService<ISocketKey> socketService;
-    private static SocketFactory socketFactory;
+    private static ISocketFactory socketFactory;
 
 
     /* --------------------------------------------------------------- */
@@ -68,11 +70,15 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
 
     private void initSocket() {
         if (socketFactory == null) {
-            socketFactory = new SocketFactory();
+            if (getBoolean(EStateManagerKey.USE_MOCK_SOCKET_SERVICE)){
+                   socketFactory = new MockSocketFactory();
+            }else{
+                socketFactory = new SocketFactory();
+            }
         }
 
         try {
-            socketService = socketFactory.get(
+            socketService = (ISocketService<ISocketKey>) socketFactory.get(
                     getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
                     getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
             socketService.addObserver(this);
@@ -107,7 +113,7 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
 
     public void restartSocket() {
         try {
-            socketService = socketFactory.createNew(
+            socketService = (ISocketService<ISocketKey>) socketFactory.createNew(
                     getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
                     getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
             socketService.addObserver(this);

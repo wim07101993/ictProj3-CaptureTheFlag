@@ -100,12 +100,12 @@ public class Flag implements ISerializable {
     }
 
     @Override
-    public String Serialize() {
+    public String serialize() {
         return new Gson().toJson(this);
     }
 
     @Override
-    public void Deserialize(String serializedObject) {
+    public void deserialize(String serializedObject) {
         Flag This = new Gson().fromJson(serializedObject, Flag.class);
 
         this.beaconMAC = This.beaconMAC;

@@ -53,10 +53,10 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
             startGameButton.setVisibility(View.INVISIBLE);
         }
 
-        stateManager.getSocketService().getSocket().on("startGame", startGameActivityListener);
-        stateManager.getSocketService().getSocket().on("getPlayersResult", getPlayersResult);
-        stateManager.getSocketService().getSocket().on("leaveLobby", leaveLobby);
-        stateManager.getSocketService().getSocket().emit("getPlayers", stateManager.getInt(EStateManagerKey.LOBBY_ID));
+//        stateManager.getSocketService().getSocket().on("startGame", startGameActivityListener);
+//        stateManager.getSocketService().getSocket().on("getPlayersResult", getPlayersResult);
+//        stateManager.getSocketService().getSocket().on("leaveLobby", leaveLobby);
+//        stateManager.getSocketService().getSocket().emit("getPlayers", stateManager.getInt(EStateManagerKey.LOBBY_ID));
     }
 
     @Override
@@ -69,11 +69,11 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         int id = view.getId();
         switch (id) {
             case R.id.teamGreenJoinButton:
-                joinTeam(Team.TEAM_GREEN);
+                joinTeam();
                 break;
 
             case R.id.teamOrangeJoinButton:
-                joinTeam(Team.TEAM_ORANGE);
+                joinTeam();
                 break;
 
             case R.id.startButton:
@@ -86,7 +86,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         }
     }
 
-    private void joinTeam(String team) {
+    private void joinTeam() {
         if (stateManager.getSocketService().getSocket() != null) {
             stateManager.getSocketService().getSocket().emit(
                     "joinTeam",
@@ -172,8 +172,6 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     public LobbyActivity parent;
 
     public void startGameActivity() {
-
-
         Intent i = new Intent(this, GameActivity.class);
         String team = stateManager.getString(EStateManagerKey.MY_TEAM);
         if (team.equals(EStateManagerKey.MY_TEAM.getDefaultValue())) {
@@ -217,13 +215,13 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         ArrayList<HashMap<String, String>> data = new ArrayList<>();
         for (Player player : playerList) {
             HashMap<String, String> map = new HashMap<>();
-            map.put("player", player.getName());
+            map.put("Player", player.getName());
             data.add(map);
         }
 
         // create the resource, from, and to variables
         int resource = R.layout.listview_item;
-        String[] from = {"player"};
+        String[] from = {"Player"};
         int[] to = {R.id.item_textview};
 
         // create and set the adapter

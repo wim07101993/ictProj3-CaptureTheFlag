@@ -44,7 +44,7 @@ final class ArgsConverter {
             return true;
         } else if (stateManagerKey == EStateManagerKey.LOBBY_SETTINGS) {
             LobbySettings lobbySettings = new LobbySettings();
-            lobbySettings.Deserialize((String) args);
+            lobbySettings.deserialize((String) args);
             return lobbySettings;
         }
 
