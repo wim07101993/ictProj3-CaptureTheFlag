@@ -21,14 +21,16 @@ public enum ESocketOnKey implements ISocketKey {
     },
 
     WAS_LOBBY_CREATED{
+        private static final String IDENTIFIER = "wasLobbyCreated";
+
         @Override
         public String getStringIdentifier() {
-            return "wasLobbyCreated";
+            return IDENTIFIER;
         }
 
         @Override
         public Class getValueClass() {
-            return LobbySettings.class;
+            return String.class;
         }
     },
 
@@ -84,9 +86,11 @@ public enum ESocketOnKey implements ISocketKey {
     },
 
     GET_LOBBY_ID {
+        private static final String IDENTIFIER = "getLobbyId";
+
         @Override
         public String getStringIdentifier() {
-            return "getLobbyId";
+            return IDENTIFIER;
         }
     };
 

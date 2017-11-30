@@ -52,16 +52,20 @@ public enum ESocketEmitKey implements ISocketKey {
     },
 
     JOIN_LOBBY {
+        private static final String IDENTIFIER = "joinLobby";
+
         @Override
         public String getStringIdentifier() {
-            return "joinLobby";
+            return IDENTIFIER;
         }
     },
 
     LOBBY_SETTINGS {
+        private static final String IDENTIFIER = "createLobbyNew";
+
         @Override
         public String getStringIdentifier() {
-            return "createLobbyNew";
+            return IDENTIFIER;
         }
 
         @Override
