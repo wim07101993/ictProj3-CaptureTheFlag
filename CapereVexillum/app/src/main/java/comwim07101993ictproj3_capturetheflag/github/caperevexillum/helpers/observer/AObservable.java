@@ -10,13 +10,16 @@ import java.util.Vector;
  * Created by wimva on 27/11/2017.
  */
 
-public abstract class AObservable extends Observable{
+public abstract class AObservable extends Observable {
     @NonNull
     public abstract String getTAG();
+
     private boolean changed = false;
     private Vector obs;
 
-    /** Construct an Observable with zero Observers. */
+    /**
+     * Construct an Observable with zero Observers.
+     */
 
     public AObservable() {
         obs = new Vector();
@@ -28,8 +31,8 @@ public abstract class AObservable extends Observable{
      * The order in which notifications will be delivered to multiple
      * observers is not specified. See the class comment.
      *
-     * @param   o   an observer to be added.
-     * @throws NullPointerException   if the parameter o is null.
+     * @param o an observer to be added.
+     * @throws NullPointerException if the parameter o is null.
      */
     public synchronized void addObserver(Observer o) {
         if (o == null)
@@ -42,7 +45,8 @@ public abstract class AObservable extends Observable{
     /**
      * Deletes an observer from the set of observers of this object.
      * Passing <CODE>null</CODE> to this method will have no effect.
-     * @param   o   the observer to be deleted.
+     *
+     * @param o the observer to be deleted.
      */
     public synchronized void deleteObserver(Observer o) {
         obs.removeElement(o);
@@ -60,9 +64,9 @@ public abstract class AObservable extends Observable{
      * <blockquote><tt>
      * notifyObservers(null)</tt></blockquote>
      *
-     * @see     java.util.Observable#clearChanged()
-     * @see     java.util.Observable#hasChanged()
-     * @see     java.util.Observer#update(java.util.Observable, java.lang.Object)
+     * @see java.util.Observable#clearChanged()
+     * @see java.util.Observable#hasChanged()
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void notifyObservers() {
         notifyObservers(null);
@@ -77,10 +81,10 @@ public abstract class AObservable extends Observable{
      * Each observer has its <code>update</code> method called with two
      * arguments: this observable object and the <code>arg</code> argument.
      *
-     * @param   arg   any object.
-     * @see     java.util.Observable#clearChanged()
-     * @see     java.util.Observable#hasChanged()
-     * @see     java.util.Observer#update(java.util.Observable, java.lang.Object)
+     * @param arg any object.
+     * @see java.util.Observable#clearChanged()
+     * @see java.util.Observable#hasChanged()
+     * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
      */
     public void notifyObservers(Object arg) {
         /*
@@ -102,14 +106,12 @@ public abstract class AObservable extends Observable{
              * 2) a recently unregistered Observer will be
              *   wrongly notified when it doesn't care
              */
-            if (!changed)
-                return;
             arrLocal = obs.toArray();
             clearChanged();
         }
 
-        for (int i = arrLocal.length-1; i>=0; i--)
-            ((Observer)arrLocal[i]).update(this, arg);
+        for (int i = arrLocal.length - 1; i >= 0; i--)
+            ((Observer) arrLocal[i]).update(this, arg);
     }
 
     /**
@@ -134,8 +136,8 @@ public abstract class AObservable extends Observable{
      * This method is called automatically by the
      * <code>notifyObservers</code> methods.
      *
-     * @see     java.util.Observable#notifyObservers()
-     * @see     java.util.Observable#notifyObservers(java.lang.Object)
+     * @see java.util.Observable#notifyObservers()
+     * @see java.util.Observable#notifyObservers(java.lang.Object)
      */
     protected synchronized void clearChanged() {
         changed = false;
@@ -144,12 +146,12 @@ public abstract class AObservable extends Observable{
     /**
      * Tests if this object has changed.
      *
-     * @return  <code>true</code> if and only if the <code>setChanged</code>
-     *          method has been called more recently than the
-     *          <code>clearChanged</code> method on this object;
-     *          <code>false</code> otherwise.
-     * @see     java.util.Observable#clearChanged()
-     * @see     java.util.Observable#setChanged()
+     * @return <code>true</code> if and only if the <code>setChanged</code>
+     * method has been called more recently than the
+     * <code>clearChanged</code> method on this object;
+     * <code>false</code> otherwise.
+     * @see java.util.Observable#clearChanged()
+     * @see java.util.Observable#setChanged()
      */
     public synchronized boolean hasChanged() {
         return changed;
@@ -158,7 +160,7 @@ public abstract class AObservable extends Observable{
     /**
      * Returns the number of observers of this <tt>Observable</tt> object.
      *
-     * @return  the number of observers of this object.
+     * @return the number of observers of this object.
      */
     public synchronized int countObservers() {
         return obs.size();

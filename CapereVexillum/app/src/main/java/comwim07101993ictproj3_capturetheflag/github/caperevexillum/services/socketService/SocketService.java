@@ -69,15 +69,12 @@ class SocketService
                 @Override
                 public void call(Object... args) {
                     Class c = key.getValueClass();
-                    try{
                     if (args.getClass().isAssignableFrom(c)) {
                         SocketValueChangedArgs socketValueChangedArgs = new SocketValueChangedArgs(key, args);
                         notifyObservers(socketValueChangedArgs);
                     } else if (!ArrayHelpers.IsNullOrEmpty(args) && args[0].getClass().isAssignableFrom(c)) {
                         SocketValueChangedArgs socketValueChangedArgs = new SocketValueChangedArgs(key, args[0]);
                         notifyObservers(socketValueChangedArgs);
-                    }}catch(Exception ex){
-                        Log.e("Socketservice", ex.getMessage());
                     }
                 }
             });
