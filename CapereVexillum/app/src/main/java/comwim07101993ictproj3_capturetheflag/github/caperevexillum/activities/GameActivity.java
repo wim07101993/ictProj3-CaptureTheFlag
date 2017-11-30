@@ -64,7 +64,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     /* ------------------------- View elements ------------------------- */
 
     private TextView timerTextView;
-    private RelativeLayout quizLayout;
+    private RelativeLayout quizLayout2;
     private ConstraintLayout mainLayout;
     private CooldownTimerFragment cooldownFragment;
     private QuizFragment2 quizFragment2;
@@ -110,11 +110,11 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         if (showQuestion) {
             mainLayout.setVisibility(View.INVISIBLE);
             quizFragment2.getQuestions();
-            quizLayout.setVisibility(View.VISIBLE);
+            quizLayout2.setVisibility(View.VISIBLE);
 
         } else {
             mainLayout.setVisibility(View.VISIBLE);
-            quizLayout.setVisibility(View.INVISIBLE);
+            quizLayout2.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -190,7 +190,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     private void initView() {
 
-        quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
+        quizLayout2 = (RelativeLayout) findViewById(R.id.quizLayout2);
         mainLayout = (ConstraintLayout) findViewById(R.id.content);
         quizFragment2 = (QuizFragment2) getFragmentManager().findFragmentById(R.id.quizFragment2);
         quizFragment2.addActivity(this);
@@ -283,7 +283,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             }
         }
 
-        if (( beacon.getRelativeRssi() > SIGNAL_THRESHOLD||quizLayout.getVisibility() == View.VISIBLE)) {
+        if (( beacon.getRelativeRssi() > SIGNAL_THRESHOLD||quizLayout2.getVisibility() == View.VISIBLE)) {
             return;
         }
 

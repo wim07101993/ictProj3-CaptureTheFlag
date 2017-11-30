@@ -92,13 +92,13 @@
     </android.support.constraint.ConstraintLayout>
 
     <RelativeLayout
-        android:id="@+id/quizLayout"
+        android:id="@+id/quizLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible">
 
         <fragment
-            android:id="@+id/quizFragment"
+            android:id="@+id/quizFragment2"
             android:name="comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment2"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

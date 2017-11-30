@@ -44,7 +44,7 @@ public class TestDataService implements TestIDataService {
     public void getRandomQuestions(final Response.Listener<List<Quiz1>> listener, final Response.ErrorListener errorListener, int amount, int category) {
 
 
-        createRequestAndAddToQueue(listener, errorListener, Variables.SERVER_IP+GET_RANDOM+category+"/"+ amount);
+        createRequestAndAddToQueue(listener, errorListener, Variables.REST_API+GET_RANDOM+category+"/"+ amount);
     }
 
     private void createRequestAndAddToQueue(final Response.Listener<List<Quiz1>> listener,
