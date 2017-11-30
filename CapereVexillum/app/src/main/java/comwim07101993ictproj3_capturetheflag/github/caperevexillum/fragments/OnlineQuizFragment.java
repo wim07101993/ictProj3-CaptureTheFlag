@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz1;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
@@ -33,14 +33,14 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuizFragment2 extends Fragment implements View.OnClickListener {
+public class OnlineQuizFragment extends Fragment implements View.OnClickListener {
 
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
     static final int CATEGORY = 1;
-    static  final  String TAG = QuizFragment2.class.getSimpleName();
+    static  final  String TAG = OnlineQuizFragment.class.getSimpleName();
     DataServiceApi dataService;
 
     private View view;
@@ -50,10 +50,10 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
     private TextView question;
     private Integer nQuestions;
     private Integer count;
-    private Quiz1 questionAndAnswer;
+    private Quiz questionAndAnswer;
     private GameActivity gameActivity;
     private IBeacon currentBeacon;
-    private List<Quiz1> quiz;
+    private List<Quiz> quiz;
 
     //layout settings
     LinearLayout linearLayout;
@@ -69,9 +69,9 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
         this.currentFlag = currentFlag;
     }
 
-    final Response.Listener  listener = new Response.Listener<List<Quiz1>>() {
+    final Response.Listener  listener = new Response.Listener<List<Quiz>>() {
         @Override
-        public void onResponse(List<Quiz1> response) {
+        public void onResponse(List<Quiz> response) {
             quiz = response;
             count = 0;
             questionAndAnswer = quiz.get(count);
@@ -218,7 +218,7 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_quiz2,container,false);
+        view = inflater.inflate(R.layout.fragment_online_quiz,container,false);
         dataService=new DataServiceApi(getActivity());
 
         setup();

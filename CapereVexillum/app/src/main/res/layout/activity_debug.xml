@@ -13,7 +13,7 @@
 
         <fragment
             android:id="@+id/quizFragment2"
-            android:name="comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment2"
+            android:name="comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.OnlineQuizFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>

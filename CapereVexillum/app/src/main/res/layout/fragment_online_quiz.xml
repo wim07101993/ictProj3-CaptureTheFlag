@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment2">
+    tools:context="comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.OnlineQuizFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

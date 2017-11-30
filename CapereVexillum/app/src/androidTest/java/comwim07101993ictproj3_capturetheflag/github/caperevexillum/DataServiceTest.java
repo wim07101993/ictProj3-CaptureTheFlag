@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Answers;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz1;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataServiceApi;
 
 import static junit.framework.Assert.assertEquals;
@@ -28,7 +28,7 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class DataServiceTest {
-    private List<Quiz1> dataQuiz = new ArrayList<>();
+    private List<Quiz> dataQuiz = new ArrayList<>();
     private List<Answers> answers = new ArrayList<>();
     DataServiceApi dataService ;
 
@@ -46,12 +46,12 @@ public class DataServiceTest {
         answer = new Answers("Donald Trump","1");
         answers.add(answer);
 
-        final Quiz1 testQuiz = new Quiz1("Wie is de 45ste president van de verenigde staten.", answers);
+        final Quiz testQuiz = new Quiz("Wie is de 45ste president van de verenigde staten.", answers);
 
 
-        final Response.Listener  listener = new Response.Listener<List<Quiz1>>() {
+        final Response.Listener  listener = new Response.Listener<List<Quiz>>() {
             @Override
-            public void onResponse(List<Quiz1> response) {
+            public void onResponse(List<Quiz> response) {
                 dataQuiz = response;
                 //Eerste question afhalen
                 Assert.assertEquals(3,dataQuiz.size());            }
@@ -81,12 +81,12 @@ public class DataServiceTest {
         answer = new Answers("Donald Trump","1");
         answers.add(answer);
 
-        final Quiz1 testQuiz = new Quiz1("Wie is de 45ste president van de verenigde staten.", answers);
+        final Quiz testQuiz = new Quiz("Wie is de 45ste president van de verenigde staten.", answers);
 
 
-        final Response.Listener  listener = new Response.Listener<List<Quiz1>>() {
+        final Response.Listener  listener = new Response.Listener<List<Quiz>>() {
             @Override
-            public void onResponse(List<Quiz1> response) {
+            public void onResponse(List<Quiz> response) {
                 dataQuiz = response;
                 //Eerste question afhalen
                 assertEquals("Wat is Claustrofobie?",response.get(2).getQuestion());

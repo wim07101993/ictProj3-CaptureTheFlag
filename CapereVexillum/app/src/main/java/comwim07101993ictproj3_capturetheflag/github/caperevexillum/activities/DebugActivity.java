@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment2;
 
 public class DebugActivity extends AppCompatActivity {
     private RelativeLayout quizLayout;

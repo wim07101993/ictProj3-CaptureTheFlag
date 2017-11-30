@@ -4,7 +4,6 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
 import java.util.ArrayList;
 import java.util.List;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.DbHandler;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.Quiz;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.quiz.QuizOld;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
 
@@ -54,10 +47,10 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
     private TextView question;
     private Integer nQuestions;
     private Integer count;
-    private Quiz questionAndAnswer;
+    private QuizOld questionAndAnswer;
     private GameActivity gameActivity;
 
-    private List<Quiz> quizList;
+    private List<QuizOld> quizOldList;
     private Flag currentFlag;
     private String  myTeam;
     //layout settings
@@ -135,7 +128,7 @@ public class QuizFragment extends Fragment implements View.OnClickListener {
                 createButtons();
             }
             else{
-                //Quiz capture and cooldown
+                //QuizOld capture and cooldown
 
                 capturedFlag();
             }

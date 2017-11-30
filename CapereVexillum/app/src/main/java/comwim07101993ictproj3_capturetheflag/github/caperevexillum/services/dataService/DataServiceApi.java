@@ -40,29 +40,29 @@ public class DataServiceApi implements IDataServiceApi {
     }
 
     @Override
-    public void getRandomQuestions(final Response.Listener<List<Quiz1>> listener, final Response.ErrorListener errorListener, int amount, int category) {
+    public void getRandomQuestions(final Response.Listener<List<Quiz>> listener, final Response.ErrorListener errorListener, int amount, int category) {
 
 
         createRequestAndAddToQueue(listener, errorListener, Variables.REST_API+GET_RANDOM+category+"/"+ amount);
     }
 
-    private void createRequestAndAddToQueue(final Response.Listener<List<Quiz1>> listener,
+    private void createRequestAndAddToQueue(final Response.Listener<List<Quiz>> listener,
                                             final Response.ErrorListener errorListener,
                                             String url) {
         createRequestAndAddToQueue(listener, errorListener, url, Request.Method.GET, null);
     }
 
-    private void createRequestAndAddToQueue(final Response.Listener<List<Quiz1>> listener,
+    private void createRequestAndAddToQueue(final Response.Listener<List<Quiz>> listener,
                                             final Response.ErrorListener errorListener,
                                             String url, int method, Map<String, Object> data) {
         final Response.Listener<String> originalResponseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    Type collectionType = new TypeToken<List<Quiz1>>() {
+                    Type collectionType = new TypeToken<List<Quiz>>() {
                     }.getType();
                     Log.d("string",response);
-                    List<Quiz1> boxSearchCollection = new Gson().fromJson(response, collectionType);
+                    List<Quiz> boxSearchCollection = new Gson().fromJson(response, collectionType);
                     for (Answers a1 : boxSearchCollection.get(0).getAnswers()
                          ) {
                         Log.d("answer", a1.getAnswer());
