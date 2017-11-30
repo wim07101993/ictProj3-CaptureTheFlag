@@ -21,6 +21,8 @@ export default class{
         let parent=this;
         console.log("connection to the server");
         socket.on("createLobby",(playerName, lobbyName, password, time)=> lobbyClass.createLobby(this.server, socket, playerName, lobbyName, password, time,this.lobbies));
+        socket.on("createLobbyNew",(settings)=>lobbyClass.createLobby(parent.server,socket,settings,this.lobbies));
+        
         socket.on("joinLobby", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(this.server, socket, lobbyName, lobbyPassword, playerName,this.lobbies));
         socket.on("leaveLobby", (lobbyId, playerName) => lobbyClass.leaveLobby(lobbyId, playerName, this.server,this.lobbies));
         socket.on("hostLeft", (lobbyID) => lobbyClass.hostLeft(this.server, lobbyID,this.lobbies));
