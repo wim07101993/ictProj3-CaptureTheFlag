@@ -374,8 +374,14 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
                             " flags");
                     timerTextView.setText(R.string.finished);
                     stateManager.set(StateManagerKey.GAME_STARTED, false);
+                    startEndActivity();
                 }
             });
         }
     };
+
+    private void startEndActivity() {
+        Intent endIntent = new Intent(this, EndActivity.class);
+        startActivity(endIntent);
+    }
 }

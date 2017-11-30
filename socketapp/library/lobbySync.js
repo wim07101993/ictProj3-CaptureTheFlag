@@ -1,5 +1,6 @@
 import Lobby from '../db/lobby';
 import timeClass from './timeSync';
+import Team from '../db/team';
 //const JSON = require('circular-json');
 export default{
     
@@ -207,5 +208,18 @@ export default{
         
       }
       
-    }
+    },
+
+    restart(lobbyID){
+      let lobby = lobbies.filter((lobby)=>{return lobby.id == lobbyID});
+      if (lobby != undefined) {
+        lobby = lobby[0];
+        lobby.player.forEach(player => {
+          lobby.player.team = Team[2];
+        });
+        lobby.flag = [];
+        lobby.team[0].score = 0;
+        lobby.team[1].score = 0;
+      }
+  }
 }
