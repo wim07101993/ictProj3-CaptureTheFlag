@@ -13,6 +13,8 @@ import java.util.Observer;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketOnKey;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.ArgsConverter;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateChangedArgs;
 
@@ -45,8 +47,8 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
                 playerNameEditText.getText().toString()
         );
 
-        stateManager.addObserver(lobbyCreatedObserver);
         stateManager.setSerializable(EStateManagerKey.LOBBY_SETTINGS, lobbySettings);
+        stateManager.addObserver(lobbyCreatedObserver);
     }
 
     @Override
@@ -86,6 +88,8 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
             } else {
                 showToast("Could not create lobby");
             }
+
+            stateManager.deleteObserver(this);
         }
     };
 

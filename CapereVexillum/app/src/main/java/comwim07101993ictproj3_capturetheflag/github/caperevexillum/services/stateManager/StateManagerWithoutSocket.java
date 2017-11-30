@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.MapHelpers;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObserver;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
@@ -75,8 +76,11 @@ public class StateManagerWithoutSocket
     }
 
     private void checkIfTypesMatch(IStateManagerKey key, Object value) {
-        if (!value.getClass().isAssignableFrom(key.getValueClass())) {
+        if (value != null && !value.getClass().isAssignableFrom(key.getValueClass())) {
             String error = "Value " + value + " not of right type for key " + key + ".";
+            throw new IllegalArgumentException(error);
+        } else if (value == null && PrimitiveDefaults.getDefaultValue(key.getValueClass()) != null) {
+            String error = "Type for key " + key + " cant not be null.";
             throw new IllegalArgumentException(error);
         }
     }
@@ -371,7 +375,7 @@ public class StateManagerWithoutSocket
         }
 
         if (value instanceof Observable || value instanceof IObservable || value instanceof ObservableList) {
-            if (observers == null){
+            if (observers == null) {
                 observers = new HashMap<>();
             }
 
