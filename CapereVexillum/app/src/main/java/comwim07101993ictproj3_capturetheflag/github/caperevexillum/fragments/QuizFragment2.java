@@ -49,10 +49,9 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
     TestDataService dataService;
 
     private View view;
-    //lijst met buttons die getoond worden
     private List<Button> buttons;
-
-    //variabele declareren (main)
+    private Flag currentFlag;
+    private String  myTeam;
     private TextView question;
     private Integer nQuestions;
     private Integer count;
@@ -67,6 +66,13 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
     private StateManager stateManager;
+
+    public void setTeam(String myTeam){
+        this.myTeam=myTeam;
+    }
+    public void setCurrentFlag(Flag currentFlag) {
+        this.currentFlag = currentFlag;
+    }
 
     final Response.Listener  listener = new Response.Listener<List<Quiz1>>() {
         @Override
@@ -105,17 +111,12 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
     }
 
     public void setup(){
-
-        //TODO Georges statemanager.GET(MY_FLAGS);
         buttons = new ArrayList<>();
-        nQuestions = 4;
-
+        nQuestions = 3;
+        //todo nQuestions = equal to amount flags team has in statemanager
         linearLayout = view.findViewById(R.id.buttonsLayout);;
-
         question = (TextView) view.findViewById(R.id.questionTextView);
         dataService.getRandomQuestions(listener,errorListener,nQuestions,CATEGORY);
-
-
     }
 
     //buttons dynamish aanmaken aan de hand van aantal antwoorden
@@ -139,26 +140,18 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
 
     //kijkt of de antwoorden juist zijn en returnt true or false
     boolean checkAnswerQuestion(Button button){
-
         //als de question juist is toon dan de volgende
         //of als alle vragen zijn geweest ga naar de functie capturedFlag
         //anders ga naar de functie einde quiz
-        Log.d("checkAnsweredQuestion",button.getText()+"");
-        Log.d("checkAnsweredQuestion",button.getId()+"");
-        Log.d("questionAndAnswer",questionAndAnswer.getAnswer(button.getId())+"");
-        Log.d("checkAnsweredQuestion",questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect());
-
         if(questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect().equals("1")){
             Log.d("questionAndAnswer",questionAndAnswer.getAnswer(button.getId()).isAnswerCorrect());
             count++;
             if ((nQuestions -1) >= count){
                 questionAndAnswer = quiz.get(count);
-
                 createButtons();
             }
             else{
                 //Quiz capture and cooldown
-
                 capturedFlag();
             }
 
@@ -169,17 +162,16 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
         }
         return true;
     }
-
+    /* originele quizfragment2 enquiz en capturedflag
     //zet variabele terug normaal en toont een melding dat het antwoord fout was
     //het toont een nieuwe question en zet de antwoorden erbij
     public  void endQuiz(){
         count = 0;
-        //Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
-        //Flag flag = new Flag(currentBeacon);
-        //flag.CaptureAndCooldown(Team.NO_TEAM);
-        getQuestions();
-        //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
-        //gameActivity.showQuiz(false);
+        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
+        Flag flag = new Flag(currentBeacon);
+        flag.CaptureAndCooldown(Team.NO_TEAM);
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        gameActivity.showQuiz(false);
     }
 
     //geeft een melding dat de vragen juist waren en de vlag overgenomen is
@@ -194,6 +186,38 @@ public class QuizFragment2 extends Fragment implements View.OnClickListener {
         gameActivity.showQuiz(false);
 
     }
+    */
+    //zet variabele terug normaal en toont een melding dat het antwoord fout was
+    //het toont een nieuwe question en zet de antwoorden erbij
+
+    public  void endQuiz(){
+        count = 0;
+        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
+
+
+        //flag.team=
+        currentFlag.CaptureAndCooldown(currentFlag.getTeam());
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(currentFlag);
+        //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        gameActivity.showQuiz(false);
+    }
+
+    //geeft een melding dat de vragen juist waren en de vlag overgenomen is
+    //zet de variabele terug tegoei
+    public void capturedFlag(){
+        Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
+        //Flag flag = new Flag(currentBeacon);
+        currentFlag.team=myTeam;
+        //flag.team=
+        currentFlag.CaptureAndCooldown(gameActivity.MY_TEAM);
+        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(currentFlag);
+
+        count=0;
+        gameActivity.showQuiz(false);
+
+    }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

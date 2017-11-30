@@ -21,8 +21,8 @@
                 @guest
 
                 @else
-                    <li><a href="{{ url('/') }}">Categorieën</a></li>
-                    <li><a href="{{ url('/vragen') }}">Vragen</a></li>
+                    <li id="categorieënTab"><a href="{{ url('/categorieën') }}">Categorieën</a></li>
+                    <li id="vragenTab"><a href="{{ url('/vragen') }}">Vragen</a></li>
                 @endguest
                 </ul>
                 <ul class="right">

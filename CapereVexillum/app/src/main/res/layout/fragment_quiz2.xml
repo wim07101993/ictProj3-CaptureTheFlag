@@ -26,7 +26,6 @@
             android:layout_height="wrap_content"
 
             android:layout_marginTop="32dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut aliquam, elit in sagittis semper, magna dui sagittis ipsum, eu vestibulum.  "
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="8dp" />
     </android.support.constraint.ConstraintLayout>

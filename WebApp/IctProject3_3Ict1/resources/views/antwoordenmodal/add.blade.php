@@ -39,7 +39,7 @@
     })
     $("#saveAdd").click(function(){
         if(document.getElementById("answer").value != ''){
-            $(".editanswerform").submit();
+            $(".addanswerform").submit();
         } else {
             document.getElementById("answer").className = "Invalid";
         }

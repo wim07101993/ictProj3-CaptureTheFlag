@@ -37,4 +37,16 @@ Route::group(['prefix' => '/antwoorden'], function() {
         
 });
 
+Route::group(['prefix' => '/categorieën'], function() {
+        
+    Route::get('/',"CategorieController@ShowCategorieën")->middleware('auth');
+        
+    Route::post('/edit', "CategorieController@UpdateCategorie")->middleware('auth');
+    
+    Route::get('/delete/{Category_ID}',"CategorieController@DeleteCategorie")->middleware('auth');
+    
+    Route::post('/add', "CategorieController@AddCategorie")->middleware('auth');
+        
+});
+
 Auth::routes();

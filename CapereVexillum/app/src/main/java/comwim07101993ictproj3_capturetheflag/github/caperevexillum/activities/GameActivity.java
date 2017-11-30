@@ -24,7 +24,7 @@ import java.util.Date;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.CooldownTimerFragment;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.QuizFragment2;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments.ScoreFragment;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.Utils;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.gametimer.GameTimer;
@@ -64,10 +64,10 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     /* ------------------------- View elements ------------------------- */
 
     private TextView timerTextView;
-    private RelativeLayout quizLayout;
+    private RelativeLayout quizLayout2;
     private ConstraintLayout mainLayout;
     private CooldownTimerFragment cooldownFragment;
-    private QuizFragment quizFragment;
+    private QuizFragment2 quizFragment2;
     private ScoreFragment scoreFragment;
 
     public CooldownTimerFragment cooldownUpdatable;
@@ -109,11 +109,12 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         isStartQuizActivityOpen = false;
         if (showQuestion) {
             mainLayout.setVisibility(View.INVISIBLE);
-            quizLayout.setVisibility(View.VISIBLE);
+            quizFragment2.getQuestions();
+            quizLayout2.setVisibility(View.VISIBLE);
 
         } else {
             mainLayout.setVisibility(View.VISIBLE);
-            quizLayout.setVisibility(View.INVISIBLE);
+            quizLayout2.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -189,10 +190,10 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     private void initView() {
 
-        quizLayout = (RelativeLayout) findViewById(R.id.quizLayout);
+        quizLayout2 = (RelativeLayout) findViewById(R.id.quizLayout2);
         mainLayout = (ConstraintLayout) findViewById(R.id.content);
-        quizFragment = (QuizFragment) getFragmentManager().findFragmentById(R.id.quizFragment);
-        quizFragment.addActivity(this);
+        quizFragment2 = (QuizFragment2) getFragmentManager().findFragmentById(R.id.quizFragment2);
+        quizFragment2.addActivity(this);
         scoreFragment = (ScoreFragment) getFragmentManager().findFragmentById(R.id.scoreFragment);
 
         cooldownFragment = (CooldownTimerFragment) getFragmentManager().findFragmentById(R.id.cooldownFragment);
@@ -282,7 +283,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             }
         }
 
-        if (( beacon.getRelativeRssi() > SIGNAL_THRESHOLD||quizLayout.getVisibility() == View.VISIBLE)) {
+        if (( beacon.getRelativeRssi() > SIGNAL_THRESHOLD||quizLayout2.getVisibility() == View.VISIBLE)) {
             return;
         }
 
@@ -306,7 +307,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
                 flag=new Flag(beacon);
                 flag.setTeam(Team.NO_TEAM);
             }
-            quizFragment.setCurrentFlag(flag);
+            quizFragment2.setCurrentFlag(flag);
             if (!isStartQuizActivityOpen) {
                 Intent intent = new Intent(this, StartQuizActivity.class);
                 startActivityForResult(intent, START_QUIZ_ACTIVITY);
