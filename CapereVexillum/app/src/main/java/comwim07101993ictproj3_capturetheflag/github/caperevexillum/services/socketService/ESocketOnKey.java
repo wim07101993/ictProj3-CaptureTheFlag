@@ -28,7 +28,7 @@ public enum ESocketOnKey implements ISocketKey {
 
         @Override
         public Class getValueClass() {
-            return LobbySettings.class;
+            return String.class;
         }
     },
 
