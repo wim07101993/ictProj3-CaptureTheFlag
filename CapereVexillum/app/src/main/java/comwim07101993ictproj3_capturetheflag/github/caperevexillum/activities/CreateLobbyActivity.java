@@ -5,16 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.github.nkzawa.emitter.Emitter;
-
 import java.util.Observable;
 import java.util.Observer;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketOnKey;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.ArgsConverter;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateChangedArgs;
 
