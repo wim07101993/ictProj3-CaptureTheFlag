@@ -25,7 +25,7 @@
  $(document).ready(function(){
     $(".editquestion").click(function(){
         var id = this.id;
-        var vraag =vragen.filter(function(vraag){
+        var vraag = vragen.filter(function(vraag){
             return vraag.Question_ID == id;
         });
         vraag=vraag[0]
