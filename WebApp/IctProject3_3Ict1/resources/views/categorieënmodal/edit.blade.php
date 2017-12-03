@@ -22,7 +22,7 @@
 </div>
 
 <script>
- $(document).ready(function(){
+function addEditListeners(){
     $(".editcategory").click(function(){
         var id = this.id;
         var categorie =categorieën.filter(function(categorie){
@@ -47,5 +47,5 @@
             document.getElementById("editName").className = "Invalid";
         }
     })
-});
+}
 </script>

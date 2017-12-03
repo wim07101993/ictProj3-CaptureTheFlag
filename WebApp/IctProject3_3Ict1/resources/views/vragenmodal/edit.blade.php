@@ -22,7 +22,7 @@
 </div>
 
 <script>
- $(document).ready(function(){
+ function addEditListeners(){
     $(".editquestion").click(function(){
         var id = this.id;
         var vraag = vragen.filter(function(vraag){
@@ -48,5 +48,5 @@
             document.getElementById("editQuestion").className = "Invalid";
         }
     })
-});
+}
 </script>
