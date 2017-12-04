@@ -12,7 +12,29 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <style>
+    #search:focus{
+        text-align: center;
+    margin: 0;
+    border: 0;
+    border-radius: 2px;
+    color: black;
+    box-shadow: 1px 1px 10px 0px #00000080;
+    -webkit-transition: all 0.5s ease-in;
+    -moz-transition: all 0.5s ease-in;
+    transition: all 0.5s ease-in;
+    background-color: #fafafa !important;
+    }
+    #search{
+        text-align: center;
+    margin: 0;
+    border: 0;
+    border-radius: 2px;
+    color: white;
+    background-color: #9e9e9e !important;
+    box-shadow: 0px 0px 2px 0px #00000099;
+    }
+    </style>
 </head>
 <body>
         <nav class="grey">

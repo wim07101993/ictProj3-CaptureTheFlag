@@ -49,7 +49,7 @@
                             <a class="waves-effect waves-light btn green accent-3 editanswer" id="<?=($antwoord["Answer_ID"]); ?>">Bewerk</a>
                         </td>
                         <td>
-                            <a class="waves-effect waves-light btn red accent-3" href="/antwoorden/delete/<?= $antwoord["Answer_ID"]?>">Verwijder</a>
+                            <a class="waves-effect waves-light btn red accent-3 deleteanswer" id="<?=($antwoord["Answer_ID"]); ?>">Verwijder</a>
                         </td>
                         </tr>
                         <?php } ?>
@@ -76,6 +76,7 @@
          console.log(question_id);
          </script>
         <?php
+            include (__DIR__."/../../../resources/views/antwoordenmodal/delete.blade.php");
             include (__DIR__."/../../../resources/views/antwoordenmodal/edit.blade.php");
             include (__DIR__."/../../../resources/views/antwoordenmodal/add.blade.php");
         ?>

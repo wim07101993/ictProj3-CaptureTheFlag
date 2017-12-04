@@ -7,38 +7,16 @@
                 <tr>
                 <td>
                     <table class="centered bordered">
-                    <thead>
+                    <thead  >
                         <th>ID</th>
                         <th>Vraag</th> 
                         <th>Antwoorden</th>
-                        <th> </th>
-                        <th> </th>
+                        <th colspan="2" style="height: 75px;">
+                            <input id="search" placeholder=" Search..." class="grey"  id="search" ></input>
+                        </th>
                     </thead>
-                    <tbody class="grey lighten-4">
-                        <?php foreach ($vragen as $vraag) { ?>
-                        <tr>
-                        <td>
-                            <?php echo($vraag["Question_ID"]); ?>
-                        </td>
-                        <td>
-                            <?php echo($vraag["Question"]); ?>
-                        </td>
-                        <td>
-                            <a class="waves-effect waves-light btn amber accent-3 editanwsers" href="antwoorden/<?= $vraag["Question_ID"]?>">Antwoorden</a>
-                        </td>
-                        <td>
-                            <a class="waves-effect waves-light btn green accent-3 editquestion" id="<?=($vraag["Question_ID"]); ?>">Bewerk</a>
-                        </td>
-                        <td>
-                            <a class="waves-effect waves-light btn red" href="vragen/delete/<?= $vraag["Question_ID"]?>">Verwijder</a>
-                        </td>
-                        </tr>
-                        <?php } ?>
-                        <tr class="grey lighten-3" style="border:none;">
-                        <td>                 
-                            <a class="btn-floating btn-large waves-effect waves-light green accent-3 addquestion"><i class="material-icons">add</i></a>
-                        </td>
-                        </tr>
+                    <tbody class="grey lighten-4" id="table">
+                    
                     </tbody>
                     </table>
                 </td>
@@ -46,17 +24,18 @@
             </tbody>
         </table>
         <script>
+            document.getElementById("categorieënTab").className = " ";
+            document.getElementById("vragenTab").className = "active";
 
-        document.getElementById("categorieënTab").className = " ";
-        document.getElementById("vragenTab").className = "active";
-
-         var vragen= <?php echo json_encode( $vragen) ?> ;
-         var csrf='<?php echo csrf_field()?>';
-         console.log(vragen);
-         </script>
-        <?php
+            var vragen= <?php echo json_encode( $vragen) ?> ;
+            var filteredVragen=vragen; 
+            var csrf='<?php echo csrf_field()?>';
+        </script>
+        <?php     
+            include (__DIR__."/../../../resources/views/vragenmodal/delete.blade.php");
             include (__DIR__."/../../../resources/views/vragenmodal/edit.blade.php");
             include (__DIR__."/../../../resources/views/vragenmodal/add.blade.php");
+            include (__DIR__."/../../../resources/views/library/generateVragenTabel.php");                            
         ?>
     </body>
 @endsection

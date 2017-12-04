@@ -22,7 +22,7 @@
 </div>
 
 <script>
- $(document).ready(function(){
+function addAddListener(){
     $(".addquestion").click(function(){
         $(".modalAddQuestion").fadeIn(1000);
         var generateView="";
@@ -41,5 +41,5 @@
             document.getElementById("question").className = "Invalid";
         }
     })
-});
+}
 </script>
