@@ -10,6 +10,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManagerFactory;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 /**
  * Created by wimva on 17/11/2017.
@@ -23,8 +24,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
 
     private static final String TAG = AActivityWithStateManager.class.getSimpleName();
 
-    protected StateManager stateManager;
-    protected StateManagerFactory stateManagerFactory;
+    protected IStateManager stateManager;
 
 
     /* ----------------------------------------------------------- */
@@ -57,12 +57,8 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     protected void initStateManager(boolean clearSharedPreferences) {
 
         if (stateManager == null) {
-            if (stateManagerFactory == null) {
-                stateManagerFactory = new StateManagerFactory();
-            }
-
             try {
-                stateManager = stateManagerFactory.get(
+                stateManager = StateManagerFactory.createNew(
                         PreferenceManager.getDefaultSharedPreferences(this));
 
                 if (!clearSharedPreferences) {
@@ -82,7 +78,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
         }
     }
 
-    public StateManager getStateManager() {
+    public IStateManager getStateManager() {
         return stateManager;
     }
 

@@ -42,7 +42,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beac
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.OnScanListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateChangedArgs;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 
@@ -320,7 +320,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     /* ------------------------- Getters ------------------------- */
 
-    public StateManager getStateManager() {
+    public IStateManager getStateManager() {
         return stateManager;
     }
 

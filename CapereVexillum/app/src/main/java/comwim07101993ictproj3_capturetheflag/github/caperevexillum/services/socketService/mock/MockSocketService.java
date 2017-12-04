@@ -150,7 +150,7 @@ public class MockSocketService
                 break;
             case WAS_LOBBY_CREATED:
                 break;
-            case START:
+            case START_GAME:
                 break;
             case RESYNC_TIME:
                 break;

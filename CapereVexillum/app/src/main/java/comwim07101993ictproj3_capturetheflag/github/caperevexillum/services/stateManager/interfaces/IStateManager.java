@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketService;
 
 /**
  * Created by Wim Van Laer on 20/10/2017.
@@ -135,4 +136,6 @@ public interface IStateManager<TKey> extends IObservable {
      */
     void clear();
 
+    @Deprecated
+    ISocketService getSocketService();
 }

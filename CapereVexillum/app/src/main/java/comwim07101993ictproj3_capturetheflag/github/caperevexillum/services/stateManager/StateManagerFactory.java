@@ -1,25 +1,30 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.factories.SingletonFactory;
+import android.content.SharedPreferences;
+
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 /**
  * Created by wimva on 28/11/2017.
  */
 
-public class StateManagerFactory extends SingletonFactory<StateManager> {
-    private static StateManager stateManager;
+public class StateManagerFactory {
+    private static IStateManager stateManager;
 
-    public StateManagerFactory() {
-        super(StateManager.class);
-    }
-
-    @Override
-    protected StateManager getStaticProduct() {
+    public synchronized static IStateManager get() {
+        if (stateManager == null) {
+            return createNew(null);
+        }
         return stateManager;
     }
 
-    @Override
-    protected void setStaticProduct(StateManager value) {
+    public synchronized static IStateManager set(IStateManager value) {
         stateManager = value;
+        return stateManager;
+    }
+
+    public synchronized static IStateManager createNew(SharedPreferences sharedPreferences) {
+        stateManager = new StateManager(sharedPreferences);
+        return stateManager;
     }
 }

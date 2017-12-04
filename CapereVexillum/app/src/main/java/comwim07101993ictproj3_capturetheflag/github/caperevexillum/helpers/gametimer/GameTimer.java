@@ -15,7 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 /**
  * Created by Sanli on 12/10/2017.
@@ -33,7 +33,7 @@ public class GameTimer {
     private String stringTimeOver;
     private TextView textViewTime;
     private OnGameTimerFinishedListener onGameTimerFinishedListener;
-    private StateManager stateManager;
+    private IStateManager stateManager;
     private Socket socket;
     private boolean timerStarted = false;
 
@@ -57,14 +57,14 @@ public class GameTimer {
         }
     };
 
-    public GameTimer(StateManager stateManager, TextView textViewTime, float timeInMinutes) {
+    public GameTimer(IStateManager stateManager, TextView textViewTime, float timeInMinutes) {
         timer = new Timer();
 
         Calendar endDownCal = Calendar.getInstance();
         int seconds = (int) (timeInMinutes - (int) timeInMinutes) * 100;
         endDownCal.add(Calendar.SECOND, seconds);
         endDownCal.add(Calendar.MINUTE, (int) timeInMinutes);
-        this.stateManager =stateManager;
+        this.stateManager = stateManager;
         stateManager.getSocketService().getSocket().on("reSyncTime", syncTime);
         stateManager.getSocketService().getSocket().emit("syncTime", "");
         DateEndTime = endDownCal.getTime();

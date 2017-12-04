@@ -28,7 +28,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataServiceApi;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +60,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-    private StateManager stateManager;
+    private IStateManager stateManager;
 
     public void setTeam(String myTeam) {
         this.myTeam = myTeam;

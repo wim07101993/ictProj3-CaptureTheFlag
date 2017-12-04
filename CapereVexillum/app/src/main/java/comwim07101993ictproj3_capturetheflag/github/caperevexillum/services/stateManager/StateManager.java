@@ -36,7 +36,6 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
     private static final String TAG = GameActivity.class.getSimpleName();
 
     private ISocketService<ISocketKey> socketService;
-    private static ISocketFactory socketFactory;
 
 
     /* --------------------------------------------------------------- */
@@ -69,16 +68,8 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
     /* ----------------------------------------------------------- */
 
     private void initSocket() {
-        if (socketFactory == null) {
-            if (getBoolean(EStateManagerKey.USE_MOCK_SOCKET_SERVICE)){
-                   socketFactory = new MockSocketFactory();
-            }else{
-                socketFactory = new SocketFactory();
-            }
-        }
-
         try {
-            socketService = (ISocketService<ISocketKey>) socketFactory.get(
+            socketService = SocketFactory.get(
                     getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
                     getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
             socketService.addObserver(this);
@@ -113,7 +104,7 @@ public class StateManager extends StateManagerWithoutSocket implements Observer 
 
     public void restartSocket() {
         try {
-            socketService = (ISocketService<ISocketKey>) socketFactory.createNew(
+            socketService = SocketFactory.createNew(
                     getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
                     getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
             socketService.addObserver(this);

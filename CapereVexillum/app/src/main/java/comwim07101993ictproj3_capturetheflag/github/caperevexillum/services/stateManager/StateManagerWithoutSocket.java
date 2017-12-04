@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.obser
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObserver;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.ObservableListArgs;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketService;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
@@ -144,6 +146,8 @@ public class StateManagerWithoutSocket
             loadString(key);
         } else if (Boolean.class.isAssignableFrom(c)) {
             loadBoolean(key);
+        } else {
+            Log.w(TAG, "tried to load state of unknown type: " + key.getValueClass());
         }
     }
 
@@ -158,9 +162,7 @@ public class StateManagerWithoutSocket
                     sharedPreferences.getString(key.toString(), serializable.serialize()));
 
             setSerializable(key, serializable);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
@@ -359,6 +361,11 @@ public class StateManagerWithoutSocket
         return TAG;
     }
 
+    @Override
+    public ISocketService getSocketService() {
+        return null;
+    }
+
 
     /* ------------------------- SETTERS ------------------------- */
 
@@ -388,7 +395,7 @@ public class StateManagerWithoutSocket
                 ((Observable) value).addObserver(observer);
             } else if (value instanceof IObservable) {
                 ((IObservable) value).addObserver(observer);
-            } else if (value instanceof ObservableList) {
+            } else {
                 ((ObservableList) value).addOnListChangedCallback(observer);
             }
         }

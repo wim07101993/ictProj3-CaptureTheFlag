@@ -23,6 +23,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.Ga
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 
 /**
@@ -38,7 +39,7 @@ public class ScoreFragment extends Fragment {
     private TextView amountFlagsRedView;
     private TextView amountFlagsGreenView;
     private ProgressBar scoreBalanceProgressbar;
-    private StateManager stateManager;
+    private IStateManager stateManager;
     private View view;
     private GameActivity gameActivity;
     private Vector<Flag> flags;
