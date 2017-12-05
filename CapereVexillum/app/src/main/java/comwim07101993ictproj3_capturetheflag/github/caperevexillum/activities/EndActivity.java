@@ -56,13 +56,13 @@ public class EndActivity extends AActivityWithStateManager implements View.OnCli
     }
 
     private void restartLobby() {
-        LobbyID = (Integer) stateManager.getInt(EStateManagerKey.LOBBY_ID);
-        stateManager.getSocketService().getSocket().emit("restartLobby", LobbyID);
+        LobbyID = (Integer) gameController.getInt(EStateManagerKey.LOBBY_ID);
+        gameController.getSocketService().getSocket().emit("restartLobby", LobbyID);
     }
 
     private void leaveLobby() {
-        LobbyID = (Integer) stateManager.getInt(EStateManagerKey.LOBBY_ID);
-        playerName = (String) stateManager.getString(EStateManagerKey.PLAYER_NAME);
-        stateManager.getSocketService().getSocket().emit("leaveLobby", LobbyID, playerName);
+        LobbyID = (Integer) gameController.getInt(EStateManagerKey.LOBBY_ID);
+        playerName = (String) gameController.getString(EStateManagerKey.PLAYER_NAME);
+        gameController.getSocketService().getSocket().emit("leaveLobby", LobbyID, playerName);
     }
 }

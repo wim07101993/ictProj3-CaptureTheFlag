@@ -23,7 +23,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
 
     private static final String TAG = AActivityWithStateManager.class.getSimpleName();
 
-    protected IGameController stateManager;
+    protected IGameController gameController;
 
 
     /* ----------------------------------------------------------- */
@@ -34,14 +34,14 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     protected void onCreate(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initStateManager();
-        stateManager.setContext(this);
+        gameController.setContext(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (stateManager != null)
-            stateManager.save();
+        if (gameController != null)
+            gameController.save();
     }
 
     @Override
@@ -56,13 +56,13 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
 
     protected void initStateManager(boolean clearSharedPreferences) {
 
-        if (stateManager == null) {
+        if (gameController == null) {
             try {
-                stateManager = GameStateManagerFactory.createNew(
+                gameController = GameStateManagerFactory.createNew(
                         PreferenceManager.getDefaultSharedPreferences(this));
 
                 if (!clearSharedPreferences) {
-                    stateManager.load();
+                    gameController.load();
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
@@ -70,16 +70,16 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
         }
 
         if (clearSharedPreferences) {
-            stateManager.clear();
+            gameController.clear();
         }
 
-        if (stateManager.getSerializable(EStateManagerKey.FLAGS) == null) {
-            stateManager.setSerializable(EStateManagerKey.FLAGS, new Flags());
+        if (gameController.getSerializable(EStateManagerKey.FLAGS) == null) {
+            gameController.setSerializable(EStateManagerKey.FLAGS, new Flags());
         }
     }
 
-    public IGameController getStateManager() {
-        return stateManager;
+    public IGameController getGameController() {
+        return gameController;
     }
 
     public void showToast(final String message) {

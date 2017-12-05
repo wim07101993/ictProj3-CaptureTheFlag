@@ -47,14 +47,14 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         startGameButton.setOnClickListener(this);
 
         // Set startbutton visible for host
-        if (stateManager.getBoolean(EStateManagerKey.IS_HOST)) {
+        if (gameController.getBoolean(EStateManagerKey.IS_HOST)) {
             startGameButton.setVisibility(View.VISIBLE);
         } else {
             startGameButton.setVisibility(View.INVISIBLE);
         }
 
-        stateManager.addObserver(stateChangeObserver);
-        stateManager.getSerializable(EStateManagerKey.PLAYERS);
+        gameController.addObserver(stateChangeObserver);
+        gameController.getSerializable(EStateManagerKey.PLAYERS);
     }
 
     @Override
@@ -67,19 +67,19 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         int id = view.getId();
         switch (id) {
             case R.id.teamGreenJoinButton:
-                stateManager.joinTeam(Team.TEAM_GREEN);
+                gameController.joinTeam(Team.TEAM_GREEN);
                 break;
 
             case R.id.teamOrangeJoinButton:
-                stateManager.joinTeam(Team.TEAM_ORANGE);
+                gameController.joinTeam(Team.TEAM_ORANGE);
                 break;
 
             case R.id.startButton:
-                stateManager.startGame();
+                gameController.startGame();
                 break;
 
             case R.id.leaveButton:
-                stateManager.leaveLobby();
+                gameController.leaveLobby();
                 break;
         }
     }
@@ -88,15 +88,15 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
     public void startGameActivity() {
         Intent i = new Intent(this, GameActivity.class);
-        String team = stateManager.getString(EStateManagerKey.MY_TEAM);
+        String team = gameController.getString(EStateManagerKey.MY_TEAM);
         if (team.equals(EStateManagerKey.MY_TEAM.getDefaultValue())) {
             Random rand = new Random();
 
             int n = rand.nextInt(50) + 1;
             if (n < 25) {
-                stateManager.setString(EStateManagerKey.MY_TEAM, Team.TEAM_GREEN);
+                gameController.setString(EStateManagerKey.MY_TEAM, Team.TEAM_GREEN);
             } else {
-                stateManager.setString(EStateManagerKey.MY_TEAM, Team.TEAM_ORANGE);
+                gameController.setString(EStateManagerKey.MY_TEAM, Team.TEAM_ORANGE);
             }
         }
         showToast("Your team is:" + team);
@@ -133,7 +133,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
     private void gameStarted(List<Player> players) {
         if (players.size() > 0) {
-            stateManager.setString(EStateManagerKey.MY_TEAM, players.get(0).getTeam().getTeamName());
+            gameController.setString(EStateManagerKey.MY_TEAM, players.get(0).getTeam().getTeamName());
             startGameActivity();
         }
     }
@@ -158,8 +158,8 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                     noTeam.add(p);
                     break;
             }
-            if (p.getName().equals(stateManager.getString(EStateManagerKey.PLAYER_NAME))) {
-                stateManager.setString(EStateManagerKey.MY_TEAM, p.getTeam().getTeamName());
+            if (p.getName().equals(gameController.getString(EStateManagerKey.PLAYER_NAME))) {
+                gameController.setString(EStateManagerKey.MY_TEAM, p.getTeam().getTeamName());
             }
         }
         updateUI(noTeam, noTeamListView);
