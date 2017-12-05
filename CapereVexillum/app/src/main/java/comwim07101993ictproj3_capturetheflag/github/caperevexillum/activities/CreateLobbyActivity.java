@@ -33,7 +33,7 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
 
     @Override
     public void onClick(View view) {
-        stateManager.createLobby(new LobbySettings(
+        gameController.createLobby(new LobbySettings(
                 lobbyNameEditText.getText().toString(),
                 passwordEditText.getText().toString(),
                 Float.parseFloat(timeEditText.getText().toString()),

@@ -38,11 +38,11 @@ public class JoinLobbyActivity extends AActivityWithStateManager implements View
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.join_lobby_button) {
-            stateManager.getSocketService().getSocket().emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText().toString());
+            gameController.getSocketService().getSocket().emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText().toString());
             // Link listener for server answer
-            stateManager.getSocketService().getSocket().on("getLobbyId", getLobbyId);
-            stateManager.getSocketService().getSocket().on("playerNameUnavailable", playerNameUnavailable);
-            stateManager.getSocketService().getSocket().on("lobbyNotFound", lobbyNotFound);
+            gameController.getSocketService().getSocket().on("getLobbyId", getLobbyId);
+            gameController.getSocketService().getSocket().on("playerNameUnavailable", playerNameUnavailable);
+            gameController.getSocketService().getSocket().on("lobbyNotFound", lobbyNotFound);
 
             goToLobby = new Intent(this, LobbyActivity.class);
         }
@@ -60,9 +60,9 @@ public class JoinLobbyActivity extends AActivityWithStateManager implements View
             goToLobby.putExtra("isHost", false);
             goToLobby.putExtra("lobbyID", lobbyID);
 
-            stateManager.setString(EStateManagerKey.PLAYER_NAME, playerNameEditText.getText().toString());
-            stateManager.setBoolean(EStateManagerKey.IS_HOST, false);
-            stateManager.setInt(EStateManagerKey.LOBBY_ID, lobbyID);
+            gameController.setString(EStateManagerKey.PLAYER_NAME, playerNameEditText.getText().toString());
+            gameController.setBoolean(EStateManagerKey.IS_HOST, false);
+            gameController.setInt(EStateManagerKey.LOBBY_ID, lobbyID);
 
             startActivity(goToLobby);
         }

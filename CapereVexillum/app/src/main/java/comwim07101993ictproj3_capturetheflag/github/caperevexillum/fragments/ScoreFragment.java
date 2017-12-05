@@ -68,7 +68,7 @@ public class ScoreFragment extends Fragment {
         amountFlagsRedView = (TextView) view.findViewById(R.id.aantalFlagsRood);
         amountFlagsGreenView = (TextView) view.findViewById(R.id.aantalFlagsGroen);
         scoreBalanceProgressbar = (ProgressBar) view.findViewById(R.id.scoreVerhoudingProgressBar);
-        stateManager = gameActivity.getStateManager();
+        stateManager = gameActivity.getGameController();
         stateManager.getSocketService().getSocket().on("syncTeamScore",syncScoreListenner);
         return view;
     }
