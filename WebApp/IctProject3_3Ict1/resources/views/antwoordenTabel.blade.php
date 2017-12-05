@@ -8,13 +8,17 @@
                 <td>
                     <table class="centered">
                     <tbody>
-                        <td>
-                        <h4>
-                            <a class="btn-floating btn-large waves-effect waves-light grey lighten-5" href="/vragen"><i class="material-icons left" style="color:black;">arrow_back</i></a>
-                            <?php echo($vraag["Question"]); ?>
-                        </h4>
-                        </td>
-                    </tbody>
+                    <tr>
+                    <td style="left:2vw; position:absolute">
+                        <a class="btn-large waves-effect waves-light white" style="color:black;" href="/vragen"><i class="material-icons left">arrow_back</i>Back</a>
+                        
+                    </td>
+
+                    <td>
+                        <h4 class="center"><?php echo($vraag["Question"]); ?></h4>
+                    </td>
+                    </tr>
+                </tbody>
                     </table>
                 </td>
                 </tr>
