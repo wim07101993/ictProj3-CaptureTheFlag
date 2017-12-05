@@ -9,7 +9,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.obser
  */
 
 public interface ISocketService<TKey> extends IObservable {
-    void Send(TKey key, Object value);
+    void send(TKey key, Object value);
 
     void connect();
 

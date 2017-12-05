@@ -9,12 +9,8 @@ public final class SocketFactory {
     private static SocketService socketService;
 
     public synchronized static SocketService get() {
-        return socketService;
-    }
-
-    public synchronized static SocketService get(String serverAddress, int port) {
         if (socketService == null) {
-            return createNew(serverAddress, port);
+            return createNew(null, 0);
         }
         return socketService;
     }

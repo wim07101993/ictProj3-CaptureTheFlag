@@ -8,9 +8,8 @@ import android.widget.Toast;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManagerFactory;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.GameStateManagerFactory;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IGameController;
 
 /**
  * Created by wimva on 17/11/2017.
@@ -24,7 +23,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
 
     private static final String TAG = AActivityWithStateManager.class.getSimpleName();
 
-    protected IStateManager stateManager;
+    protected IGameController stateManager;
 
 
     /* ----------------------------------------------------------- */
@@ -35,6 +34,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     protected void onCreate(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initStateManager();
+        stateManager.setContext(this);
     }
 
     @Override
@@ -58,7 +58,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
 
         if (stateManager == null) {
             try {
-                stateManager = StateManagerFactory.createNew(
+                stateManager = GameStateManagerFactory.createNew(
                         PreferenceManager.getDefaultSharedPreferences(this));
 
                 if (!clearSharedPreferences) {
@@ -78,7 +78,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
         }
     }
 
-    public IStateManager getStateManager() {
+    public IGameController getStateManager() {
         return stateManager;
     }
 

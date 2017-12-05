@@ -19,6 +19,28 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sock
 public interface IStateManager<TKey> extends IObservable {
 
     /**
+     * save is supposed to save the current state to a database.
+     *
+     * @return boolean to indicate whether the state has been saved or not.
+     */
+    boolean save();
+
+    /**
+     * load is supposed to load the previous state from a database.
+     *
+     * @return boolean to indicate whether an old state has been restored.
+     */
+    boolean load();
+
+    /**
+     * clear is supposed to clear all the data stored on the device.
+     */
+    void clear();
+
+
+    /* ------------------------- SETTERS ------------------------- */
+
+    /**
      * get is supposed to return the state behind of TKey key.
      *
      * @param key is the key to get value of.
@@ -66,6 +88,11 @@ public interface IStateManager<TKey> extends IObservable {
      */
     Boolean getBoolean(TKey key);
 
+    @Deprecated
+    ISocketService getSocketService();
+
+
+    /* ------------------------- SETTERS ------------------------- */
 
     void SetSharedPreferences(SharedPreferences sharedPreferences);
 
@@ -116,26 +143,4 @@ public interface IStateManager<TKey> extends IObservable {
      * @param value is the value to setLong the state to.
      */
     Boolean setBoolean(TKey key, Boolean value);
-
-    /**
-     * save is supposed to save the current state to a database.
-     *
-     * @return boolean to indicate whether the state has been saved or not.
-     */
-    boolean save();
-
-    /**
-     * load is supposed to load the previous state from a database.
-     *
-     * @return boolean to indicate whether an old state has been restored.
-     */
-    boolean load();
-
-    /**
-     * clear is supposed to clear all the data stored on the device.
-     */
-    void clear();
-
-    @Deprecated
-    ISocketService getSocketService();
 }

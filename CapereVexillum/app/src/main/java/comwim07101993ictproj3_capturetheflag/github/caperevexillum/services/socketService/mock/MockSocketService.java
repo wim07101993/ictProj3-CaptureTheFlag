@@ -69,7 +69,7 @@ public class MockSocketService
     }
 
     @Override
-    public void Send(final ISocketKey key, final Object value) {
+    public void send(final ISocketKey key, final Object value) {
         Thread t = new Thread() {
             @Override
             public void run() {
@@ -101,7 +101,7 @@ public class MockSocketService
                 break;
             case JOIN_LOBBY:
                 break;
-            case LOBBY_SETTINGS:
+            case CREATE_LOBBY:
                 createLobby(value);
                 break;
         }

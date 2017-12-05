@@ -1,13 +1,12 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService;
 
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 
 /**
  * Created by wimva on 25/11/2017.
  */
 
+// TODO WIM change base get value class to return String.class
 public enum ESocketEmitKey implements ISocketKey {
 
     ASK_FLAGS {
@@ -60,7 +59,21 @@ public enum ESocketEmitKey implements ISocketKey {
         }
     },
 
-    LOBBY_SETTINGS {
+    ASK_PLAYERS {
+        private static final String IDENTIFIER = "askPlayers";
+
+        @Override
+        public String getStringIdentifier() {
+            return IDENTIFIER;
+        }
+
+        @Override
+        public Class getValueClass() {
+            return Integer.class;
+        }
+    },
+
+    CREATE_LOBBY {
         private static final String IDENTIFIER = "createLobbyNew";
 
         @Override
@@ -71,6 +84,27 @@ public enum ESocketEmitKey implements ISocketKey {
         @Override
         public Class getValueClass() {
             return String.class;
+        }
+    },
+
+    JOIN_TEAM {
+        @Override
+        public String getStringIdentifier() {
+            return null;
+        }
+    },
+
+    HOST_LEFT {
+        @Override
+        public String getStringIdentifier() {
+            return null;
+        }
+    },
+
+    LEAVE_LOBBY {
+        @Override
+        public String getStringIdentifier() {
+            return null;
         }
     };
 

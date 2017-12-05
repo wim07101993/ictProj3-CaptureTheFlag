@@ -21,7 +21,6 @@ public abstract class AObservable extends Observable {
         obs = new Vector<>();
     }
 
-    @Override
     /**
      * Adds an observer to the set of observers for this object, provided
      * that it is not the same as some observer already in the set.
@@ -31,6 +30,7 @@ public abstract class AObservable extends Observable {
      * @param o an observer to be added.
      * @throws NullPointerException if the parameter o is null.
      */
+    @Override
     public synchronized void addObserver(Observer o) {
         if (o == null)
             throw new NullPointerException();
@@ -39,13 +39,13 @@ public abstract class AObservable extends Observable {
         }
     }
 
-    @Override
     /**
      * Deletes an observer from the set of observers of this object.
      * Passing <CODE>null</CODE> to this method will have no effect.
      *
      * @param o the observer to be deleted.
      */
+    @Override
     public synchronized void deleteObserver(Observer o) {
         obs.removeElement(o);
     }
