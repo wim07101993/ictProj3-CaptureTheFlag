@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
@@ -74,6 +75,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         @Override
         public void onResponse(List<Quiz> response) {
             quiz = response;
+            Collections.shuffle(quiz);
             count = 0;
             questionAndAnswer = quiz.get(count);
             createButtons();
