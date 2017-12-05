@@ -29,7 +29,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.dataService.DataServiceApi;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +61,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-    private StateManager stateManager;
+    private IStateManager stateManager;
 
     public void setTeam(String myTeam) {
         this.myTeam = myTeam;
@@ -100,7 +100,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         this.gameActivity = gameActivity;
 
         dataService = new DataServiceApi(gameActivity);
-        stateManager = gameActivity.getStateManager();
+        stateManager = gameActivity.getGameController();
         setup();
 
     }
@@ -169,7 +169,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(Team.NO_TEAM);
-        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        ((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
         gameActivity.showQuiz(false);
     }
 
@@ -179,7 +179,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
         Flag flag = new Flag(currentBeacon);
         flag.CaptureAndCooldown(gameActivity.MY_TEAM);
-        ((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        ((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
 
         count=0;
         gameActivity.showQuiz(false);
@@ -197,7 +197,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         //flag.team=
         currentFlag.CaptureAndCooldown(currentFlag.getTeam());
         ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).add(currentFlag);
-        //((Flags)stateManager.get(StateManagerKey.FLAGS)).addFlag(flag);
+        //((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
         gameActivity.showQuiz(false);
     }
 

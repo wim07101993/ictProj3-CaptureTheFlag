@@ -7,7 +7,6 @@ import java.util.Arrays;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ArrayHelpers;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
@@ -42,10 +41,6 @@ final class ArgsConverter {
             return true;
         } else if (stateManagerKey == EStateManagerKey.IS_HOST) {
             return true;
-        } else if (stateManagerKey == EStateManagerKey.LOBBY_SETTINGS) {
-            LobbySettings lobbySettings = new LobbySettings();
-            lobbySettings.Deserialize((String) args);
-            return lobbySettings;
         }
 
         return args;

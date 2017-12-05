@@ -2,7 +2,6 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.Button;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 
 /**
  * Gives an fragment where you can choose to begin the quiz or not

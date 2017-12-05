@@ -87,7 +87,7 @@ class SocketService
     }
 
     @Override
-    public void Send(ISocketKey key, Object value) {
+    public void send(ISocketKey key, Object value) {
         if (key.getMode() != ISocketKey.EMode.EMIT) {
             throw new UnsupportedOperationException("The key " + key.getStringIdentifier() + " does not support sending.");
         }

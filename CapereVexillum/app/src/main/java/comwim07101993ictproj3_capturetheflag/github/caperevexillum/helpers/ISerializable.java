@@ -5,6 +5,6 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers;
  */
 
 public interface ISerializable {
-    String Serialize();
-    void Deserialize(String serializedObject);
+    String serialize();
+    void deserialize(String serializedObject);
 }

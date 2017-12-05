@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,46 +21,47 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.obser
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObserver;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.IObservable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.ObservableListArgs;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketService;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 /**
- * Created by wimva on 25/11/2017.
+ * Created by wimva on 4/12/2017.
  */
 
-public class StateManagerWithoutSocket
+public abstract class AStateManager<TKey extends IStateManagerKey>
         extends AObservable
-        implements IStateManager<IStateManagerKey> {
+        implements IStateManager<TKey> {
 
     /* ---------------------------------------------------------- */
     /* ------------------------- FIELDS ------------------------- */
     /* ---------------------------------------------------------- */
 
-    private static final String TAG = StateManager.class.getSimpleName();
+    private static final String TAG = StateManagerWithSocket.class.getSimpleName();
 
     private SharedPreferences sharedPreferences;
 
-    private Map<IStateManagerKey, ISerializable> objects;
-    private Map<IStateManagerKey, Integer> ints;
-    private Map<IStateManagerKey, Long> longs;
-    private Map<IStateManagerKey, Float> floats;
-    private Map<IStateManagerKey, String> strings;
-    private Map<IStateManagerKey, Boolean> booleans;
+    private Map<TKey, ISerializable> objects;
+    private Map<TKey, Integer> ints;
+    private Map<TKey, Long> longs;
+    private Map<TKey, Float> floats;
+    private Map<TKey, String> strings;
+    private Map<TKey, Boolean> booleans;
 
-    private List<IStateManagerKey> registeredKeys;
+    private List<TKey> registeredKeys;
 
-    private Map<IStateManagerKey, AObserver> observers;
+    private Map<TKey, AObserver> observers;
 
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
     /* --------------------------------------------------------------- */
 
-    StateManagerWithoutSocket() {
+    AStateManager() {
         registeredKeys = new Vector<>();
     }
 
-    StateManagerWithoutSocket(SharedPreferences sharedPreferences) {
+    AStateManager(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
         registeredKeys = new Vector<>();
     }
@@ -113,7 +115,7 @@ public class StateManagerWithoutSocket
 
         loadRegisteredKeys();
 
-        for (IStateManagerKey registeredKey : registeredKeys) {
+        for (TKey registeredKey : registeredKeys) {
             load(registeredKey);
         }
 
@@ -125,11 +127,13 @@ public class StateManagerWithoutSocket
         stringKeys = sharedPreferences.getStringSet(EStateManagerKey.REGISTERED_KEYS.toString(), stringKeys);
 
         for (String stringKey : stringKeys) {
-            registeredKeys.add(EStateManagerKey.convertFromString(stringKey));
+            registeredKeys.add(convertStringToKey(stringKey));
         }
     }
 
-    private void load(IStateManagerKey key) {
+    protected abstract TKey convertStringToKey(String string);
+
+    private void load(TKey key) {
         Class c = key.getValueClass();
 
         if (ISerializable.class.isAssignableFrom(c)) {
@@ -144,28 +148,28 @@ public class StateManagerWithoutSocket
             loadString(key);
         } else if (Boolean.class.isAssignableFrom(c)) {
             loadBoolean(key);
+        } else {
+            Log.w(TAG, "tried to load state of unknown type: " + key.getValueClass());
         }
     }
 
-    private void loadObject(IStateManagerKey key, Class c) throws ClassCastException {
+    private void loadObject(TKey key, Class c) throws ClassCastException {
         if (MapHelpers.IsNullOrEmpty(objects)) {
             objects = new HashMap<>();
         }
 
         try {
             ISerializable serializable = (ISerializable) c.newInstance();
-            serializable.Deserialize(
-                    sharedPreferences.getString(key.toString(), serializable.Serialize()));
+            serializable.deserialize(
+                    sharedPreferences.getString(key.toString(), serializable.serialize()));
 
             setSerializable(key, serializable);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadInt(IStateManagerKey key) {
+    private void loadInt(TKey key) {
         if (MapHelpers.IsNullOrEmpty(ints)) {
             ints = new HashMap<>();
         }
@@ -173,7 +177,7 @@ public class StateManagerWithoutSocket
         setInt(key, sharedPreferences.getInt(key.toString(), 0));
     }
 
-    private void loadLong(IStateManagerKey key) {
+    private void loadLong(TKey key) {
         if (MapHelpers.IsNullOrEmpty(longs)) {
             longs = new HashMap<>();
         }
@@ -181,7 +185,7 @@ public class StateManagerWithoutSocket
         setLong(key, sharedPreferences.getLong(key.toString(), 0));
     }
 
-    private void loadFloat(IStateManagerKey key) {
+    private void loadFloat(TKey key) {
         if (MapHelpers.IsNullOrEmpty(floats)) {
             floats = new HashMap<>();
         }
@@ -189,7 +193,7 @@ public class StateManagerWithoutSocket
         setFloat(key, sharedPreferences.getFloat(key.toString(), 0));
     }
 
-    private void loadString(IStateManagerKey key) {
+    private void loadString(TKey key) {
         if (MapHelpers.IsNullOrEmpty(strings)) {
             strings = new HashMap<>();
         }
@@ -197,7 +201,7 @@ public class StateManagerWithoutSocket
         setString(key, sharedPreferences.getString(key.toString(), null));
     }
 
-    private void loadBoolean(IStateManagerKey key) {
+    private void loadBoolean(TKey key) {
         if (MapHelpers.IsNullOrEmpty(booleans)) {
             booleans = new HashMap<>();
         }
@@ -233,7 +237,7 @@ public class StateManagerWithoutSocket
     private void saveRegisteredKeys(@NonNull SharedPreferences.Editor editor) {
         Set<String> stringKeys = new HashSet<>();
 
-        for (IStateManagerKey key : registeredKeys) {
+        for (TKey key : registeredKeys) {
             if (key.needsToBeStored()) {
                 stringKeys.add(key.toString());
             }
@@ -243,60 +247,60 @@ public class StateManagerWithoutSocket
     }
 
     private void saveObjects(@NonNull SharedPreferences.Editor editor) {
-        putInEditor(editor, objects, new ISharedPreferenceSaver() {
+        putInEditor(editor, objects, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
-            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
-                editor.putString(key.toString(), getSerializable(key).Serialize());
+            public void putFunction(SharedPreferences.Editor editor, TKey key) {
+                editor.putString(key.toString(), getSerializable(key).serialize());
             }
         });
     }
 
     private void saveInts(@NonNull SharedPreferences.Editor editor) {
-        putInEditor(editor, ints, new ISharedPreferenceSaver() {
+        putInEditor(editor, ints, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
-            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+            public void putFunction(SharedPreferences.Editor editor, TKey key) {
                 editor.putInt(key.toString(), getInt(key));
             }
         });
     }
 
     private void saveLongs(@NonNull SharedPreferences.Editor editor) {
-        putInEditor(editor, longs, new ISharedPreferenceSaver() {
+        putInEditor(editor, longs, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
-            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+            public void putFunction(SharedPreferences.Editor editor, TKey key) {
                 editor.putLong(key.toString(), getLong(key));
             }
         });
     }
 
     private void saveFloats(@NonNull SharedPreferences.Editor editor) {
-        putInEditor(editor, floats, new ISharedPreferenceSaver() {
+        putInEditor(editor, floats, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
-            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+            public void putFunction(SharedPreferences.Editor editor, TKey key) {
                 editor.putFloat(key.toString(), getFloat(key));
             }
         });
     }
 
     private void saveStrings(@NonNull SharedPreferences.Editor editor) {
-        putInEditor(editor, strings, new ISharedPreferenceSaver() {
+        putInEditor(editor, strings, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
-            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+            public void putFunction(SharedPreferences.Editor editor, TKey key) {
                 editor.putString(key.toString(), getString(key));
             }
         });
     }
 
     private void saveBooleans(@NonNull SharedPreferences.Editor editor) {
-        putInEditor(editor, booleans, new ISharedPreferenceSaver() {
+        putInEditor(editor, booleans, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
-            public void putFunction(SharedPreferences.Editor editor, IStateManagerKey key) {
+            public void putFunction(SharedPreferences.Editor editor, TKey key) {
                 editor.putBoolean(key.toString(), getBoolean(key));
             }
         });
     }
 
-    private <T> void putInEditor(SharedPreferences.Editor editor, Map<IStateManagerKey, T> map, ISharedPreferenceSaver saver) {
+    private <T> void putInEditor(SharedPreferences.Editor editor, Map<TKey, T> map, AStateManager.ISharedPreferenceSaver saver) {
         if (MapHelpers.IsNullOrEmpty(map)) {
             return;
         }
@@ -312,37 +316,37 @@ public class StateManagerWithoutSocket
     /* ------------------------- GETTERS ------------------------- */
 
     @Override
-    public ISerializable getSerializable(IStateManagerKey key) {
+    public ISerializable getSerializable(TKey key) {
         return getState(key, objects);
     }
 
     @Override
-    public Integer getInt(IStateManagerKey key) {
+    public Integer getInt(TKey key) {
         return getState(key, ints);
     }
 
     @Override
-    public Long getLong(IStateManagerKey key) {
+    public Long getLong(TKey key) {
         return getState(key, longs);
     }
 
     @Override
-    public Float getFloat(IStateManagerKey key) {
+    public Float getFloat(TKey key) {
         return getState(key, floats);
     }
 
     @Override
-    public String getString(IStateManagerKey key) {
+    public String getString(TKey key) {
         return getState(key, strings);
     }
 
     @Override
-    public Boolean getBoolean(IStateManagerKey key) {
+    public Boolean getBoolean(TKey key) {
         return getState(key, booleans);
     }
 
     @Nullable
-    protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) {
+    protected <T> T getState(TKey key, Map<TKey, T> map) {
         if (MapHelpers.IsNullOrEmpty(map)) {
             return (T) key.getDefaultValue();
         }
@@ -359,6 +363,11 @@ public class StateManagerWithoutSocket
         return TAG;
     }
 
+    @Override
+    public ISocketService getSocketService() {
+        return null;
+    }
+
 
     /* ------------------------- SETTERS ------------------------- */
 
@@ -368,7 +377,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public <T extends ISerializable> ISerializable setSerializable(final IStateManagerKey key, T value) {
+    public <T extends ISerializable> ISerializable setSerializable(final TKey key, T value) {
         checkIfTypesMatch(key, value);
         if (objects == null) {
             objects = new HashMap<>();
@@ -381,14 +390,14 @@ public class StateManagerWithoutSocket
 
             AObserver observer = observers.get(key);
             if (observer == null) {
-                observer = new StateObserver(key);
+                observer = new AStateManager.StateObserver(key);
             }
 
             if (value instanceof Observable) {
                 ((Observable) value).addObserver(observer);
             } else if (value instanceof IObservable) {
                 ((IObservable) value).addObserver(observer);
-            } else if (value instanceof ObservableList) {
+            } else {
                 ((ObservableList) value).addOnListChangedCallback(observer);
             }
         }
@@ -397,7 +406,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public Integer setInt(IStateManagerKey key, Integer value) {
+    public Integer setInt(TKey key, Integer value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(ints)) {
             ints = new HashMap<>();
@@ -406,7 +415,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public Long setLong(IStateManagerKey key, Long value) {
+    public Long setLong(TKey key, Long value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(longs)) {
             longs = new HashMap<>();
@@ -415,7 +424,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public Float setFloat(IStateManagerKey key, Float value) {
+    public Float setFloat(TKey key, Float value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(floats)) {
             floats = new HashMap<>();
@@ -424,7 +433,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public String setString(IStateManagerKey key, String value) {
+    public String setString(TKey key, String value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(strings)) {
             strings = new HashMap<>();
@@ -433,7 +442,7 @@ public class StateManagerWithoutSocket
     }
 
     @Override
-    public Boolean setBoolean(IStateManagerKey key, Boolean value) {
+    public Boolean setBoolean(TKey key, Boolean value) {
         checkIfTypesMatch(key, value);
         if (MapHelpers.IsNullOrEmpty(booleans)) {
             booleans = new HashMap<>();
@@ -441,7 +450,7 @@ public class StateManagerWithoutSocket
         return updateState(key, booleans, value);
     }
 
-    protected <T> T updateState(IStateManagerKey key, Map<IStateManagerKey, T> map, T value) {
+    protected <T> T updateState(TKey key, Map<TKey, T> map, T value) {
         if (!registeredKeys.contains(key)) {
             registeredKeys.add(key);
         }
@@ -506,7 +515,7 @@ public class StateManagerWithoutSocket
         }
     }
 
-    private interface ISharedPreferenceSaver {
-        void putFunction(SharedPreferences.Editor editor, IStateManagerKey key);
+    protected interface ISharedPreferenceSaver<TKey> {
+        void putFunction(SharedPreferences.Editor editor, TKey key);
     }
 }

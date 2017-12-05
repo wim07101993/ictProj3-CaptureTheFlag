@@ -1,26 +1,27 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService;
 
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.factories.SingletonFactory;
-
 /**
  * Created by wimva on 25/11/2017.
  */
 
-public final class SocketFactory extends SingletonFactory<SocketService> {
+public final class SocketFactory {
 
     private static SocketService socketService;
 
-    public SocketFactory() {
-        super(SocketService.class);
-    }
-
-    @Override
-    protected SocketService getStaticProduct() {
+    public synchronized static SocketService get() {
+        if (socketService == null) {
+            return createNew(null, 0);
+        }
         return socketService;
     }
 
-    @Override
-    protected void setStaticProduct(SocketService value) {
+    public synchronized static SocketService set(SocketService value) {
         socketService = value;
+        return socketService;
+    }
+
+    public synchronized static SocketService createNew(String serverAddress, int port) {
+        socketService = new SocketService(serverAddress, port);
+        return socketService;
     }
 }

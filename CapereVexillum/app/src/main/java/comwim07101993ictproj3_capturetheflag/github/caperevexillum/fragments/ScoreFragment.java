@@ -22,7 +22,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 
 /**
@@ -38,7 +38,7 @@ public class ScoreFragment extends Fragment {
     private TextView amountFlagsRedView;
     private TextView amountFlagsGreenView;
     private ProgressBar scoreBalanceProgressbar;
-    private StateManager stateManager;
+    private IStateManager stateManager;
     private View view;
     private GameActivity gameActivity;
     private Vector<Flag> flags;
@@ -68,7 +68,7 @@ public class ScoreFragment extends Fragment {
         amountFlagsRedView = (TextView) view.findViewById(R.id.aantalFlagsRood);
         amountFlagsGreenView = (TextView) view.findViewById(R.id.aantalFlagsGroen);
         scoreBalanceProgressbar = (ProgressBar) view.findViewById(R.id.scoreVerhoudingProgressBar);
-        stateManager = gameActivity.getStateManager();
+        stateManager = gameActivity.getGameController();
         stateManager.getSocketService().getSocket().on("syncTeamScore",syncScoreListenner);
         return view;
     }

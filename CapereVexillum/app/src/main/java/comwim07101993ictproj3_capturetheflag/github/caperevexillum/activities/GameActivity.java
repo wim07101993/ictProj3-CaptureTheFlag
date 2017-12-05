@@ -42,7 +42,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beac
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner.OnScanListener;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateChangedArgs;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IGameController;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 
@@ -179,10 +179,10 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     // TODO Safe remove this method
 //    private void initSocket() {
-//        Flags flags = (Flags) stateManager.getSerializable(EStateManagerKey.FLAGS);
+//        Flags flags = (Flags) gameController.getSerializable(EStateManagerKey.FLAGS);
 //        //flags.setSyncFlagListener(this);
 //        //flags.startSocketListener();
-//        stateManager.setSerializable(EStateManagerKey.FLAGS, flags);
+//        gameController.setSerializable(EStateManagerKey.FLAGS, flags);
 //    }
 
     private void initView() {
@@ -206,7 +206,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.hide(cooldownFragment);
         // TODO WIM: get statemanager out of gametimer
-        gt = new GameTimer(stateManager, timerTextView, 30);
+        gt = new GameTimer(gameController, timerTextView, 30);
         ft.commit();
     }
 
@@ -228,7 +228,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             initView();
             initGameTimer();
             //initSocket();
-            stateManager.addObserver(this);
+            gameController.addObserver(this);
 
         } catch (Exception ex) {
             Log.e("gameActivity", ex.getMessage());
@@ -288,7 +288,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             return;
         }
 
-        Flag flag = ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).find(beacon);
+        Flag flag = ((Flags) gameController.getSerializable(EStateManagerKey.FLAGS)).find(beacon);
         if (flag != null) {
             //it's a nested if because get team would return on null
             //return if my team already has the flag
@@ -320,8 +320,8 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     /* ------------------------- Getters ------------------------- */
 
-    public StateManager getStateManager() {
-        return stateManager;
+    public IGameController getGameController() {
+        return gameController;
     }
 
     @Override
@@ -345,7 +345,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     Emitter.Listener startTimer = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            stateManager.setBoolean(EStateManagerKey.GAME_STARTED, true);
+            gameController.setBoolean(EStateManagerKey.GAME_STARTED, true);
             String request = (String) args[0];
             gameTime = Float.parseFloat(request);
             startTimeHandler.obtainMessage(1).sendToTarget();
@@ -355,18 +355,18 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     Handler startTimeHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            GameTimer gameTimer = new GameTimer(stateManager, timerTextView, gameTime);
+            GameTimer gameTimer = new GameTimer(gameController, timerTextView, gameTime);
             gameTimer.addListener(new OnGameTimerFinishedListener() {
                 @Override
                 public void OnGameTimerFinished() {
-                    Flags flags = (Flags) stateManager.getSerializable(EStateManagerKey.FLAGS);
+                    Flags flags = (Flags) gameController.getSerializable(EStateManagerKey.FLAGS);
                     Utils.toast(getApplicationContext(), "Game Finished, you have captured "
                             + flags.size() +
                             " flags");
                     timerTextView.setText(R.string.finished);
-                    stateManager.setBoolean(EStateManagerKey.GAME_STARTED, false);
+                    gameController.setBoolean(EStateManagerKey.GAME_STARTED, false);
                     startEndActivity();
-                    stateManager.setBoolean(EStateManagerKey.GAME_STARTED, false);
+                    gameController.setBoolean(EStateManagerKey.GAME_STARTED, false);
                 }
             });
         }
@@ -387,7 +387,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
         if (key == EStateManagerKey.FLAGS) {
             try {
-                Flags flags = (Flags) stateManager.getSerializable(EStateManagerKey.FLAGS);
+                Flags flags = (Flags) gameController.getSerializable(EStateManagerKey.FLAGS);
                 int redFlags = flags.getNumberOfFlagsOfTeam(Team.TEAM_ORANGE);
                 int greenFlags = flags.getNumberOfFlagsOfTeam(Team.TEAM_GREEN);
                 scoreFragment.setFlags(redFlags, greenFlags);

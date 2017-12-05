@@ -8,8 +8,8 @@ import android.widget.Toast;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManagerFactory;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.GameStateManagerFactory;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IGameController;
 
 /**
  * Created by wimva on 17/11/2017.
@@ -23,8 +23,7 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
 
     private static final String TAG = AActivityWithStateManager.class.getSimpleName();
 
-    protected StateManager stateManager;
-    protected StateManagerFactory stateManagerFactory;
+    protected IGameController gameController;
 
 
     /* ----------------------------------------------------------- */
@@ -35,13 +34,14 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     protected void onCreate(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initStateManager();
+        gameController.setContext(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (stateManager != null)
-            stateManager.save();
+        if (gameController != null)
+            gameController.save();
     }
 
     @Override
@@ -56,17 +56,13 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
 
     protected void initStateManager(boolean clearSharedPreferences) {
 
-        if (stateManager == null) {
-            if (stateManagerFactory == null) {
-                stateManagerFactory = new StateManagerFactory();
-            }
-
+        if (gameController == null) {
             try {
-                stateManager = stateManagerFactory.get(
+                gameController = GameStateManagerFactory.createNew(
                         PreferenceManager.getDefaultSharedPreferences(this));
 
                 if (!clearSharedPreferences) {
-                    stateManager.load();
+                    gameController.load();
                 }
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage());
@@ -74,16 +70,16 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
         }
 
         if (clearSharedPreferences) {
-            stateManager.clear();
+            gameController.clear();
         }
 
-        if (stateManager.getSerializable(EStateManagerKey.FLAGS) == null) {
-            stateManager.setSerializable(EStateManagerKey.FLAGS, new Flags());
+        if (gameController.getSerializable(EStateManagerKey.FLAGS) == null) {
+            gameController.setSerializable(EStateManagerKey.FLAGS, new Flags());
         }
     }
 
-    public StateManager getStateManager() {
-        return stateManager;
+    public IGameController getGameController() {
+        return gameController;
     }
 
     public void showToast(final String message) {

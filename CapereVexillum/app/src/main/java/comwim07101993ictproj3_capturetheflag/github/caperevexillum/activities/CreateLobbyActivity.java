@@ -1,24 +1,21 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateChangedArgs;
 
 public class CreateLobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
 
     private static final String TAG = CreateLobbyActivity.class.getSimpleName();
 
-    private EditText lobbyNameEditText, passwordEditText, timeEditText, playerNameEditText;
+    private EditText lobbyNameEditText;
+    private EditText passwordEditText;
+    private EditText timeEditText;
+    private EditText playerNameEditText;
 
 
     @Override
@@ -36,58 +33,18 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
 
     @Override
     public void onClick(View view) {
-        LobbySettings lobbySettings = new LobbySettings(
+        gameController.createLobby(new LobbySettings(
                 lobbyNameEditText.getText().toString(),
                 passwordEditText.getText().toString(),
                 Float.parseFloat(timeEditText.getText().toString()),
                 playerNameEditText.getText().toString()
-        );
-
-        stateManager.setSerializable(EStateManagerKey.LOBBY_SETTINGS, lobbySettings);
-        stateManager.addObserver(lobbyCreatedObserver);
+        ));
     }
 
     @Override
     protected String getTAG() {
         return TAG;
     }
-
-
-    private Observer lobbyCreatedObserver = new Observer() {
-        @Override
-        public void update(Observable observable, Object args) {
-            if (!(args instanceof StateChangedArgs)) {
-                return;
-            }
-
-            StateChangedArgs stateChangedArgs = (StateChangedArgs) args;
-            if (stateChangedArgs.getKey() != EStateManagerKey.LOBBY_SETTINGS) {
-                return;
-            }
-
-            Object newValue = stateChangedArgs.getNewValue();
-            if (!(newValue instanceof LobbySettings)) {
-                return;
-            }
-
-            LobbySettings lobbySettings = (LobbySettings) newValue;
-            if (lobbySettings.getId() != -1) {
-                stateManager.setInt(EStateManagerKey.LOBBY_ID, lobbySettings.getId());
-                stateManager.setString(EStateManagerKey.PLAYER_NAME, lobbySettings.getHostName());
-                stateManager.setBoolean(EStateManagerKey.IS_HOST, true);
-
-                startActivity(new Intent(CreateLobbyActivity.this, LobbyActivity.class));
-            } else if (lobbySettings.getHostName() == null) {
-                showToast("Playername already exists");
-            } else if (lobbySettings.getName() == null) {
-                showToast("Lobbyname already exists");
-            } else {
-                showToast("Could not create lobby");
-            }
-
-            stateManager.deleteObserver(this);
-        }
-    };
 
 }
 

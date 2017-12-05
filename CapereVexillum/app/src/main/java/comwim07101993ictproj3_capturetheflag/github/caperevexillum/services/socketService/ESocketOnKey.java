@@ -1,7 +1,6 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 
@@ -9,6 +8,7 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sock
  * Created by wimva on 25/11/2017.
  */
 
+// TODO WIM change base get value class to return String.class
 public enum ESocketOnKey implements ISocketKey {
 
     HOST {
@@ -34,12 +34,17 @@ public enum ESocketOnKey implements ISocketKey {
         }
     },
 
-    START {
-        private static final String IDENTIFIER = "start";
+    START_GAME {
+        private static final String IDENTIFIER = "startGame";
 
         @Override
         public String getStringIdentifier() {
             return IDENTIFIER;
+        }
+
+        @Override
+        public Class getValueClass() {
+            return String.class;
         }
     },
 
@@ -85,6 +90,27 @@ public enum ESocketOnKey implements ISocketKey {
         }
     },
 
+    PLAYERS {
+        private static final String IDENTIFIER = "players";
+
+        @Override
+        public String getStringIdentifier() {
+            return IDENTIFIER;
+        }
+
+        @Override
+        public Class getValueClass() {
+            return String.class;
+        }
+    },
+
+    JOINED_LOBBY {
+        @Override
+        public String getStringIdentifier() {
+            return null;
+        }
+    },
+
     GET_LOBBY_ID {
         private static final String IDENTIFIER = "getLobbyId";
 
@@ -93,6 +119,7 @@ public enum ESocketOnKey implements ISocketKey {
             return IDENTIFIER;
         }
     };
+
 
     @Override
     public EMode getMode() {

@@ -1,12 +1,15 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
+import com.google.gson.reflect.TypeToken;
+
 import java.util.List;
 import java.util.Set;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Player;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Players;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketEmitKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketOnKey;
@@ -140,28 +143,6 @@ public enum EStateManagerKey implements IStateManagerKey {
         }
     },
 
-    LOBBY_SETTINGS {
-        @Override
-        public Class getValueClass() {
-            return LobbySettings.class;
-        }
-
-        @Override
-        public ESocketOnKey getSocketOnKey() {
-            return ESocketOnKey.WAS_LOBBY_CREATED;
-        }
-
-        @Override
-        public ESocketEmitKey getSocketEmitPutKey() {
-            return ESocketEmitKey.LOBBY_SETTINGS;
-        }
-
-        @Override
-        public boolean needsToBeStored() {
-            return false;
-        }
-    },
-
     FLAGS {
         @Override
         public Class getValueClass() {
@@ -179,15 +160,24 @@ public enum EStateManagerKey implements IStateManagerKey {
         }
     },
 
-    GAME_STARTED {
+    START_GAME {
+        // TODO WIM: connect to socket
         @Override
         public Class getValueClass() {
             return Boolean.class;
         }
+    },
+
+    GAME_STARTED {
+        @Override
+        public Class getValueClass() {
+            return new TypeToken<List<Player>>() {
+            }.getClass();
+        }
 
         @Override
         public ESocketOnKey getSocketOnKey() {
-            return ESocketOnKey.START;
+            return ESocketOnKey.START_GAME;
         }
 
         @Override
@@ -264,7 +254,66 @@ public enum EStateManagerKey implements IStateManagerKey {
         public Object getDefaultValue() {
             return 30;
         }
-    },;
+    },
+
+    USE_MOCK_SOCKET_SERVICE {
+        @Override
+        public Class getValueClass() {
+            return Boolean.class;
+        }
+
+        @Override
+        public boolean needsToBeStored() {
+            return false;
+        }
+
+        @Override
+        public Object getDefaultValue() {
+            return true;
+        }
+    },
+
+    USE_MOCK_BEACON_SERVICE {
+        @Override
+        public Class getValueClass() {
+            return Boolean.class;
+        }
+
+        @Override
+        public boolean needsToBeStored() {
+            return false;
+        }
+
+        @Override
+        public Object getDefaultValue() {
+            return true;
+        }
+    },
+
+
+    PLAYERS {
+        @Override
+        public Class getValueClass() {
+            return Players.class;
+        }
+
+        @Override
+        public ESocketOnKey getSocketOnKey() {
+            return ESocketOnKey.PLAYERS;
+        }
+
+        @Override
+        public ESocketEmitKey getSocketEmitAskKey() {
+            return ESocketEmitKey.ASK_PLAYERS;
+        }
+    },
+
+    LEAVE_LOBBY {
+        @Override
+        public Class getValueClass() {
+            return Boolean.class;
+        }
+    };
 
 
     public static EStateManagerKey convertFromString(String stringKey) {

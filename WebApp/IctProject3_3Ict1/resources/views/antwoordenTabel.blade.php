@@ -8,13 +8,17 @@
                 <td>
                     <table class="centered">
                     <tbody>
-                        <td>
-                        <h4>
-                            <a class="btn-floating btn-large waves-effect waves-light grey lighten-5" href="/vragen"><i class="material-icons left" style="color:black;">arrow_back</i></a>
-                            <?php echo($vraag["Question"]); ?>
-                        </h4>
-                        </td>
-                    </tbody>
+                    <tr>
+                    <td style="left:2vw; position:absolute">
+                        <a class="btn-large waves-effect waves-light white" style="color:black;" href="/vragen"><i class="material-icons left">arrow_back</i>Back</a>
+                        
+                    </td>
+
+                    <td>
+                        <h4 class="center"><?php echo($vraag["Question"]); ?></h4>
+                    </td>
+                    </tr>
+                </tbody>
                     </table>
                 </td>
                 </tr>
@@ -49,7 +53,7 @@
                             <a class="waves-effect waves-light btn green accent-3 editanswer" id="<?=($antwoord["Answer_ID"]); ?>">Bewerk</a>
                         </td>
                         <td>
-                            <a class="waves-effect waves-light btn red accent-3" href="/antwoorden/delete/<?= $antwoord["Answer_ID"]?>">Verwijder</a>
+                            <a class="waves-effect waves-light btn red accent-3 deleteanswer" id="<?=($antwoord["Answer_ID"]); ?>">Verwijder</a>
                         </td>
                         </tr>
                         <?php } ?>
@@ -76,6 +80,7 @@
          console.log(question_id);
          </script>
         <?php
+            include (__DIR__."/../../../resources/views/antwoordenmodal/delete.blade.php");
             include (__DIR__."/../../../resources/views/antwoordenmodal/edit.blade.php");
             include (__DIR__."/../../../resources/views/antwoordenmodal/add.blade.php");
         ?>
