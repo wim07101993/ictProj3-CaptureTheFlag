@@ -21,12 +21,15 @@
     function generateVragenTabel(){
         var TableHtml="";
         for(categorie of filteredCategorieën){
-            if(categorie["Category_ID"] != 1){
-                TableHtml+="<tr>";
-                TableHtml+="<td>"+categorie["Name"]+"</td>";
-                TableHtml+=' <td><a class="waves-effect waves-light btn green editcategory" id="'+categorie["Category_ID"]+'">Bewerk</a></td>';
-                TableHtml+='<td><a class="waves-effect waves-light btn red deletecategory" id="'+categorie["Category_ID"]+'">Verwijder</a></td>';
+            var disabled = "";
+
+            if(categorie.Category_ID == 1){
+                disabled = "disabled";
             }
+            TableHtml+="<tr>";
+            TableHtml+="<td>"+categorie["Name"]+"</td>";
+            TableHtml+=' <td><a class="waves-effect waves-light btn green editcategory '+ disabled +'" id="'+categorie["Category_ID"]+'">Bewerk</a></td>';
+            TableHtml+='<td><a class="waves-effect waves-light btn red deletecategory '+ disabled +'" id="'+categorie["Category_ID"]+'">Verwijder</a></td>';
         }
         TableHtml+=' <tr class="grey lighten-3" style="border:none;"><td>';                 
         TableHtml+='<a class="btn-floating btn-large waves-effect waves-light green addcategory"><i class="material-icons">add</i></a>';

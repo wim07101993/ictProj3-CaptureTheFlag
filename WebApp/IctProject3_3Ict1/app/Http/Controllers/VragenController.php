@@ -48,6 +48,23 @@ class VragenController extends Controller
         $vraag->save();
         return back();
     }
+
+    function UpdateCategorieën(Request $request){
+        $input = $request->all();
+
+        $Question_ID = $request->question_id;
+        unset($input["question_id"]);
+        unset($input["_token"]);
+
+        $category_IDs = [];
+        foreach($input as $Category_ID => $value){
+            array_push($category_IDs, $Category_ID);
+        }
+
+        $vraag = QuestionModel::find($Question_ID)->categories()->sync($category_IDs);
+
+        return back();
+    }
     
     function UpdateAntwoord(Request $request){
         $antwoord = AnswerModel::find($request->id);
@@ -76,8 +93,8 @@ class VragenController extends Controller
     function AddVraag(Request $request){
         $vraag = new QuestionModel;
         $vraag["Question"] = $request->question;
-        
         $vraag->save();
+        QuestionModel::find($vraag["Question_ID"])->categories()->sync([1]);
         return back();
     }
     

@@ -29,7 +29,7 @@
         generateView+=csrf;
             generateView+="<h4>Antwoord</h4>"
             generateView+="<input id='answer' name='answer' value='' required />";
-            generateView+="<input type='checkbox' class='filled-in' id='correct' name='correct'/>"
+            generateView+="<input type='checkbox' id='correct' name='correct'/>"
             generateView+="<label for='correct'>Correct</label>"
         generateView+="<input name='question_id' value='"+question_id+"' style='display:none;'/>";
         $(".addanswerform").html(generateView)

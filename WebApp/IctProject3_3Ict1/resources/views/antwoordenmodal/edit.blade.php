@@ -39,7 +39,7 @@
                 if(antwoord["Correct"]==1){
                     checked="checked='checked'";
                 }
-            generateView+="<input type='checkbox' class='filled-in' id='editCorrect' name='correct' "+checked+" />"
+            generateView+="<input type='checkbox' id='editCorrect' name='correct' "+checked+" />"
             generateView+="<label for='editCorrect'>Correct</label>"
         $(".editanswerform").html(generateView)
     });

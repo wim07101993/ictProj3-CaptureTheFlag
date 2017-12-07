@@ -11,7 +11,7 @@
 </div>
 <div class="modal modalEditCategories" style="position:fixed; top:30vh; z-index: 100 !important;">
     <div class="modal-content">
-        <form class="editcategoriesform" method="post" action="/vragen/edit">
+        <form class="editcategoriesform" method="post" action="/vragen/categorieën">
                 
         </form>
     </div>
@@ -34,17 +34,26 @@
         var generateView="";
         generateView+=csrf;
         generateView+="<h4>Categorieën voor: </h4> <h5>"+ vraag.Question + "</h5>"; 
-        generateView+="<input name='id' value='"+vraag.Question_ID+"' style='display:none;'/>";
+        generateView+="<input name='question_id' value='"+vraag.Question_ID+"' style='display:none;'/>";
         
         categorieën.forEach(function(categorie){
             var checked = "";
+            var disabled = "";
+
+            if(categorie.Category_ID == 1){
+                console.log("hide");
+                disabled = "disabled = 'disabled'";            
+            }
+
             vraag["Categories"].forEach(function(vraagCategorie){
+                
                 if(vraagCategorie.Category_ID == categorie.Category_ID){
                     checked = "checked = 'checked'";
                 }
+                
             });
-
-            generateView+='<p><input type="checkbox" id="#'+ categorie.Category_ID + '" ' + checked +'" /><label for="#'+ categorie.Category_ID +'">'+ categorie.Name +'</label></p>';
+            generateView+='<p><input '+ disabled + 'name="'+ categorie.Category_ID +'" type="checkbox" id="#'+ categorie.Category_ID + '" ' + checked + '" /><label for="#'+ categorie.Category_ID +'">'+ categorie.Name +'</label></p>';
+            
         });
 
         $(".editcategoriesform").html(generateView)
@@ -53,11 +62,7 @@
            $(".modalEditCategories").fadeOut(1000);
     })
     $("#saveCategorieën").click(function(){
-        if(document.getElementById("editCategory").value != ''){
-            $(".editcategoriesform").submit();
-        } else {
-            document.getElementById("editCategory").className = "Invalid";
-        }
+        $(".editcategoriesform").submit();
     })
 }
 </script>

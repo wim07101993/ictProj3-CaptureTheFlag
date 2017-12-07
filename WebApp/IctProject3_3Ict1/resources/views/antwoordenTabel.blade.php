@@ -42,7 +42,7 @@
                             if($antwoord["Correct"]==1){
                                 $checked="checked='checked'";
                             } ?>
-                            <input type="checkbox" class="filled-in" id="filled-in-box" disabled="disabled" <?= $checked ?>/>
+                            <input type="checkbox" id="filled-in-box" disabled="disabled" <?= $checked ?>/>
                             <label for=""></label>
                         </td>
                         <td>
