@@ -44,7 +44,7 @@ function addEditListeners(){
         if(document.getElementById("editName").value != ''){
             $(".editcategoryform").submit();
         } else {
-            document.getElementById("editName").className = "Invalid";
+            document.getElementById("editName").className = "invalid";
         }
     })
 }

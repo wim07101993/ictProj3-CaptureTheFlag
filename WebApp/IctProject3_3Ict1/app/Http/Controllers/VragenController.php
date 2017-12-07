@@ -57,6 +57,7 @@ class VragenController extends Controller
         unset($input["_token"]);
 
         $category_IDs = [];
+        array_push($category_IDs, 1);
         foreach($input as $Category_ID => $value){
             array_push($category_IDs, $Category_ID);
         }

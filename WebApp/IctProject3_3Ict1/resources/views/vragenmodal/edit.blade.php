@@ -45,7 +45,7 @@
         if(document.getElementById("editQuestion").value != ''){
             $(".editquestionform").submit();
         } else {
-            document.getElementById("editQuestion").className = "Invalid";
+            document.getElementById("editQuestion").className = "invalid";
         }
     })
 }

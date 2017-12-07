@@ -50,7 +50,7 @@
         if(document.getElementById("editAnswer").value != ''){
             $(".editanswerform").submit();
         } else {
-            document.getElementById("editAnswer").className = "Invalid";
+            document.getElementById("editAnswer").className = "invalid";
         }
     })
 });

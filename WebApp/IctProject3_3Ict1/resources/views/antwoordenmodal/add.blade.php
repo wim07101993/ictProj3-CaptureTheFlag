@@ -41,7 +41,7 @@
         if(document.getElementById("answer").value != ''){
             $(".addanswerform").submit();
         } else {
-            document.getElementById("answer").className = "Invalid";
+            document.getElementById("answer").className = "invalid";
         }
     })
 });

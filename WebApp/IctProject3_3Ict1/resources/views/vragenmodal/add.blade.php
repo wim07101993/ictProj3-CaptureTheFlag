@@ -38,7 +38,7 @@ function addAddListener(){
         if(document.getElementById("question").value != ''){
             $(".addquestionform").submit();
         } else {
-            document.getElementById("question").className = "Invalid";
+            document.getElementById("question").className = "invalid";
         }
     })
 }
