@@ -8,8 +8,8 @@
                 <td>
                     <table class="centered bordered">
                     <thead  >
-                        <th>ID</th>
                         <th>Vraag</th> 
+                        <th>Categorieën</th>
                         <th>Antwoorden</th>
                         <th colspan="2" style="height: 75px;">
                             <input id="search" placeholder=" Search..." class="grey"  id="search" ></input>

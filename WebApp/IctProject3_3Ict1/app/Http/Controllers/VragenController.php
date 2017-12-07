@@ -23,6 +23,15 @@ class VragenController extends Controller
         return $vragen; 
     }
     
+    function GetVragenEnCategoriëen(){
+        $vragen = QuestionModel::all();
+        foreach($vragen as $vraag){
+            $vraag["Answers"] = QuestionModel::find($vraag["Question_ID"])->answers;
+            $vraag["Categories"] = QuestionModel::find($vraag["Question_ID"])->categories;
+        }
+        return $vragen; 
+    }
+
     function GetAntwoorden($Question_ID){
         $antwoorden = QuestionModel::find($Question_ID)->answers;
         return $antwoorden;
@@ -98,7 +107,7 @@ class VragenController extends Controller
     }
     
     function ShowVragen(){
-        $vragen=$this->GetVragen();
+        $vragen=$this->GetVragenEnCategoriëen();
         return view("vragenTabel",["vragen"=>$vragen]);
     }
     

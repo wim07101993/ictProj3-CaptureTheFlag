@@ -8,7 +8,6 @@
                 <td>
                     <table class="centered bordered">
                     <thead>
-                        <th>ID</th>
                         <th>Categorie</th>
                         <th colspan="2" style="height: 75px;">
                             <input id="search" placeholder=" Search..." class="grey"  id="search" ></input>
