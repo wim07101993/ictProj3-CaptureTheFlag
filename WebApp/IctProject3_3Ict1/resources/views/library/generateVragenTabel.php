@@ -45,6 +45,7 @@
         TableHtml+='</td></tr>';
         $("#table").html(TableHtml);
         addEditListeners();
+        addEditCategoryListener();
         addAddListener();
         addDeleteListener();
     }

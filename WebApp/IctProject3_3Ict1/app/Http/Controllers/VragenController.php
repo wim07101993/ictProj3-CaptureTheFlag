@@ -22,6 +22,11 @@ class VragenController extends Controller
         }
         return $vragen; 
     }
+
+    function GetCategorieën(){
+        $categorieën = CategoryModel::all();
+        return $categorieën;
+    }
     
     function GetVragenEnCategoriëen(){
         $vragen = QuestionModel::all();
@@ -71,6 +76,7 @@ class VragenController extends Controller
     function AddVraag(Request $request){
         $vraag = new QuestionModel;
         $vraag["Question"] = $request->question;
+        
         $vraag->save();
         return back();
     }
@@ -108,7 +114,8 @@ class VragenController extends Controller
     
     function ShowVragen(){
         $vragen=$this->GetVragenEnCategoriëen();
-        return view("vragenTabel",["vragen"=>$vragen]);
+        $categorieën=$this->GetCategorieën();
+        return view("vragenTabel",["vragen"=>$vragen, "categorieën"=>$categorieën]);
     }
     
     function ShowAntwoorden($Question_ID){

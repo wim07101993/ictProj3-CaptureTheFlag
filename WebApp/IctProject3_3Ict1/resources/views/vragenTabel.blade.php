@@ -29,9 +29,12 @@
 
             var vragen= <?php echo json_encode( $vragen) ?> ;
             var filteredVragen=vragen; 
+
+            var categorieën = <?php echo json_encode($categorieën)?>;
             var csrf='<?php echo csrf_field()?>';
         </script>
         <?php     
+            include (__DIR__."/../../../resources/views/vragenmodal/editcategorieën.blade.php");
             include (__DIR__."/../../../resources/views/vragenmodal/delete.blade.php");
             include (__DIR__."/../../../resources/views/vragenmodal/edit.blade.php");
             include (__DIR__."/../../../resources/views/vragenmodal/add.blade.php");
