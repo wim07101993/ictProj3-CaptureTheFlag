@@ -72,10 +72,6 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
         if (clearSharedPreferences) {
             gameController.clear();
         }
-
-        if (gameController.getSerializable(EStateManagerKey.FLAGS) == null) {
-            gameController.setSerializable(EStateManagerKey.FLAGS, new Flags());
-        }
     }
 
     public IGameController getGameController() {

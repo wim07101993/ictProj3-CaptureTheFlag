@@ -6,6 +6,7 @@ import android.widget.EditText;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.StringHelpers;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 
 public class CreateLobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
@@ -27,6 +28,8 @@ public class CreateLobbyActivity extends AActivityWithStateManager implements Vi
         lobbyNameEditText = (EditText) findViewById(R.id.lobbyname_edittext);
         passwordEditText = (EditText) findViewById(R.id.lobbypassword_edittext);
         timeEditText = (EditText) findViewById(R.id.lobbytime_edittext);
+
+        lobbyNameEditText.setText(StringHelpers.randomString());
 
         findViewById(R.id.createLobby).setOnClickListener(this);
     }

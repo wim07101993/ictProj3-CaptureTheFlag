@@ -25,6 +25,8 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
 
 public class GameController extends StateManagerWithSocket implements IGameController {
 
+    private final static String TAG = GameController.class.getSimpleName();
+
     private Activity context;
     private static Gson gson = new Gson();
 
@@ -48,8 +50,6 @@ public class GameController extends StateManagerWithSocket implements IGameContr
 
     @Override
     public void createLobby(LobbySettings lobbySettings) {
-        socketService.send(ESocketEmitKey.CREATE_LOBBY, gson.toJson(lobbySettings));
-
         socketService.addObserver(new Observer() {
             @Override
             public synchronized void update(Observable observable, Object arg) {
@@ -70,6 +70,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
                     setString(EStateManagerKey.PLAYER_NAME, lobbySettings.getHostName());
                     setBoolean(EStateManagerKey.IS_HOST, true);
 
+                    showToast("navigating to lobby activity");
                     context.startActivity(new Intent(context, LobbyActivity.class));
                 } else if (lobbySettings.getHostName() == null) {
                     showToast("Playername already exists");
@@ -80,6 +81,8 @@ public class GameController extends StateManagerWithSocket implements IGameContr
                 }
             }
         });
+
+        socketService.send(ESocketEmitKey.CREATE_LOBBY, gson.toJson(lobbySettings));
     }
 
     @Override
@@ -127,6 +130,11 @@ public class GameController extends StateManagerWithSocket implements IGameContr
     @Override
     public void startGame() {
 
+    }
+
+    @Override
+    public void askPlayers() {
+        socketService.send(ESocketEmitKey.ASK_PLAYERS,getInt(EStateManagerKey.LOBBY_ID));
     }
 
     @Override

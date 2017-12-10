@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 import java.util.Set;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
@@ -244,6 +245,23 @@ public enum EStateManagerKey implements IStateManagerKey {
         }
     },
 
+    PLAYERS {
+        @Override
+        public Class getValueClass() {
+            return Players.class;
+        }
+
+        @Override
+        public ESocketOnKey getSocketOnKey() {
+            return ESocketOnKey.PLAYERS;
+        }
+
+        @Override
+        public ESocketEmitKey getSocketEmitAskKey() {
+            return ESocketEmitKey.ASK_PLAYERS;
+        }
+    },
+
     GAME_DURATION {
         @Override
         public Class getValueClass() {
@@ -253,6 +271,13 @@ public enum EStateManagerKey implements IStateManagerKey {
         @Override
         public Object getDefaultValue() {
             return 30;
+        }
+    },
+
+    LEAVE_LOBBY {
+        @Override
+        public Class getValueClass() {
+            return Boolean.class;
         }
     },
 
@@ -288,32 +313,9 @@ public enum EStateManagerKey implements IStateManagerKey {
         public Object getDefaultValue() {
             return true;
         }
-    },
-
-
-    PLAYERS {
-        @Override
-        public Class getValueClass() {
-            return Players.class;
-        }
-
-        @Override
-        public ESocketOnKey getSocketOnKey() {
-            return ESocketOnKey.PLAYERS;
-        }
-
-        @Override
-        public ESocketEmitKey getSocketEmitAskKey() {
-            return ESocketEmitKey.ASK_PLAYERS;
-        }
-    },
-
-    LEAVE_LOBBY {
-        @Override
-        public Class getValueClass() {
-            return Boolean.class;
-        }
     };
+
+
 
 
     public static EStateManagerKey convertFromString(String stringKey) {

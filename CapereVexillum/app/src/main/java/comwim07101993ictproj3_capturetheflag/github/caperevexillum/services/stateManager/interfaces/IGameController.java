@@ -20,7 +20,7 @@ public interface IGameController
     void leaveTeam();
 
     void startGame();
-
+    void askPlayers();
     void setContext(Activity context);
 
     Activity getContext();

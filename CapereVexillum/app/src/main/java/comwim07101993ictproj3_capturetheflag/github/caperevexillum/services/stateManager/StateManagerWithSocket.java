@@ -58,11 +58,11 @@ public class StateManagerWithSocket
 
     private void initSocket() {
         try {
-            if (getBoolean(EStateManagerKey.USE_MOCK_SOCKET_SERVICE)){
+            if (getBoolean(EStateManagerKey.USE_MOCK_SOCKET_SERVICE)) {
                 socketService = MockSocketFactory.createNew(
                         getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
                         getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
-            }else{
+            } else {
                 socketService = SocketFactory.createNew(
                         getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
                         getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
@@ -111,10 +111,10 @@ public class StateManagerWithSocket
 
     @Nullable
     @Override
-    protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) {
+    protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) throws Exception {
         ESocketEmitKey askKey = key.getSocketEmitAskKey();
         if (askKey != null && socketService.isConnected()) {
-            socketService.send(askKey, null);
+            socketService.send(askKey, getInt(EStateManagerKey.LOBBY_ID));
         }
 
         return super.getState(key, map);

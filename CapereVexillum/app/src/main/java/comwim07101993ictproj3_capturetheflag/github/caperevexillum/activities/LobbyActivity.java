@@ -54,7 +54,9 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
         }
 
         gameController.addObserver(stateChangeObserver);
-        gameController.getSerializable(EStateManagerKey.PLAYERS);
+        //gameController.getSerializable(EStateManagerKey.PLAYERS);
+        gameController.askPlayers();
+
     }
 
     @Override
@@ -181,7 +183,9 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                     gameStarted((List<Player>) stateChangedArgs.getNewValue());
                     break;
                 case PLAYERS:
-                    gotPlayersResult((Players) stateChangedArgs.getNewValue());
+                    Players players=new Players();
+                    players.deserialize((String)stateChangedArgs.getNewValue());
+                    gotPlayersResult(players);
                     break;
             }
         }

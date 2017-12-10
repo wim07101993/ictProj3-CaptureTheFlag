@@ -23,6 +23,7 @@ public class Players extends Vector<Player> implements ISerializable {
     public void deserialize(String serializedObject) {
         List<Player> playerList = new Gson().fromJson(serializedObject, new TypeToken<List<Player>>() {
         }.getType());
+        this.clear();
         this.addAll(playerList);
     }
 }

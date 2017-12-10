@@ -105,9 +105,11 @@ public enum ESocketOnKey implements ISocketKey {
     },
 
     JOINED_LOBBY {
+        private static final String IDENTIFIER = "joinedLobby";
+
         @Override
         public String getStringIdentifier() {
-            return null;
+            return IDENTIFIER;
         }
     },
 

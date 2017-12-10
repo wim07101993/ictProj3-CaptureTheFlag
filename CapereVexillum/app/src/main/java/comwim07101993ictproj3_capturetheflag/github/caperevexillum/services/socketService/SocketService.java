@@ -69,6 +69,7 @@ class SocketService
                 @Override
                 public void call(Object... args) {
                     Class c = key.getValueClass();
+                    Log.d(TAG, "server replied on: " + key);
                     if (args.getClass().isAssignableFrom(c)) {
                         SocketValueChangedArgs socketValueChangedArgs = new SocketValueChangedArgs(key, args);
                         notifyObservers(socketValueChangedArgs);
@@ -95,6 +96,7 @@ class SocketService
         Class c = key.getValueClass();
         String identifier = key.getStringIdentifier();
 
+        Log.d(TAG, "sending to server: " + key + " : " + value);
         if (c == null) {
             socket.emit(identifier);
         } else if (value.getClass().isAssignableFrom(c)) {

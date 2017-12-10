@@ -21,6 +21,7 @@ public class ValueChangedArgs<T> implements IValueChangedArgs<T> {
 
     @Override
     public T getNewValue() {
+
         return newValue;
     }
 }

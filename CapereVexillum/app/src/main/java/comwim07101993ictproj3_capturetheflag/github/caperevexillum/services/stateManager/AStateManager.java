@@ -250,7 +250,12 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
         putInEditor(editor, objects, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
             public void putFunction(SharedPreferences.Editor editor, TKey key) {
-                editor.putString(key.toString(), getSerializable(key).serialize());
+                ISerializable value = getSerializable(key);
+                if (value != null) {
+                    editor.putString(key.toString(), value.serialize());
+                } else {
+                    editor.putString(key.toString(), null);
+                }
             }
         });
     }
@@ -317,36 +322,68 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
 
     @Override
     public ISerializable getSerializable(TKey key) {
-        return getState(key, objects);
+        Log.d(TAG, "getting " + key.toString());
+        try {
+
+            return getState(key, objects);
+        } catch (Exception ex) {
+            Log.e(TAG, ex.getMessage());
+        }
+        return null;
     }
 
     @Override
     public Integer getInt(TKey key) {
-        return getState(key, ints);
+        try {
+            return getState(key, ints);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (Integer) PrimitiveDefaults.getDefaultValue(Integer.class);
     }
 
     @Override
     public Long getLong(TKey key) {
-        return getState(key, longs);
+        try {
+            return getState(key, longs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (Long) PrimitiveDefaults.getDefaultValue(Long.class);
     }
 
     @Override
     public Float getFloat(TKey key) {
-        return getState(key, floats);
+        try {
+            return getState(key, floats);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (Float) PrimitiveDefaults.getDefaultValue(Float.class);
     }
 
     @Override
     public String getString(TKey key) {
-        return getState(key, strings);
+        try {
+            return getState(key, strings);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (String) PrimitiveDefaults.getDefaultValue(String.class);
     }
 
     @Override
     public Boolean getBoolean(TKey key) {
-        return getState(key, booleans);
+        try {
+            return getState(key, booleans);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (Boolean) PrimitiveDefaults.getDefaultValue(Boolean.class);
     }
 
     @Nullable
-    protected <T> T getState(TKey key, Map<TKey, T> map) {
+    protected <T> T getState(TKey key, Map<TKey, T> map) throws Exception {
         if (MapHelpers.IsNullOrEmpty(map)) {
             return (T) key.getDefaultValue();
         }
@@ -354,6 +391,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
         if (!map.containsKey(key)) {
             return (T) key.getDefaultValue();
         }
+
         return map.get(key);
     }
 
@@ -451,6 +489,8 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
     }
 
     protected <T> T updateState(TKey key, Map<TKey, T> map, T value) {
+        Log.d(TAG, "updating " + key);
+
         if (!registeredKeys.contains(key)) {
             registeredKeys.add(key);
         }

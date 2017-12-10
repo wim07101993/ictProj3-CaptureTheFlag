@@ -15,6 +15,7 @@ export default class{
         console.log("starting up server");
         this.server.on("connection",(socket)=>this.OnSocketConnect(socket))
         
+
     }
     //void
     OnSocketConnect(socket){
@@ -32,7 +33,7 @@ export default class{
           lobbyClass.startTime(lobbyId, parent.server, socket,parent.lobbies);
           parent.AddLobbyListeners(socket);
         });
-        socket.on("getPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket,this.lobbies));
+        socket.on("askPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket,this.lobbies));
         socket.on("restartLobby", (lobbyID) => lobbyClass.restart(lobbyID));
     }
     //void

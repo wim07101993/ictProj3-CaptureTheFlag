@@ -4,9 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.github.nkzawa.socketio.client.Socket;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.observer.AObservable;
@@ -31,12 +29,10 @@ public class MockSocketService
 
     private static final String TAG = MockSocketService.class.getSimpleName();
 
-    private Map<ISocketKey, Object> values = new HashMap<>();
-
     private List<Lobby> lobbies = new Vector<>();
-    private List<Player> players = new Vector<>();
 
-    private boolean connected;
+    private boolean connected = false;
+    private float gameTime = 0;
 
     private String serverIPAddress;
     private int serverPort;
@@ -74,7 +70,7 @@ public class MockSocketService
             @Override
             public void run() {
                 try {
-                    sleep(1);
+                    sleep(10);
                 } catch (InterruptedException ignored) {
 
                 }
@@ -95,11 +91,15 @@ public class MockSocketService
             case ASK_FLAGS:
             case ASK_TEAMS:
             case ASK_TIME:
-                notifyObservers(values.get(key));
+                notifyObservers(new SocketValueChangedArgs(ESocketOnKey.RESYNC_TIME, gameTime));
+                break;
+            case ASK_PLAYERS:
+                emitPlayers(value);
                 break;
             case CAPTURE_FLAG:
                 break;
             case JOIN_LOBBY:
+                joinLobby(value);
                 break;
             case CREATE_LOBBY:
                 createLobby(value);
@@ -107,13 +107,30 @@ public class MockSocketService
         }
     }
 
-    private void createLobby(Object value) {
-        if (!(value instanceof String)) {
+    private void emitPlayers(Object value) {
+        if (!(value instanceof Integer)){
             return;
         }
 
-        LobbySettings lobbySettings = new LobbySettings();
-        lobbySettings.deserialize((String) value);
+        Integer id = (Integer)value;
+        if (id < lobbies.size()){
+            Lobby lobby = this.lobbies.get(id);
+            if (lobby != null) {
+                notifyObservers(lobbies.get(id).getPlayers());
+            }
+        }
+    }
+
+    private void createLobby(Object value) {
+        LobbySettings lobbySettings;
+        if (value instanceof LobbySettings) {
+            lobbySettings = (LobbySettings) value;
+        } else if (value instanceof String) {
+            lobbySettings = new LobbySettings();
+            lobbySettings.deserialize((String) value);
+        } else {
+            return;
+        }
 
         if (getLobby(lobbySettings.getName()) != null) {
             lobbySettings.setName(null);
@@ -130,7 +147,17 @@ public class MockSocketService
         }
     }
 
-    private void joinLobby(LobbySettings lobbySettings) {
+    private void joinLobby(Object value) {
+        LobbySettings lobbySettings;
+        if (value instanceof LobbySettings) {
+            lobbySettings = (LobbySettings) value;
+        } else if (value instanceof String) {
+            lobbySettings = new LobbySettings();
+            lobbySettings.deserialize((String) value);
+        } else {
+            return;
+        }
+
         Lobby lobby = getLobby(lobbySettings.getName());
 
         if (lobby == null) {

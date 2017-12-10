@@ -143,9 +143,9 @@ export default{
         
         let lobby = lobbies[lobbyID];
         
-        if(lobby != undefined){
-          
-          lobby.emit("getPlayersResult", JSON.stringify(lobby.players));
+        if(lobby != undefined){ 
+          console.log("playerssycnd")
+          lobby.emit("players", JSON.stringify(lobby.players));
         }
       } catch (error) {
         console.log("error in lobbysync => getPlayers()")
@@ -170,7 +170,7 @@ export default{
             let teamJson= JSON.stringify(team);
   
             player.team = team;
-            console.log(player.name + " joined team " + player.team.teamname);
+            console.log(player.name + " joined team " + player.team.teamName);
             this.getPlayers(lobbyID, io,lobbies);
           }
         }

@@ -117,7 +117,7 @@ export default class Lobby {
     addPlayer(name,  socket){
         try {
             
-            this.players.push({"name":name,"team":{"teamname":"no_team","score":"0"}});
+            this.players.push({"name":name,"team":{"teamName":"no_team","score":"0"}});
             this.playersockets.push({"name":name,socket});
         } catch (error) {
             
