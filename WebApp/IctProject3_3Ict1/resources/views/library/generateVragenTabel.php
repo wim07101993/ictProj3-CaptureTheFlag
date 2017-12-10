@@ -22,17 +22,30 @@
         var TableHtml="";
         for(vraag of filteredVragen){
             TableHtml+="<tr>";
-            TableHtml+="<td>"+vraag["Question_ID"]+"</td>";
             TableHtml+="<td>"+vraag["Question"]+"</td>";
-            TableHtml+='<td><a class="waves-effect waves-light btn amber accent-3 editanwsers" href="antwoorden/'+vraag["Question_ID"]+'">Antwoorden</a></td>';
-            TableHtml+=' <td><a class="waves-effect waves-light btn green accent-3 editquestion" id="'+vraag["Question_ID"]+'">Bewerk</a></td>';
+            
+            var aantalCategorieënClass = 'class="red"';
+            if(vraag["Categories"].length != 0){ 
+                aantalCategorieënClass = 'class="green"'
+            }
+
+            TableHtml+='<td><a class="waves-effect waves-light btn grey editcategories" id="'+vraag["Question_ID"]+'"><span '+ aantalCategorieënClass + 'style="border-radius:2px;box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);">&nbsp;'+vraag["Categories"].length +'&nbsp;</span>&nbsp;&nbsp;&nbsp;Categorieën</a></td>';
+
+            var aantalVragenClass = 'class="red"';
+            if(vraag["Answers"].length != 0){ 
+                aantalVragenClass = 'class="green"'
+            }
+            
+            TableHtml+='<td><a class="waves-effect waves-light btn grey editanwsers" href="antwoorden/'+vraag["Question_ID"]+'"><span '+ aantalVragenClass + 'style="border-radius:2px;box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);">&nbsp;'+vraag["Answers"].length +'&nbsp;</span>&nbsp;&nbsp;&nbsp;Antwoorden</a></td>';
+            TableHtml+=' <td><a class="waves-effect waves-light btn green editquestion" id="'+vraag["Question_ID"]+'">Bewerk</a></td>';
             TableHtml+='<td><a class="waves-effect waves-light btn red deletequestion" id="'+vraag["Question_ID"]+'">Verwijder</a></td>';
         }
         TableHtml+=' <tr class="grey lighten-3" style="border:none;"><td>';                 
-        TableHtml+='<a class="btn-floating btn-large waves-effect waves-light green accent-3 addquestion"><i class="material-icons">add</i></a>';
+        TableHtml+='<a class="btn-floating btn-large waves-effect waves-light green addquestion"><i class="material-icons">add</i></a>';
         TableHtml+='</td></tr>';
         $("#table").html(TableHtml);
         addEditListeners();
+        addEditCategoryListener();
         addAddListener();
         addDeleteListener();
     }

@@ -15,7 +15,7 @@
     </div>
     <div class="modal-footer">
         <a id="closeDelete" class="modal-action modal-close waves-effect waves-white red btn-flat" style="color:white;">Nee</a>
-        <a id="saveDelete" class="modal-action modal-close waves-effect waves-white green accent-3 btn-flat" style="color:white;">Ja</a>
+        <a id="saveDelete" class="modal-action modal-close waves-effect waves-white green btn-flat" style="color:white;">Ja</a>
     </div>
 </div>
 

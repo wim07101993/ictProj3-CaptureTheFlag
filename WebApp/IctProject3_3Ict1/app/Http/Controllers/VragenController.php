@@ -22,7 +22,21 @@ class VragenController extends Controller
         }
         return $vragen; 
     }
+
+    function GetCategorieën(){
+        $categorieën = CategoryModel::all();
+        return $categorieën;
+    }
     
+    function GetVragenEnCategoriëen(){
+        $vragen = QuestionModel::all();
+        foreach($vragen as $vraag){
+            $vraag["Answers"] = QuestionModel::find($vraag["Question_ID"])->answers;
+            $vraag["Categories"] = QuestionModel::find($vraag["Question_ID"])->categories;
+        }
+        return $vragen; 
+    }
+
     function GetAntwoorden($Question_ID){
         $antwoorden = QuestionModel::find($Question_ID)->answers;
         return $antwoorden;
@@ -32,6 +46,24 @@ class VragenController extends Controller
         $vraag = QuestionModel::find($request->id);
         $vraag["Question"] = $request->question;
         $vraag->save();
+        return back();
+    }
+
+    function UpdateCategorieën(Request $request){
+        $input = $request->all();
+
+        $Question_ID = $request->question_id;
+        unset($input["question_id"]);
+        unset($input["_token"]);
+
+        $category_IDs = [];
+        array_push($category_IDs, 1);
+        foreach($input as $Category_ID => $value){
+            array_push($category_IDs, $Category_ID);
+        }
+
+        $vraag = QuestionModel::find($Question_ID)->categories()->sync($category_IDs);
+
         return back();
     }
     
@@ -63,6 +95,7 @@ class VragenController extends Controller
         $vraag = new QuestionModel;
         $vraag["Question"] = $request->question;
         $vraag->save();
+        QuestionModel::find($vraag["Question_ID"])->categories()->sync([1]);
         return back();
     }
     
@@ -98,8 +131,9 @@ class VragenController extends Controller
     }
     
     function ShowVragen(){
-        $vragen=$this->GetVragen();
-        return view("vragenTabel",["vragen"=>$vragen]);
+        $vragen=$this->GetVragenEnCategoriëen();
+        $categorieën=$this->GetCategorieën();
+        return view("vragenTabel",["vragen"=>$vragen, "categorieën"=>$categorieën]);
     }
     
     function ShowAntwoorden($Question_ID){

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 23 nov 2017 om 15:18
--- Serverversie: 10.1.28-MariaDB
--- PHP-versie: 7.1.11
+-- Generation Time: Dec 07, 2017 at 03:52 PM
+-- Server version: 10.1.28-MariaDB
+-- PHP Version: 7.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,15 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ictproject3_3ict1`
+-- Database: `ictproject`
 --
+CREATE DATABASE IF NOT EXISTS `ictproject` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `ictproject`;
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `answer`
+-- Table structure for table `answer`
 --
 
 CREATE TABLE `answer` (
@@ -36,18 +38,17 @@ CREATE TABLE `answer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Gegevens worden geëxporteerd voor tabel `answer`
+-- Dumping data for table `answer`
 --
 
 INSERT INTO `answer` (`Answer_ID`, `Answer`, `Question_ID`, `Correct`) VALUES
-(1, 'Angst voor Sinterklaas.', 1, 1),
-(4, 'Ja', 2, 1),
-(5, 'Neen', 2, 0);
+(14, 'Een beest', 12, 1),
+(15, 'Een kast', 12, 0);
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `category`
+-- Table structure for table `category`
 --
 
 CREATE TABLE `category` (
@@ -56,18 +57,17 @@ CREATE TABLE `category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Gegevens worden geëxporteerd voor tabel `category`
+-- Dumping data for table `category`
 --
 
 INSERT INTO `category` (`Category_ID`, `Name`) VALUES
 (1, 'Alle'),
-(2, 'psychology'),
-(3, 'wiskunde');
+(17, 'Wiskunde');
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `migrations`
+-- Table structure for table `migrations`
 --
 
 CREATE TABLE `migrations` (
@@ -79,7 +79,7 @@ CREATE TABLE `migrations` (
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `question`
+-- Table structure for table `question`
 --
 
 CREATE TABLE `question` (
@@ -88,38 +88,36 @@ CREATE TABLE `question` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Gegevens worden geëxporteerd voor tabel `question`
+-- Dumping data for table `question`
 --
 
 INSERT INTO `question` (`Question_ID`, `Question`) VALUES
-(1, 'Wat is Claustrofobie'),
-(2, 'Is dit een Test?'),
-(3, 'Test?');
+(12, 'Wat is een eenhoorn?');
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `question_per_category`
+-- Table structure for table `question_per_category`
 --
 
 CREATE TABLE `question_per_category` (
   `Question_Per_Category_ID` int(11) NOT NULL,
-  `Question_ID` int(11),
-  `Category_ID` int(11)
+  `Question_ID` int(11) DEFAULT NULL,
+  `Category_ID` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Gegevens worden geëxporteerd voor tabel `question_per_category`
+-- Dumping data for table `question_per_category`
 --
 
 INSERT INTO `question_per_category` (`Question_Per_Category_ID`, `Question_ID`, `Category_ID`) VALUES
-(1, 1, 1),
-(2, 1, 2);
+(20, 12, 1),
+(21, 12, 17);
 
 -- --------------------------------------------------------
 
 --
--- Tabelstructuur voor tabel `users`
+-- Table structure for table `users`
 --
 
 CREATE TABLE `users` (
@@ -133,43 +131,43 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Gegevens worden geëxporteerd voor tabel `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Michiel', 'michiel.vanbergen@hotmail.com', '$2y$10$SDR13aSbBEZI2CjBq8y7s.nHJCXsCsNziFTusUhkAkMw07k6yfAF.', '9PdqMzzZyubX1MLT9tSNPOYaTq6Gxt5jhe51smvjUWkbWTRVrNkLN1WY3Ago', '2017-11-23 11:00:48', '2017-11-23 11:00:48');
+(1, 'Michiel', 'michiel.vanbergen@hotmail.com', '$2y$10$SDR13aSbBEZI2CjBq8y7s.nHJCXsCsNziFTusUhkAkMw07k6yfAF.', 'aHybMVCaDmB9ut6qwvK6ABf4tN6v66vlhM22q2KkmbHFGqhe3uxsIF9yJiil', '2017-11-23 11:00:48', '2017-11-23 11:00:48');
 
 --
--- Indexen voor geëxporteerde tabellen
+-- Indexes for dumped tables
 --
 
 --
--- Indexen voor tabel `answer`
+-- Indexes for table `answer`
 --
 ALTER TABLE `answer`
   ADD PRIMARY KEY (`Answer_ID`),
   ADD KEY `Question_ID` (`Question_ID`);
 
 --
--- Indexen voor tabel `category`
+-- Indexes for table `category`
 --
 ALTER TABLE `category`
   ADD PRIMARY KEY (`Category_ID`);
 
 --
--- Indexen voor tabel `migrations`
+-- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexen voor tabel `question`
+-- Indexes for table `question`
 --
 ALTER TABLE `question`
   ADD PRIMARY KEY (`Question_ID`);
 
 --
--- Indexen voor tabel `question_per_category`
+-- Indexes for table `question_per_category`
 --
 ALTER TABLE `question_per_category`
   ADD PRIMARY KEY (`Question_Per_Category_ID`),
@@ -177,66 +175,66 @@ ALTER TABLE `question_per_category`
   ADD KEY `Kolom 3` (`Category_ID`);
 
 --
--- Indexen voor tabel `users`
+-- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT voor geëxporteerde tabellen
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT voor een tabel `answer`
+-- AUTO_INCREMENT for table `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `Answer_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `Answer_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
--- AUTO_INCREMENT voor een tabel `category`
+-- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT voor een tabel `migrations`
+-- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT voor een tabel `question`
+-- AUTO_INCREMENT for table `question`
 --
 ALTER TABLE `question`
-  MODIFY `Question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
--- AUTO_INCREMENT voor een tabel `question_per_category`
+-- AUTO_INCREMENT for table `question_per_category`
 --
 ALTER TABLE `question_per_category`
-  MODIFY `Question_Per_Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Question_Per_Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT voor een tabel `users`
+-- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- Beperkingen voor geëxporteerde tabellen
+-- Constraints for dumped tables
 --
 
 --
--- Beperkingen voor tabel `answer`
+-- Constraints for table `answer`
 --
 ALTER TABLE `answer`
   ADD CONSTRAINT `Question_ID` FOREIGN KEY (`Question_ID`) REFERENCES `question` (`Question_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Beperkingen voor tabel `question_per_category`
+-- Constraints for table `question_per_category`
 --
 ALTER TABLE `question_per_category`
-  ADD CONSTRAINT `Category_ID` FOREIGN KEY (`Category_ID`) REFERENCES `category` (`Category_ID`),
+  ADD CONSTRAINT `Category_ID` FOREIGN KEY (`Category_ID`) REFERENCES `category` (`Category_ID`) ON DELETE CASCADE,
   ADD CONSTRAINT `Question_ID_Category` FOREIGN KEY (`Question_ID`) REFERENCES `question` (`Question_ID`) ON DELETE CASCADE;
 COMMIT;
 

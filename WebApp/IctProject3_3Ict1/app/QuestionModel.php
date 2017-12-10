@@ -22,4 +22,9 @@ class QuestionModel extends Model
     {
         return $this->hasMany('App\AnswerModel', 'Question_ID', 'Question_ID');
     }
+
+    public function categories()
+    {
+        return $this->belongsToMany('App\CategoryModel', 'question_per_category', 'Question_ID', 'Category_ID');
+    }
 }

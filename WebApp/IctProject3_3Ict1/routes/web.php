@@ -22,6 +22,8 @@ Route::group(['prefix' => '/vragen'], function() {
     Route::get('/delete/{Question_ID}',"VragenController@DeleteVraag")->middleware('auth');
     
     Route::post('/add', "VragenController@AddVraag")->middleware('auth');
+
+    Route::post('/categorieën', "VragenController@UpdateCategorieën")->middleware('auth');
     
 });
 

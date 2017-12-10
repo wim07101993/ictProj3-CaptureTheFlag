@@ -17,7 +17,7 @@
     </div>
     <div class="modal-footer">
         <a id="closeAdd" class="modal-action modal-close waves-effect waves-white red btn-flat" style="color:white;">Annuleer</a>
-        <a id="saveAdd" class="modal-action modal-close waves-effect waves-white green accent-3 btn-flat" style="color:white;">Opslaan</a>
+        <a id="saveAdd" class="modal-action modal-close waves-effect waves-white green btn-flat" style="color:white;">Opslaan</a>
     </div>
 </div>
 
@@ -29,7 +29,7 @@
         generateView+=csrf;
             generateView+="<h4>Antwoord</h4>"
             generateView+="<input id='answer' name='answer' value='' required />";
-            generateView+="<input type='checkbox' class='filled-in' id='correct' name='correct'/>"
+            generateView+="<input type='checkbox' id='correct' name='correct'/>"
             generateView+="<label for='correct'>Correct</label>"
         generateView+="<input name='question_id' value='"+question_id+"' style='display:none;'/>";
         $(".addanswerform").html(generateView)
@@ -41,7 +41,7 @@
         if(document.getElementById("answer").value != ''){
             $(".addanswerform").submit();
         } else {
-            document.getElementById("answer").className = "Invalid";
+            document.getElementById("answer").className = "invalid";
         }
     })
 });

@@ -17,7 +17,7 @@
     </div>
     <div class="modal-footer">
         <a id="close" class="modal-action modal-close waves-effect waves-white red btn-flat" style="color:white;">Annuleer</a>
-        <a id="save" class="modal-action modal-close waves-effect waves-white green accent-3 btn-flat" style="color:white;">Opslaan</a>
+        <a id="save" class="modal-action modal-close waves-effect waves-white green btn-flat" style="color:white;">Opslaan</a>
     </div>
 </div>
 
@@ -44,7 +44,7 @@ function addEditListeners(){
         if(document.getElementById("editName").value != ''){
             $(".editcategoryform").submit();
         } else {
-            document.getElementById("editName").className = "Invalid";
+            document.getElementById("editName").className = "invalid";
         }
     })
 }

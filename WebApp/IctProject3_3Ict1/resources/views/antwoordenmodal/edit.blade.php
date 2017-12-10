@@ -17,7 +17,7 @@
     </div>
     <div class="modal-footer">
         <a id="close" class="modal-action modal-close waves-effect waves-white red btn-flat" style="color:white;">Annuleer</a>
-        <a id="save" class="modal-action modal-close waves-effect waves-white green accent-3 btn-flat" style="color:white;">Opslaan</a>
+        <a id="save" class="modal-action modal-close waves-effect waves-white green btn-flat" style="color:white;">Opslaan</a>
     </div>
 </div>
 
@@ -39,7 +39,7 @@
                 if(antwoord["Correct"]==1){
                     checked="checked='checked'";
                 }
-            generateView+="<input type='checkbox' class='filled-in' id='editCorrect' name='correct' "+checked+" />"
+            generateView+="<input type='checkbox' id='editCorrect' name='correct' "+checked+" />"
             generateView+="<label for='editCorrect'>Correct</label>"
         $(".editanswerform").html(generateView)
     });
@@ -50,7 +50,7 @@
         if(document.getElementById("editAnswer").value != ''){
             $(".editanswerform").submit();
         } else {
-            document.getElementById("editAnswer").className = "Invalid";
+            document.getElementById("editAnswer").className = "invalid";
         }
     })
 });

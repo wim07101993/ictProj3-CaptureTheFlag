@@ -12,10 +12,11 @@
 <div class="modal modalDeleteCategory" style="position:fixed; top:30vh;  z-index: 100 !important;">
     <div class="modal-content">
         <h4>Bent u zeker?</h4>
+        <p>De vragen die aan deze categorie gekoppeld zijn worden niet verwijderd. <br />Als dit de enige categorie is waar een vraag toe behoort zal deze niet langer in een quiz voorkomen.</p>
     </div>
     <div class="modal-footer">
         <a id="closeDelete" class="modal-action modal-close waves-effect waves-white red btn-flat" style="color:white;">Nee</a>
-        <a id="saveDelete" class="modal-action modal-close waves-effect waves-white green accent-3 btn-flat" style="color:white;">Ja</a>
+        <a id="saveDelete" class="modal-action modal-close waves-effect waves-white green btn-flat" style="color:white;">Ja</a>
     </div>
 </div>
 
