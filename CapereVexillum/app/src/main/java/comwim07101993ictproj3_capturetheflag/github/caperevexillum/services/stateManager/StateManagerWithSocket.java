@@ -114,10 +114,10 @@ public class StateManagerWithSocket
     protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) throws Exception {
         ESocketEmitKey askKey = key.getSocketEmitAskKey();
         if (askKey != null && socketService.isConnected()) {
-            socketService.send(askKey, getInt(EStateManagerKey.LOBBY_ID));
+            socketService.send(askKey, baseGetState(EStateManagerKey.LOBBY_ID, ints));
         }
 
-        return super.getState(key, map);
+        return baseGetState(key, map);
     }
 
     @Deprecated

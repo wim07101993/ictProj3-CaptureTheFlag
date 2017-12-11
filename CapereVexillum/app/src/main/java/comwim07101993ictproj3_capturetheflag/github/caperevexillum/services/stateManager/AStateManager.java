@@ -41,12 +41,12 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
 
     private SharedPreferences sharedPreferences;
 
-    private Map<TKey, ISerializable> objects;
-    private Map<TKey, Integer> ints;
-    private Map<TKey, Long> longs;
-    private Map<TKey, Float> floats;
-    private Map<TKey, String> strings;
-    private Map<TKey, Boolean> booleans;
+    protected Map<TKey, ISerializable> objects;
+    protected Map<TKey, Integer> ints;
+    protected Map<TKey, Long> longs;
+    protected Map<TKey, Float> floats;
+    protected Map<TKey, String> strings;
+    protected Map<TKey, Boolean> booleans;
 
     private List<TKey> registeredKeys;
 
@@ -250,7 +250,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
         putInEditor(editor, objects, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
             public void putFunction(SharedPreferences.Editor editor, TKey key) {
-                ISerializable value = getSerializable(key);
+                ISerializable value = baseGetState(key, objects);
                 if (value != null) {
                     editor.putString(key.toString(), value.serialize());
                 } else {
@@ -264,7 +264,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
         putInEditor(editor, ints, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
             public void putFunction(SharedPreferences.Editor editor, TKey key) {
-                editor.putInt(key.toString(), getInt(key));
+                editor.putInt(key.toString(), baseGetState(key, ints));
             }
         });
     }
@@ -273,7 +273,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
         putInEditor(editor, longs, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
             public void putFunction(SharedPreferences.Editor editor, TKey key) {
-                editor.putLong(key.toString(), getLong(key));
+                editor.putLong(key.toString(), baseGetState(key, longs));
             }
         });
     }
@@ -282,7 +282,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
         putInEditor(editor, floats, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
             public void putFunction(SharedPreferences.Editor editor, TKey key) {
-                editor.putFloat(key.toString(), getFloat(key));
+                editor.putFloat(key.toString(), baseGetState(key, floats));
             }
         });
     }
@@ -291,7 +291,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
         putInEditor(editor, strings, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
             public void putFunction(SharedPreferences.Editor editor, TKey key) {
-                editor.putString(key.toString(), getString(key));
+                editor.putString(key.toString(), baseGetState(key, strings));
             }
         });
     }
@@ -300,7 +300,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
         putInEditor(editor, booleans, new AStateManager.ISharedPreferenceSaver<TKey>() {
             @Override
             public void putFunction(SharedPreferences.Editor editor, TKey key) {
-                editor.putBoolean(key.toString(), getBoolean(key));
+                editor.putBoolean(key.toString(), baseGetState(key, booleans));
             }
         });
     }
@@ -384,6 +384,10 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
 
     @Nullable
     protected <T> T getState(TKey key, Map<TKey, T> map) throws Exception {
+        return baseGetState(key, map);
+    }
+
+    protected final <T> T baseGetState(TKey key, Map<TKey, T> map) {
         if (MapHelpers.IsNullOrEmpty(map)) {
             return (T) key.getDefaultValue();
         }
