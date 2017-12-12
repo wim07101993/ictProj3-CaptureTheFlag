@@ -8,16 +8,20 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.util.EmptyStackException;
 import java.util.Observable;
 import java.util.Observer;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.LobbyActivity;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Player;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketEmitKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.ESocketOnKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketValueChangedArgs;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IGameController;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 /**
  * Created by wimva on 4/12/2017.
@@ -61,7 +65,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
                 if (socketArg.getKey() != ESocketOnKey.WAS_LOBBY_CREATED) {
                     return;
                 }
-
+                try{
                 socketService.deleteObserver(this);
                 LobbySettings lobbySettings = gson.fromJson((String) socketArg.getArgs(), LobbySettings.class);
 
@@ -71,13 +75,19 @@ public class GameController extends StateManagerWithSocket implements IGameContr
                     setBoolean(EStateManagerKey.IS_HOST, true);
 
                     showToast("navigating to lobby activity");
-                    context.startActivity(new Intent(context, LobbyActivity.class));
+                    ((AActivityWithStateManager)context).startActivity(LobbyActivity.class);
+                    //context.startActivity(new Intent(context, LobbyActivity.class));
+
                 } else if (lobbySettings.getHostName() == null) {
                     showToast("Playername already exists");
                 } else if (lobbySettings.getName() == null) {
                     showToast("Lobbyname already exists");
                 } else {
                     showToast("Could not create lobby");
+                }}
+                catch(Exception ex){
+                    Log.d(TAG, "error =>update: "+socketArg.getKey());
+                    throw new RuntimeException();
                 }
             }
         });
@@ -97,8 +107,18 @@ public class GameController extends StateManagerWithSocket implements IGameContr
 
     @Override
     public void joinTeam(String team) {
-        socketService.send(ESocketEmitKey.JOIN_TEAM, team);
 
+        int lobbyId=getInt(EStateManagerKey.LOBBY_ID);
+        Team newTeam=new Team(team,0);
+        String playername = getString(EStateManagerKey.PLAYER_NAME);
+        Player player = new Player(playername,newTeam);
+        player.setLobbyId(lobbyId);
+        Gson gson = new Gson();
+        String jsonPlayer =gson.toJson(player);
+
+        socketService.send(ESocketEmitKey.JOIN_TEAM, jsonPlayer);
+        //Player player = new Player()
+        /*
         socketService.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object arg) {
@@ -119,7 +139,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
                     showToast("Could not join team.");
                 }
             }
-        });
+        });*/
     }
 
     @Override

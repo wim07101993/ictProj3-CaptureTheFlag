@@ -294,7 +294,7 @@ public enum EStateManagerKey implements IStateManagerKey {
 
         @Override
         public Object getDefaultValue() {
-            return true;
+            return false;
         }
     },
 

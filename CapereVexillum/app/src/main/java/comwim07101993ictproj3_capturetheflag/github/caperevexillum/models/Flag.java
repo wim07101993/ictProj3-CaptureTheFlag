@@ -101,18 +101,30 @@ public class Flag implements ISerializable {
 
     @Override
     public String serialize() {
-        return new Gson().toJson(this);
+
+        try{
+        return new Gson().toJson(this);}
+        catch(Exception ex){
+            Log.d("Model=>Flag", "serialize: Flag");
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public void deserialize(String serializedObject) {
+        try{
         Flag This = new Gson().fromJson(serializedObject, Flag.class);
 
         this.beaconMAC = This.beaconMAC;
         this.cooldownTime = This.cooldownTime;
         this.timerFixer = This.timerFixer;
         this.team = This.team;
-        this.cooldownTimer = This.cooldownTimer;
+        this.cooldownTimer = This.cooldownTimer;}
+        catch(Exception ex){
+            Log.d("Model=>Flag", "deserialize: Flag");
+            throw new RuntimeException();
+
+        }
     }
 
 

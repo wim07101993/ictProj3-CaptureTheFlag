@@ -1,6 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
 import android.databinding.ObservableArrayList;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,15 +20,28 @@ public class Flags extends ObservableArrayList<Flag> implements ISerializable {
 
     @Override
     public String serialize() {
-        return new Gson().toJson(this);
+
+        try{
+            return new Gson().toJson(this);}
+        catch(Exception ex){
+            Log.d("Model=>Flags", "serialize: Flags");
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public void deserialize(String serializedObject) {
-        ObservableArrayList<Flag> flags = new Gson().fromJson(serializedObject, new TypeToken<ObservableArrayList<Flag>>() {
-        }.getType());
+        try {
+            ObservableArrayList<Flag> flags = new Gson().fromJson(serializedObject, new TypeToken<ObservableArrayList<Flag>>() {
+            }.getType());
 
-        this.addAll(flags);
+            this.addAll(flags);
+        }
+        catch(Exception ex){
+                Log.d("Models=>Flags", "deserialize: in Flags");
+                throw new RuntimeException();
+
+        }
     }
 
     /**

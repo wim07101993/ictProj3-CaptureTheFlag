@@ -154,7 +154,8 @@ export default{
     },
 
     joinTeam(lobbyID, team, playername, io,lobbies){
-      try {
+      try { 
+        console.log("joining team")
         
         let lobby = lobbies[lobbyID];
         console.log(playername);

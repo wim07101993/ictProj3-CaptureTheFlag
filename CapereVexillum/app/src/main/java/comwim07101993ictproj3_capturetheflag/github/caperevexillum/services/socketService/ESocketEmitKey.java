@@ -88,9 +88,14 @@ public enum ESocketEmitKey implements ISocketKey {
     },
 
     JOIN_TEAM {
+        private static final String IDENTIFIER = "joinTeam";
         @Override
         public String getStringIdentifier() {
-            return null;
+            return IDENTIFIER;
+        }
+        @Override
+        public Class getValueClass() {
+            return String.class;
         }
     },
 

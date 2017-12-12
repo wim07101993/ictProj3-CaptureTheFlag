@@ -1,5 +1,6 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,10 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
-
+    public void startActivity(Class activity){
+        startActivity(new Intent(this.getBaseContext(), activity));
+        finish();
+    }
     @Override
     protected void onCreate(@org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

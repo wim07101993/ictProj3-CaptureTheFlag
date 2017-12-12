@@ -1,5 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
@@ -42,17 +44,29 @@ public class LobbySettings implements ISerializable {
 
     @Override
     public String serialize() {
-        return new Gson().toJson(this);
+        try{
+            return new Gson().toJson(this);}
+        catch(Exception ex){
+            Log.d("Model=>LobbySettings", "serialize: LobbySettings");
+            throw new RuntimeException();
+        }
     }
 
     @Override
     public void deserialize(String serializedObject) {
+        try {
         LobbySettings This = new Gson().fromJson(serializedObject, LobbySettings.class);
         name = This.name;
         password = This.password;
         totalGameTime = This.totalGameTime;
         hostName = This.hostName;
         id = This.id;
+        }
+        catch(Exception ex){
+            Log.d("Model=>LobbySettings", "deserialize: LobbySettings");
+            throw new RuntimeException();
+
+        }
     }
 
     /* ------------------------- GETTERS ------------------------- */
