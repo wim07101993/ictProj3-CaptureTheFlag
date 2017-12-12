@@ -322,9 +322,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
 
     @Override
     public ISerializable getSerializable(TKey key) {
-        Log.d(TAG, "getting " + key.toString());
         try {
-
             return getState(key, objects);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage());
@@ -493,8 +491,7 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
     }
 
     protected <T> T updateState(TKey key, Map<TKey, T> map, T value) {
-        Log.d(TAG, "updating " + key);
-
+        checkIfTypesMatch(key, value);
         if (!registeredKeys.contains(key)) {
             registeredKeys.add(key);
         }

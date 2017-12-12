@@ -183,8 +183,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                     gameStarted((List<Player>) stateChangedArgs.getNewValue());
                     break;
                 case PLAYERS:
-                    Players players=new Players();
-                    players.deserialize((String)stateChangedArgs.getNewValue());
+                    Players players = (Players) stateChangedArgs.getNewValue();
                     gotPlayersResult(players);
                     break;
             }
