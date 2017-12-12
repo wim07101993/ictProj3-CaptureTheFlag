@@ -60,6 +60,7 @@ export default{
           if(resultPlayer != undefined){
             settings["id"]=resultLobby.id;
             settings["hostName"] = null;
+            settings["totalGameTime"]=resultLobby.time;
             resultLobby.addPlayer(playerName,socket);
             socket.emit("wasLobbyCreated", JSON.stringify(settings) );
           }else{

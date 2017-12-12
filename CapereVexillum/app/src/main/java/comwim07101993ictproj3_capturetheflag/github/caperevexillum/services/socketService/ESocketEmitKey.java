@@ -67,6 +67,10 @@ public enum ESocketEmitKey implements ISocketKey {
         public String getStringIdentifier() {
             return IDENTIFIER;
         }
+        @Override
+        public Class getValueClass() {
+            return String.class;
+        }
     },
 
     ASK_PLAYERS {

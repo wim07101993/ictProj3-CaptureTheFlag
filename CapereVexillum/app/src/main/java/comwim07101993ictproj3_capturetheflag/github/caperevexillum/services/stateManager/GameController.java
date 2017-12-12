@@ -66,25 +66,10 @@ public class GameController extends StateManagerWithSocket implements IGameContr
                     return;
                 }
                 try{
-                socketService.deleteObserver(this);
-                LobbySettings lobbySettings = gson.fromJson((String) socketArg.getArgs(), LobbySettings.class);
-
-                if (lobbySettings.getId() != -1) {
-                    setInt(EStateManagerKey.LOBBY_ID, lobbySettings.getId());
-                    setString(EStateManagerKey.PLAYER_NAME, lobbySettings.getHostName());
-                    setBoolean(EStateManagerKey.IS_HOST, true);
-
-                    showToast("navigating to lobby activity");
-                    context.startActivity(LobbyActivity.class);
-                    //context.startActivity(new Intent(context, LobbyActivity.class));
-
-                } else if (lobbySettings.getHostName() == null) {
-                    showToast("Playername already exists");
-                } else if (lobbySettings.getName() == null) {
-                    showToast("Lobbyname already exists");
-                } else {
-                    showToast("Could not create lobby");
-                }}
+                    socketService.deleteObserver(this);
+                    LobbySettings lobbySettings = gson.fromJson((String) socketArg.getArgs(), LobbySettings.class);
+                    GameController.this.checkLobbyJoin(lobbySettings,true);
+                }
                 catch(Exception ex){
                     Log.d(TAG, "error =>update: "+socketArg.getKey());
                     throw new RuntimeException();
@@ -93,6 +78,24 @@ public class GameController extends StateManagerWithSocket implements IGameContr
         });
 
         socketService.send(ESocketEmitKey.CREATE_LOBBY, gson.toJson(lobbySettings));
+    }
+    private void checkLobbyJoin( LobbySettings lobbySettings ,Boolean host){
+        if (lobbySettings.getId() != -1) {
+            setInt(EStateManagerKey.LOBBY_ID, lobbySettings.getId());
+            setString(EStateManagerKey.PLAYER_NAME, lobbySettings.getHostName());
+            setBoolean(EStateManagerKey.IS_HOST, true);
+
+            showToast("navigating to lobby activity");
+            context.startActivity(LobbyActivity.class);
+            //context.startActivity(new Intent(context, LobbyActivity.class));
+
+        } else if (lobbySettings.getHostName() == null) {
+            showToast("Playername already exists");
+        } else if (lobbySettings.getName() == null) {
+            showToast("Lobbyname already exists");
+        } else {
+            showToast("Could not create lobby");
+        }
     }
 
     @Override
@@ -120,6 +123,33 @@ public class GameController extends StateManagerWithSocket implements IGameContr
             socketService.send(ESocketEmitKey.LEAVE_LOBBY, getInt(EStateManagerKey.LOBBY_ID ));
         }
 
+    }
+
+    @Override
+    public void joinLobby(LobbySettings lobbySettings) {
+        socketService.addObserver(new Observer() {
+            @Override
+            public synchronized void update(Observable observable, Object arg) {
+                if (!(arg instanceof SocketValueChangedArgs)) {
+                    return;
+                }
+
+                SocketValueChangedArgs socketArg = (SocketValueChangedArgs) arg;
+                if (socketArg.getKey() != ESocketOnKey.WAS_LOBBY_CREATED) {
+                    return;
+                }
+                try{
+                    socketService.deleteObserver(this);
+                    LobbySettings lobbySettings = gson.fromJson((String) socketArg.getArgs(), LobbySettings.class);
+                    GameController.this.checkLobbyJoin(lobbySettings,false);
+                }
+                catch(Exception ex){
+                    Log.d(TAG, "error =>update: "+socketArg.getKey());
+                    throw new RuntimeException();
+                }
+            }
+        });
+        socketService.send(ESocketEmitKey.JOIN_LOBBY, gson.toJson(lobbySettings));
     }
 
     @Override

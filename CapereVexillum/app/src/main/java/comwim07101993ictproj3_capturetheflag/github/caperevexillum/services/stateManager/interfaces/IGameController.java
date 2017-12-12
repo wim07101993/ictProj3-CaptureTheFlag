@@ -15,7 +15,7 @@ public interface IGameController
     void createLobby(LobbySettings lobbySettings);
 
     void leaveLobby();
-
+    void joinLobby(LobbySettings lobbySettings);
     void joinTeam(String team);
 
     void leaveTeam();
