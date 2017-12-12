@@ -10,6 +10,7 @@ import com.github.nkzawa.emitter.Emitter;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 
 public class JoinLobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
@@ -20,7 +21,7 @@ public class JoinLobbyActivity extends AActivityWithStateManager implements View
     private EditText lobbyPasswordEditText;
     private EditText playerNameEditText;
 
-    private Intent goToLobby;
+
 
 
     @Override
@@ -38,49 +39,16 @@ public class JoinLobbyActivity extends AActivityWithStateManager implements View
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.join_lobby_button) {
-            gameController.getSocketService().getSocket().emit("joinLobby", lobbyNameEditText.getText(), lobbyPasswordEditText.getText(), playerNameEditText.getText().toString());
-            // Link listener for server answer
-            gameController.getSocketService().getSocket().on("getLobbyId", getLobbyId);
-            gameController.getSocketService().getSocket().on("playerNameUnavailable", playerNameUnavailable);
-            gameController.getSocketService().getSocket().on("lobbyNotFound", lobbyNotFound);
-
-            goToLobby = new Intent(this, LobbyActivity.class);
+            gameController.joinLobby(
+                    new LobbySettings(
+                            lobbyNameEditText.getText().toString(),
+                            lobbyPasswordEditText.getText().toString(),
+                            0.0f,
+                            playerNameEditText.getText().toString()
+                    )
+            );
         }
     }
-
-    Emitter.Listener getLobbyId = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            int lobbyID = (int) args[0];
-
-            Log.d("JOINLOBBY", String.valueOf(lobbyID));
-
-            // Navigate to lobby
-            goToLobby.putExtra("playerName", playerNameEditText.getText().toString());
-            goToLobby.putExtra("isHost", false);
-            goToLobby.putExtra("lobbyID", lobbyID);
-
-            gameController.setString(EStateManagerKey.PLAYER_NAME, playerNameEditText.getText().toString());
-            gameController.setBoolean(EStateManagerKey.IS_HOST, false);
-            gameController.setInt(EStateManagerKey.LOBBY_ID, lobbyID);
-
-            startActivity(goToLobby);
-        }
-    };
-
-    Emitter.Listener lobbyNotFound = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            showToast("Lobby not found");
-        }
-    };
-
-    Emitter.Listener playerNameUnavailable = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            showToast("Player name unavailable");
-        }
-    };
 
     @Override
     protected String getTAG() {
