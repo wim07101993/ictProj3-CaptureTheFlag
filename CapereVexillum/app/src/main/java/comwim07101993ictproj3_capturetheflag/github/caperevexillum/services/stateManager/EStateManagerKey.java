@@ -5,7 +5,6 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 import java.util.Set;
 
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
@@ -281,23 +280,6 @@ public enum EStateManagerKey implements IStateManagerKey {
         }
     },
 
-    USE_MOCK_SOCKET_SERVICE {
-        @Override
-        public Class getValueClass() {
-            return Boolean.class;
-        }
-
-        @Override
-        public boolean needsToBeStored() {
-            return false;
-        }
-
-        @Override
-        public Object getDefaultValue() {
-            return true;
-        }
-    },
-
     USE_MOCK_BEACON_SERVICE {
         @Override
         public Class getValueClass() {
@@ -314,8 +296,6 @@ public enum EStateManagerKey implements IStateManagerKey {
             return true;
         }
     };
-
-
 
 
     public static EStateManagerKey convertFromString(String stringKey) {

@@ -14,7 +14,6 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sock
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.SocketValueChangedArgs;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketKey;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.interfaces.ISocketService;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.socketService.mock.MockSocketFactory;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 /**
@@ -58,15 +57,9 @@ public class StateManagerWithSocket
 
     private void initSocket() {
         try {
-            if (getBoolean(EStateManagerKey.USE_MOCK_SOCKET_SERVICE)) {
-                socketService = MockSocketFactory.createNew(
-                        getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
-                        getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
-            } else {
-                socketService = SocketFactory.createNew(
-                        getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
-                        getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
-            }
+            socketService = SocketFactory.createNew(
+                    getString(EStateManagerKey.SOCKET_SERVER_ADDRESS),
+                    getInt(EStateManagerKey.SOCKET_PORT_NUMBER));
 
             socketService.addObserver(this);
         } catch (Exception e) {
