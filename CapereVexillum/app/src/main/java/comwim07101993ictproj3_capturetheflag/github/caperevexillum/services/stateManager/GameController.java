@@ -194,6 +194,11 @@ public class GameController extends StateManagerWithSocket implements IGameContr
     }
 
     @Override
+    public void askFlags() {
+        socketService.send(ESocketEmitKey.ASK_FLAGS,getInt(EStateManagerKey.LOBBY_ID));
+    }
+
+    @Override
     public synchronized void setContext(AActivityWithStateManager context) {
         this.context = context;
     }

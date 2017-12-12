@@ -105,10 +105,10 @@ public class StateManagerWithSocket
     @Nullable
     @Override
     protected <T> T getState(IStateManagerKey key, Map<IStateManagerKey, T> map) throws Exception {
-        ESocketEmitKey askKey = key.getSocketEmitAskKey();
-        if (askKey != null && socketService.isConnected()) {
-            socketService.send(askKey, baseGetState(EStateManagerKey.LOBBY_ID, ints));
-        }
+//        ESocketEmitKey askKey = key.getSocketEmitAskKey();
+//        if (askKey != null && socketService.isConnected()) {
+//            socketService.send(askKey, baseGetState(EStateManagerKey.LOBBY_ID, ints));
+//        }
 
         return baseGetState(key, map);
     }
