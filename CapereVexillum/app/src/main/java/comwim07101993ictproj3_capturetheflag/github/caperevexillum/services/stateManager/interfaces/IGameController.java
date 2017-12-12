@@ -22,6 +22,7 @@ public interface IGameController
 
     void startGame();
     void askPlayers();
+    void askFlags();
     void setContext(AActivityWithStateManager context);
 
     AActivityWithStateManager getContext();
