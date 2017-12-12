@@ -152,7 +152,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
     }
 
     @Override
-    public synchronized Activity getContext() {
+    public synchronized AActivityWithStateManager getContext() {
         return context;
     }
 
