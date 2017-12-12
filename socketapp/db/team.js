@@ -1,9 +1,9 @@
 export default class Team {
-    teamname = "";
+    teamName = "";
     score = "";
 
-    constructor(teamname, score){
-        this.teamname = teamname;
+    constructor(teamName, score){
+        this.teamName = teamName;
         this.score = score;
     }
 

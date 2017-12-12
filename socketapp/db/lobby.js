@@ -83,12 +83,12 @@ export default class Lobby {
             }
             
             parent.teams.filter((team)=>{
-                if(team.teamname=="orange"){
+                if(team.teamName=="orange"){
                     team.score+=scoreOrange;
                     scoreOrange=team.score;
                     console.log("orange:"+scoreOrange)
                 }
-                if(team.teamname=="green"){
+                if(team.teamName=="green"){
                     team.score+=scoreGreen;
                     scoreGreen=team.score;
                     console.log("green:"+scoreGreen)

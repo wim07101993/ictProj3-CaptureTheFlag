@@ -104,13 +104,13 @@ export default{
         let lobby = lobbies.filter((lobby)=>{return lobby.id == lobbyID});
         if (lobby[0] != undefined) {
           for (var player of lobby[0].players) {
-            if (player.team.teamname == "orange") {
+            if (player.team.teamName == "orange") {
               this.playersOrange.push(player);
             }
-            else if (player.team.teamname == "green") {
+            else if (player.team.teamName == "green") {
               this.playersGreen.push(player);
             }
-            else if (player.team.teamname == "no_team") {
+            else if (player.team.teamName == "no_team") {
               this.playersNoTeam.push(player);
             }
           }
@@ -164,7 +164,7 @@ export default{
         if(playerFilter[0] != undefined){
           let player = playerFilter[0];
   
-          let teamFilter = lobby.teams.filter((t) => {return t.teamname == team});
+          let teamFilter = lobby.teams.filter((t) => {return t.teamName == team});
   
           if(teamFilter[0] != undefined){
             let team = teamFilter[0];

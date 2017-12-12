@@ -2,6 +2,7 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sta
 
 import android.app.Activity;
 
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
 
 /**
@@ -21,7 +22,7 @@ public interface IGameController
 
     void startGame();
     void askPlayers();
-    void setContext(Activity context);
+    void setContext(AActivityWithStateManager context);
 
-    Activity getContext();
+    AActivityWithStateManager getContext();
 }

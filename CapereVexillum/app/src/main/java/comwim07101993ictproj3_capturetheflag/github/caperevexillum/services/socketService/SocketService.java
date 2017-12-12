@@ -64,12 +64,15 @@ class SocketService
     }
 
     private void registerListeners() {
+        Object values =  ESocketOnKey.values();
+
         for (final ESocketOnKey key : ESocketOnKey.values()) {
+            if(key.getStringIdentifier().equals(null))
+                return;
             socket.on(key.getStringIdentifier(), new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     Class c = key.getValueClass();
-                    Log.d(TAG, "server replied on: " + key);
                     if (args.getClass().isAssignableFrom(c)) {
                         SocketValueChangedArgs socketValueChangedArgs = new SocketValueChangedArgs(key, args);
                         notifyObservers(socketValueChangedArgs);

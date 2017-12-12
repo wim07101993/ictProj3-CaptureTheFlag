@@ -31,7 +31,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
 
     private final static String TAG = GameController.class.getSimpleName();
 
-    private Activity context;
+    private AActivityWithStateManager context;
     private static Gson gson = new Gson();
 
 
@@ -75,7 +75,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
                     setBoolean(EStateManagerKey.IS_HOST, true);
 
                     showToast("navigating to lobby activity");
-                    ((AActivityWithStateManager)context).startActivity(LobbyActivity.class);
+                    context.startActivity(LobbyActivity.class);
                     //context.startActivity(new Intent(context, LobbyActivity.class));
 
                 } else if (lobbySettings.getHostName() == null) {
@@ -118,28 +118,15 @@ public class GameController extends StateManagerWithSocket implements IGameContr
 
         socketService.send(ESocketEmitKey.JOIN_TEAM, jsonPlayer);
         //Player player = new Player()
-        /*
+
         socketService.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object arg) {
-                if (!(arg instanceof SocketValueChangedArgs)) {
-                    return;
-                }
 
-                SocketValueChangedArgs socketArg = (SocketValueChangedArgs)arg;
-                if (socketArg.getKey() != ESocketOnKey.JOINED_LOBBY){
-                    return;
-                }
+                notifyObservers(arg);
 
-                socketService.deleteObserver(this);
-                String team = (String)socketArg.getArgs();
-                if (team == null || team.equals("")){
-                    setString(EStateManagerKey.MY_TEAM, team);
-                }else {
-                    showToast("Could not join team.");
-                }
             }
-        });*/
+        });
     }
 
     @Override
@@ -149,6 +136,8 @@ public class GameController extends StateManagerWithSocket implements IGameContr
 
     @Override
     public void startGame() {
+        socketService.send(ESocketEmitKey.START_GAME,getInt(EStateManagerKey.LOBBY_ID));
+
 
     }
 
@@ -158,7 +147,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
     }
 
     @Override
-    public synchronized void setContext(Activity context) {
+    public synchronized void setContext(AActivityWithStateManager context) {
         this.context = context;
     }
 

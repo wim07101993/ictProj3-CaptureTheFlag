@@ -8,7 +8,17 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.sock
 
 // TODO WIM change base get value class to return String.class
 public enum ESocketEmitKey implements ISocketKey {
+    START_GAME {
+        private static final String IDENTIFIER = "startLobby";
 
+        @Override
+        public String getStringIdentifier() {
+            return IDENTIFIER;
+        }
+        public Class getValueClass() {
+            return Integer.class;
+        }
+    },
     ASK_FLAGS {
         private static final String IDENTIFIER = "askFlags";
 
@@ -18,6 +28,7 @@ public enum ESocketEmitKey implements ISocketKey {
         }
     },
 
+
     ASK_TEAMS {
         private static final String IDENTIFIER = "askTeams";
 
@@ -26,7 +37,6 @@ public enum ESocketEmitKey implements ISocketKey {
             return IDENTIFIER;
         }
     },
-
     ASK_TIME {
         private static final String IDENTIFIER = "askTime";
 
@@ -100,18 +110,23 @@ public enum ESocketEmitKey implements ISocketKey {
     },
 
     HOST_LEFT {
+        private static final String IDENTIFIER = "hostLeft";
         @Override
         public String getStringIdentifier() {
-            return null;
+            return IDENTIFIER;
         }
     },
 
     LEAVE_LOBBY {
+        private static final String IDENTIFIER = "leaveLobby";
         @Override
         public String getStringIdentifier() {
-            return null;
+            return IDENTIFIER;
         }
     };
+
+
+
 
     @Override
     public EMode getMode() {

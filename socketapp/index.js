@@ -23,12 +23,12 @@ export default class{
         console.log("connection to the server");
         socket.on("createLobby",(playerName, lobbyName, password, time)=> lobbyClass.createLobby(this.server, socket, playerName, lobbyName, password, time,this.lobbies));
         socket.on("createLobbyNew",(settings)=>lobbyClass.createLobby(parent.server,socket,settings,this.lobbies));
-        
-        socket.on("sta", (lobbyName, lobbyPassword, playerName) => lobbyClass.joinLobby(this.server, socket, lobbyName, lobbyPassword, playerName,this.lobbies));
         socket.on("leaveLobby", (lobbyId, playerName) => lobbyClass.leaveLobby(lobbyId, playerName, this.server,this.lobbies));
         socket.on("hostLeft", (lobbyID) => lobbyClass.hostLeft(this.server, lobbyID,this.lobbies));
-        //socket.on("joinTeam", (lobbyID, team, playername) => lobbyClass.joinTeam(lobbyID, team, playername, this.server,this.lobbies));
-        socket.on("joinTeam",(value)=>{console.log(value)});
+        socket.on("joinTeam",(value)=>{
+            let player = JSON.parse(value);
+            lobbyClass.joinTeam(player["lobbyId"], player["team"]["teamName"],player["name"], this.server,this.lobbies)
+        });
         socket.on("startLobby", (lobbyId) => {
           lobbyClass.distributePlayers(lobbyId, parent.server,parent.lobbies);
           lobbyClass.startTime(lobbyId, parent.server, socket,parent.lobbies);
@@ -39,10 +39,6 @@ export default class{
     }
     //void
     AddLobbyListeners(socket){
-        //socket.on("timeSetup",(lobbyID, duration) => {lobbyClass.setupTime(lobbyId, duration)});
-        //socket.on("syncTime",(timeLeft) => timeClass.syncTime(lobby,socket,timeLeft))
-        //socket.on("askTime",() => timeClass.askTime(lobby,socket));
-    
         // flags
         socket.on("askFlags",()=> flagsClass.askFlags(socket));
         socket.on("addFlag",(flag)=> flagsClass.addFlag(lobby, socket, flag));
