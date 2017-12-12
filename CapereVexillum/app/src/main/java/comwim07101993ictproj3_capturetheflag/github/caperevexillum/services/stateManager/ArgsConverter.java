@@ -38,14 +38,13 @@ final class ArgsConverter {
 
             return flags;
 
-        } else if (stateManagerKey == EStateManagerKey.GAME_STARTED) {
-            return true;
-        } else if (stateManagerKey == EStateManagerKey.IS_HOST) {
-            return true;
-        } else if (stateManagerKey == EStateManagerKey.PLAYERS) {
+        } else if (stateManagerKey == EStateManagerKey.GAME_STARTED ||
+                stateManagerKey == EStateManagerKey.PLAYERS) {
             Players players = new Players();
             players.deserialize(args.toString());
             return players;
+        } else if (stateManagerKey == EStateManagerKey.IS_HOST) {
+            return true;
         }
 
         return args;

@@ -171,8 +171,7 @@ public enum EStateManagerKey implements IStateManagerKey {
     GAME_STARTED {
         @Override
         public Class getValueClass() {
-            return new TypeToken<List<Player>>() {
-            }.getClass();
+            return Players.class;
         }
 
         @Override
