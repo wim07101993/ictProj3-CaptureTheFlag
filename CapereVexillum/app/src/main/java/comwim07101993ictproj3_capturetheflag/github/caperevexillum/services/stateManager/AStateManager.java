@@ -79,7 +79,8 @@ public abstract class AStateManager<TKey extends IStateManagerKey>
 
     private void checkIfTypesMatch(IStateManagerKey key, Object value) {
         if (value != null && !value.getClass().isAssignableFrom(key.getValueClass())) {
-            String error = "Value " + value + " not of right type for key " + key + ".";
+            String error = "Value " + value + " not of right type for key " + key + ". (" +
+                    value.getClass().getSimpleName() +" != " + key.getValueClass();
             throw new IllegalArgumentException(error);
         } else if (value == null && PrimitiveDefaults.getDefaultValue(key.getValueClass()) != null) {
             String error = "Type for key " + key + " cant not be null.";
