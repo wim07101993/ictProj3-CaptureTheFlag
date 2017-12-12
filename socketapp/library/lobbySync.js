@@ -197,7 +197,7 @@ export default{
         let lobby = lobbies.filter((lobby)=>{return lobby.id == lobbyID});
         if (lobby != undefined) {
           console.log(io);
-          timeClass.timeStart(lobby[0], socket, lobby[0].time);
+          timeClass.timeStart(lobby[0], socket, lobby[0].time,lobby.timeInterval);
 
           lobby[0].startScore();
           lobby[0].emit("startGame",JSON.stringify( lobby[0].players));
@@ -213,12 +213,14 @@ export default{
         let lobby = lobbies.filter((lobby)=>{return lobby.id == lobbyID});
         if (lobby != undefined) {
           lobby=lobby[0];
+
+          console.log("leave lobby");
           lobby.emit("leaveLobby","");
-          lobby.name="";
+          lobby.deleteLobby();
         }
         
       } catch (error) {
-        
+        console.log("error in hostleft");
       }
       
     },

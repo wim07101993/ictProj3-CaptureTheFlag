@@ -2,6 +2,9 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -186,7 +189,19 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                     Players players = (Players) stateChangedArgs.getNewValue();
                     gotPlayersResult(players);
                     break;
+                case LEAVE_LOBBY:
+                    finishActivity();
+                    break;
             }
         }
     };
+    public void finishActivity(){
+        Handler myHandler = new Handler(Looper.getMainLooper());
+
+        myHandler.post( new Runnable() {
+            public void run() {
+                 finish();
+            }
+        } );
+    }
 }

@@ -278,6 +278,8 @@ public enum EStateManagerKey implements IStateManagerKey {
         public Class getValueClass() {
             return Boolean.class;
         }
+
+
     },
 
     USE_MOCK_BEACON_SERVICE {

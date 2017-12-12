@@ -98,11 +98,28 @@ public class GameController extends StateManagerWithSocket implements IGameContr
     @Override
     public void leaveLobby() {
         showToast("Host left, leaving lobby...");
+        socketService.addObserver(new Observer() {
+            @Override
+            public synchronized void update(Observable observable, Object arg) {
+                if (!(arg instanceof SocketValueChangedArgs)) {
+                    return;
+                }
+                if(((SocketValueChangedArgs) arg).getKey().equals(ESocketOnKey.LEAVE_LOBBY)) {
+                    socketService.deleteObserver(this);
+                    StateChangedArgs stateChangedArgs= new StateChangedArgs(
+                            null,
+                            ((SocketValueChangedArgs) arg).getArgs(),
+                            EStateManagerKey.LEAVE_LOBBY
+                    );
+                    notifyObservers(stateChangedArgs);
+                }
+            }});
         if (getBoolean(EStateManagerKey.IS_HOST)){
-            socketService.send(ESocketEmitKey.HOST_LEFT, true);
+            socketService.send(ESocketEmitKey.HOST_LEFT,getInt(EStateManagerKey.LOBBY_ID ));
         } else {
-            socketService.send(ESocketEmitKey.LEAVE_LOBBY, true);
+            socketService.send(ESocketEmitKey.LEAVE_LOBBY, getInt(EStateManagerKey.LOBBY_ID ));
         }
+
     }
 
     @Override

@@ -115,6 +115,10 @@ public enum ESocketEmitKey implements ISocketKey {
         public String getStringIdentifier() {
             return IDENTIFIER;
         }
+        @Override
+        public Class getValueClass() {
+            return Integer.class;
+        }
     },
 
     LEAVE_LOBBY {
@@ -122,6 +126,10 @@ public enum ESocketEmitKey implements ISocketKey {
         @Override
         public String getStringIdentifier() {
             return IDENTIFIER;
+        }
+        @Override
+        public Class getValueClass() {
+            return Integer.class;
         }
     };
 

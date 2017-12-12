@@ -1,12 +1,12 @@
 export default {
     time:0,
-    timeStart(io,socket,time){
+    timeStart(io,socket,time,timeInterval){
 
         this.time = time;
         
         //io.emit("timeStart",time+"");
         let parent = this;
-        setInterval(function(){parent.calculateTime(parent,io,socket)},1000)
+        timeInterval= setInterval(function(){parent.calculateTime(parent,io,socket)},1000)
 
     },
     clientStart:function(socket){

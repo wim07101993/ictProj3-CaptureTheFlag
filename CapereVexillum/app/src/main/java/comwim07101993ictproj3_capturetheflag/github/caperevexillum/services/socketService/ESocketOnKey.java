@@ -120,9 +120,16 @@ public enum ESocketOnKey implements ISocketKey {
         public String getStringIdentifier() {
             return IDENTIFIER;
         }
+    },
+
+    LEAVE_LOBBY {
+        private static final String IDENTIFIER = "leaveLobby";
+
+        @Override
+        public String getStringIdentifier() {
+            return IDENTIFIER;
+        }
     };
-
-
 
     @Override
     public EMode getMode() {

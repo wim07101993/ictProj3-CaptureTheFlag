@@ -64,8 +64,6 @@ class SocketService
     }
 
     private void registerListeners() {
-        Object values =  ESocketOnKey.values();
-
         for (final ESocketOnKey key : ESocketOnKey.values()) {
             if(key.getStringIdentifier().equals(null))
                 return;
@@ -73,7 +71,11 @@ class SocketService
                 @Override
                 public void call(Object... args) {
                     Class c = key.getValueClass();
-                    if (args.getClass().isAssignableFrom(c)) {
+                    if (c==null){
+                        SocketValueChangedArgs socketValueChangedArgs = new SocketValueChangedArgs(key, args);
+                        notifyObservers(socketValueChangedArgs);
+                    }
+                    else if (args.getClass().isAssignableFrom(c)) {
                         SocketValueChangedArgs socketValueChangedArgs = new SocketValueChangedArgs(key, args);
                         notifyObservers(socketValueChangedArgs);
                     } else if (!ArrayHelpers.IsNullOrEmpty(args) && args[0].getClass().isAssignableFrom(c)) {
@@ -100,7 +102,7 @@ class SocketService
         String identifier = key.getStringIdentifier();
 
         Log.d(TAG, "sending to server: " + key + " : " + value);
-        if (c == null) {
+        if (c== null) {
             socket.emit(identifier);
         } else if (value.getClass().isAssignableFrom(c)) {
             socket.emit(identifier, value);

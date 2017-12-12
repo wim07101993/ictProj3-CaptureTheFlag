@@ -10,6 +10,8 @@ export default class Lobby {
     teams = [];
     playersockets=[];
     flags=[];
+    timeInterval;
+    scoreInterval;
     constructor(id, name, password, time, players){
         this.id = id;
         this.name = name;
@@ -18,6 +20,16 @@ export default class Lobby {
         this.players = players;
         this.addStaticTeams();
         
+    }
+    deleteLobby(){
+        console.log("deleting lobby");
+        this.players=null;
+        this.teams=null;
+        clearInterval(this.scoreInterval);
+        clearInterval(this.timeInterval);
+        this.flags=null;
+        
+
     }
     captureFlags(flag){
         try {
