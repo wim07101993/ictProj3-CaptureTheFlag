@@ -1,4 +1,5 @@
 import Team from '../db/team';
+import timeClass from '../library/timeSync';
 
 
 export default class Lobby {
@@ -11,7 +12,9 @@ export default class Lobby {
     playersockets=[];
     flags=[];
     timeInterval;
+    timer;
     scoreInterval;
+ 
     constructor(id, name, password, time, players){
         this.id = id;
         this.name = name;
@@ -28,7 +31,7 @@ export default class Lobby {
         clearInterval(this.scoreInterval);
         clearInterval(this.timeInterval);
         this.flags=null;
-        
+        timer=null;
 
     }
     captureFlags(flag){

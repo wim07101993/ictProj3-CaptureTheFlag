@@ -132,7 +132,7 @@ export default{
                 }
             }
           }
-          this.getPlayers(lobbyID, io);
+          this.getPlayers(lobbyID, io,lobbies);
         }
       } catch (error) {
         
@@ -197,8 +197,9 @@ export default{
       try {
         let lobby = lobbies.filter((lobby)=>{return lobby.id == lobbyID});
         if (lobby != undefined) {
-          console.log(io);
-          timeClass.timeStart(lobby[0], socket, lobby[0].time,lobby.timeInterval);
+          
+          lobby[0].timer=new timeClass();
+          lobby[0].timer.timeStart(lobby[0], socket, lobby[0].time,lobby.timeInterval);
 
           lobby[0].startScore();
           lobby[0].emit("startGame",JSON.stringify( lobby[0].players));
