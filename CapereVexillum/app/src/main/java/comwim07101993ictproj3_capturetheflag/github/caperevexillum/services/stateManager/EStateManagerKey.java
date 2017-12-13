@@ -33,6 +33,13 @@ public enum EStateManagerKey implements IStateManagerKey {
             return String.class;
         }
     },
+    END_SCREEN{
+
+        public Class getValueClass() {
+            return String.class;
+        }
+
+    },
     SYNC_FLAGS {
         @Override
         public Class getValueClass() {

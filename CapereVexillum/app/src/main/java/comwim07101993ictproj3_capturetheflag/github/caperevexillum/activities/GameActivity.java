@@ -279,6 +279,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     @Override
     public void onBeaconFound(IBeacon beacon) {
+
         if (currentBeacon != null) {
             if (currentBeacon.equals(beacon)) {
                 return;

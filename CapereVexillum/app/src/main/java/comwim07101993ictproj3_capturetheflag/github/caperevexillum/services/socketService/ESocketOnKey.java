@@ -124,6 +124,18 @@ public enum ESocketOnKey implements ISocketKey {
         }
 
     },
+    END_SCREEN{
+        private static final String IDENTIFIER = "endScreen";
+
+        @Override
+        public String getStringIdentifier() {
+            return IDENTIFIER;
+        }
+        public Class getValueClass() {
+            return String.class;
+        }
+
+    },
     GET_LOBBY_ID {
         private static final String IDENTIFIER = "getLobbyId";
 

@@ -36,5 +36,8 @@ export default class {
 
          parent.syncTime(io,socket,parent);
         }
+        if(seconds<0.01){
+            io.emit("endScreen","");
+        }
     }
 }
