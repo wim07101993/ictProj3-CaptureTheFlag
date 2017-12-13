@@ -199,6 +199,31 @@ public class GameController extends StateManagerWithSocket implements IGameContr
     }
 
     @Override
+    public void startGameListeners() {
+        this.syncFlags();
+    }
+
+    public void syncFlags() {
+        socketService.addObserver(new Observer() {
+            @Override
+            public synchronized void update(Observable observable, Object arg) {
+                if (!(arg instanceof SocketValueChangedArgs)) {
+                    return;
+                }
+                if(((SocketValueChangedArgs) arg).getKey().equals(ESocketOnKey.SYNC_SCORE)) {
+
+                    StateChangedArgs stateChangedArgs= new StateChangedArgs(
+                            null,
+                            ((SocketValueChangedArgs) arg).getArgs(),
+                            EStateManagerKey.SYNC_SCORE
+                    );
+                    notifyObservers(stateChangedArgs);
+                }
+            }});
+    }
+
+
+    @Override
     public synchronized void setContext(AActivityWithStateManager context) {
         this.context = context;
     }

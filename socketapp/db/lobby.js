@@ -93,7 +93,7 @@ export default class Lobby {
                     }
                 }
             }
-            
+            scoreOrange+=5;
             parent.teams.filter((team)=>{
                 if(team.teamName=="orange"){
                     team.score+=scoreOrange;

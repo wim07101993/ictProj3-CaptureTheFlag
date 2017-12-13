@@ -112,7 +112,18 @@ public enum ESocketOnKey implements ISocketKey {
             return IDENTIFIER;
         }
     },
+    SYNC_SCORE{
+        private static final String IDENTIFIER = "syncTeamScore";
 
+        @Override
+        public String getStringIdentifier() {
+            return IDENTIFIER;
+        }
+        public Class getValueClass() {
+            return String.class;
+        }
+
+    },
     GET_LOBBY_ID {
         private static final String IDENTIFIER = "getLobbyId";
 

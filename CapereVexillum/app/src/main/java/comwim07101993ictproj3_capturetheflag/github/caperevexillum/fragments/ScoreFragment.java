@@ -72,6 +72,26 @@ public class ScoreFragment extends Fragment {
         stateManager.getSocketService().getSocket().on("syncTeamScore",syncScoreListenner);
         return view;
     }
+    public void synScore(Team[] teams){
+        String red="1";
+        String green="1";
+        for(Team team : teams){
+            if(team.getTeamName().equals("orange")){
+                red = team.getScore()+"";
+                if(red.equals("0"))
+                    red ="1";
+            }
+            if(team.getTeamName().equals("green")){
+                green = team.getScore()+"";
+                if(green.equals("0"))
+                    green="1";
+            }
+        }
+
+        scoreRed = Double.parseDouble(red);
+        scoreGreen = Double.parseDouble(green);
+        setScoreHandler.obtainMessage(1).sendToTarget();
+    }
     Emitter.Listener syncScoreListenner = new Emitter.Listener() {
         @Override
         public void call(Object... args) {

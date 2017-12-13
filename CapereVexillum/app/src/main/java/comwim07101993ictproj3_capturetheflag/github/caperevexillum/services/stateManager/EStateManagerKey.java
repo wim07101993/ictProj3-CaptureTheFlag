@@ -27,7 +27,18 @@ public enum EStateManagerKey implements IStateManagerKey {
             return Set.class;
         }
     },
-
+    SYNC_SCORE {
+        @Override
+        public Class getValueClass() {
+            return String.class;
+        }
+    },
+    SYNC_FLAGS {
+        @Override
+        public Class getValueClass() {
+            return String.class;
+        }
+    },
     USER_ID {
         @Override
         public Class getValueClass() {

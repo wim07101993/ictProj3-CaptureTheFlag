@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.nkzawa.emitter.Emitter;
+import com.google.gson.Gson;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -229,7 +230,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             initGameTimer();
             //initSocket();
             gameController.addObserver(this);
-
+            gameController.startGameListeners();
         } catch (Exception ex) {
             Log.e("gameActivity", ex.getMessage());
         }
@@ -336,12 +337,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     /* ------------------------- SOCKET ------------------------- */
 
-    Emitter.Listener becomeHost = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
 
-        }
-    };
     Emitter.Listener startTimer = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
@@ -382,6 +378,16 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         if (!(args instanceof StateChangedArgs)) {
             return;
         }
+        StateChangedArgs stateChangedArgs = (StateChangedArgs) args;
+        switch ((EStateManagerKey) stateChangedArgs.getKey()) {
+            case SYNC_SCORE:
+                Gson gson = new Gson();
+                Team[] teams = gson.fromJson((String)((StateChangedArgs) args).getNewValue(), Team[].class) ;
+                scoreFragment.synScore(teams);
+                break;
+
+        }
+
 
         IStateManagerKey key = ((StateChangedArgs) args).getKey();
 
