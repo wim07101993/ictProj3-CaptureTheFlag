@@ -114,17 +114,37 @@ class VragenController extends Controller
 
     function GetRandomVragen($Category_ID, $aantal) {
         $alleVragen = CategoryModel::find($Category_ID)->questions;
-        if(count($alleVragen) >= $aantal){
-            $vragen = [];
-            while(count($vragen) < $aantal){
-                $vragen[count($vragen)] = rand(1, count($alleVragen));
-                $vragen = array_unique($vragen);
+
+        for($index = 0; $index < count($alleVragen); $index ++){
+            $alleVragen[$index]["Answers"] = QuestionModel::find($alleVragen[$index]["Question_ID"])->answers;
+        }
+
+        $alleVragenMetAntwoorden = [];
+
+        for($index = 0; $index < count($alleVragen); $index ++){
+            if( sizeof($alleVragen[$index]["Answers"]) != 0){
+                array_push($alleVragenMetAntwoorden, $alleVragen[$index]);
             }
-            for($index = 0; $index < count($vragen); $index ++){
-                $vragen[$index] = QuestionModel::find($vragen[$index]);
-                $vragen[$index]["Answers"] = QuestionModel::find($vragen[$index]["Question_ID"])->answers;
+        }
+
+        $alleVragenMetJuisteAntwoorden = [];
+
+        for($index = 0; $index < count($alleVragenMetAntwoorden); $index ++){
+            for($index2 = 0; $index2 < count($alleVragenMetAntwoorden[$index]["Answers"]); $index2 ++){
+                if($alleVragenMetAntwoorden[$index]["Answers"][$index2]["Correct"] == 1){
+                    array_push($alleVragenMetJuisteAntwoorden, $alleVragenMetAntwoorden[$index]);
+                }
             }
-            return $vragen;
+        }
+
+        $geselecteerdeVragen = [];
+
+        if(count($alleVragenMetJuisteAntwoorden) >= $aantal){
+            shuffle($alleVragenMetJuisteAntwoorden);
+            for($index = 0; $index < $aantal; $index ++){
+                array_push($geselecteerdeVragen, $alleVragenMetJuisteAntwoorden[$index]);
+            }
+            return $geselecteerdeVragen;
         } else {
             return "error";
         }    
