@@ -85,6 +85,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG, error + "");
+            capturedFlag();
         }
     };
 
@@ -116,7 +117,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         linearLayout = view.findViewById(R.id.buttonsLayout);
         ;
         question = (TextView) view.findViewById(R.id.questionTextView);
-        dataService.getRandomQuestions(listener, errorListener, nQuestions, CATEGORY);
+        //dataService.getRandomQuestions(listener, errorListener, nQuestions, CATEGORY);
     }
 
     //buttons dynamish aanmaken aan de hand van aantal antwoorden
@@ -161,33 +162,33 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         }
         return true;
     }
-    /* originele quizfragment2 enquiz en capturedflag
-    //zet variabele terug normaal en toont een melding dat het antwoord fout was
-    //het toont een nieuwe question en zet de antwoorden erbij
-    public  void endQuiz(){
-        count = 0;
-        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
-        Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(Team.NO_TEAM);
-        ((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
-        gameActivity.showQuiz(false);
-    }
-
-    //geeft een melding dat de vragen juist waren en de vlag overgenomen is
-    //zet de variabele terug tegoei
-    public void capturedFlag(){
-        Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
-        Flag flag = new Flag(currentBeacon);
-        flag.CaptureAndCooldown(gameActivity.MY_TEAM);
-        ((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
-
-        count=0;
-        gameActivity.showQuiz(false);
-
-    }
-    */
-    //zet variabele terug normaal en toont een melding dat het antwoord fout was
-    //het toont een nieuwe question en zet de antwoorden erbij
+//    /* originele quizfragment2 enquiz en capturedflag
+//    //zet variabele terug normaal en toont een melding dat het antwoord fout was
+//    //het toont een nieuwe question en zet de antwoorden erbij
+//    public  void endQuiz(){
+//        count = 0;
+//        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
+//        Flag flag = new Flag(currentBeacon);
+//        flag.CaptureAndCooldown(Team.NO_TEAM);
+//        ((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
+//        gameActivity.showQuiz(false);
+//    }
+//
+//    //geeft een melding dat de vragen juist waren en de vlag overgenomen is
+//    //zet de variabele terug tegoei
+//    public void capturedFlag(){
+//        Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
+//        Flag flag = new Flag(currentBeacon);
+//        flag.CaptureAndCooldown(gameActivity.MY_TEAM);
+//        ((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
+//
+//        count=0;
+//        gameActivity.showQuiz(false);
+//
+//    }
+//    */
+//    //zet variabele terug normaal en toont een melding dat het antwoord fout was
+//    //het toont een nieuwe question en zet de antwoorden erbij
 
     public void endQuiz() {
         count = 0;
@@ -234,8 +235,6 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     //kijkt of het antwoord juist is
     @Override
     public void onClick(View view) {
-
         checkAnswerQuestion((Button) view);
-
     }
 }
