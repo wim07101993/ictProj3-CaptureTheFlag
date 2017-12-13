@@ -194,11 +194,9 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         count = 0;
         Toast.makeText(gameActivity.getApplicationContext(), "You failed to capture the flag", Toast.LENGTH_SHORT).show();
 
-
-        //flag.team=
         currentFlag.CaptureAndCooldown(currentFlag.getTeam());
-        ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).add(currentFlag);
-        //((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
+        stateManager.setSerializable(EStateManagerKey.CAPTURED_FLAG, currentFlag);
+
         gameActivity.showQuiz(false);
     }
 
@@ -206,15 +204,13 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
     //zet de variabele terug tegoei
     public void capturedFlag() {
         Toast.makeText(gameActivity.getApplicationContext(), "You captured the flag", Toast.LENGTH_SHORT).show();
-        //Flag flag = new Flag(currentBeacon);
         currentFlag.team = myTeam;
-        //flag.team=
+
         currentFlag.CaptureAndCooldown(gameActivity.MY_TEAM);
-        ((Flags) stateManager.getSerializable(EStateManagerKey.FLAGS)).add(currentFlag);
+        stateManager.setSerializable(EStateManagerKey.CAPTURED_FLAG, currentFlag);
 
         count = 0;
         gameActivity.showQuiz(false);
-
     }
 
 

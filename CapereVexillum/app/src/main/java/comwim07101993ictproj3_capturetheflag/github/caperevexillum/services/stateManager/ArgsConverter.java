@@ -32,9 +32,7 @@ final class ArgsConverter {
             }
 
             Flags flags = new Flags();
-            for (Object a : argsArray) {
-                flags.add((Flag) a);
-            }
+            flags.deserialize((String)argsArray[0]);
 
             return flags;
 
