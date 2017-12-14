@@ -1,7 +1,0 @@
-{
-   
-            "tijd":"",
-            "eindtijd":"",
-            "start":""
-    
-    }
