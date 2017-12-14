@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    
     <body class="grey lighten-3">
         <table style="width:100%">
             <tbody>
@@ -10,7 +11,7 @@
                     <tbody>
                     <tr>
                     <td style="left:2vw; position:absolute">
-                        <a class="btn-large waves-effect waves-light white" style="color:black;" href="/vragen"><i class="material-icons left">arrow_back</i>Back</a>
+                        <a id="backButton" class="btn-large waves-effect waves-light white" style="color:black;" href="/vragen"><i class="material-icons left">arrow_back</i>Back</a>
                         
                     </td>
 
@@ -74,11 +75,23 @@
          var csrf='<?php echo csrf_field()?>';
          console.log(antwoorden);
          console.log(question_id);
+         var juistAntwoord = false;
+            antwoorden.filter((antwoord)=>{
+                if(antwoord["Correct"] == 1){
+                    juistAntwoord = true;
+                }
+            });
+
+            if(!juistAntwoord){
+                Materialize.toast('Er moet minstens 1 juist antwoord zijn!');
+            }
          </script>
         <?php
             include (__DIR__."/../../../resources/views/antwoordenmodal/delete.blade.php");
             include (__DIR__."/../../../resources/views/antwoordenmodal/edit.blade.php");
             include (__DIR__."/../../../resources/views/antwoordenmodal/add.blade.php");
         ?>
+
+        
     </body>
 @endsection

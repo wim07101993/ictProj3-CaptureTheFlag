@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 14, 2017 at 11:35 AM
+-- Generation Time: Dec 14, 2017 at 12:24 PM
 -- Server version: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -50,7 +50,6 @@ INSERT INTO `answer` (`Answer_ID`, `Answer`, `Question_ID`, `Correct`) VALUES
 (26, 'Vierkantswortel 81', 15, 1),
 (27, 'Brussel', 16, 0),
 (28, 'Johannesburg', 16, 0),
-(29, 'Budapest', 16, 1),
 (30, 'Praag', 16, 0),
 (31, 'Heusden-Zolder', 16, 0),
 (32, 'Japan', 17, 0),
@@ -238,7 +237,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `Answer_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `Answer_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `category`
