@@ -1,7 +1,5 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.beaconScanner;
 
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.OnStateChangedListener;
-
 /**
  * Created by wimva on 11/11/2017.
  */

@@ -1,4 +1,0 @@
-#Sun Oct 08 16:19:26 CEST 2017
-base.0=D\:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_2
-renamed.0=classes.dex
-file.0=D\:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\5\\slice_2\\classes.dex

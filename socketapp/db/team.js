@@ -1,16 +1,10 @@
 export default class Team {
-    teamname = "";
+    teamName = "";
     score = "";
-    players = [];
 
-    constructor(teamname, score, players){
-        this.teamname = teamname;
+    constructor(teamName, score){
+        this.teamName = teamName;
         this.score = score;
-        this.players = players;
-    }
-
-    addPlayer(player){
-        this.players.push(player);
     }
 
 }

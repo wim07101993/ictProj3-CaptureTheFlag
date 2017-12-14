@@ -1,119 +1,45 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.PrimitiveDefaults;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManagerKey;
 
 /**
- * Created by Wim Van Laer on 20/10/2017.
- * <p>
- * StateManager is a state manager that extends the abstractStateManager (and thereby implements the
- * IStateManager interface).
- * <p>
- * The StateManagerKey enum is used as key for the abstract class.
- *
- * @see AbstractStateManager
+ * Created by wimva on 25/11/2017.
  */
 
-public class StateManager extends AbstractStateManager<StateManagerKey> {
+public class StateManager extends AStateManager<IStateManagerKey> {
 
-    /* ---------------------------------------------------------- */
-    /* ------------------------- FIELDS ------------------------- */
-    /* ---------------------------------------------------------- */
+    private static final String TAG = StateManagerWithSocket.class.getSimpleName();
 
-    private static final Map<StateManagerKey, Type> KEY_TYPE_MAP = new HashMap<StateManagerKey, Type>() {{
-        put(StateManagerKey.FLAGS, Flags.class);
-        //put(StateManagerKey.CURRENT_ACTIVITY, )
-        put(StateManagerKey.LOBBY_SETTINGS, LobbySettings.class);
-        put(StateManagerKey.USER_ID, String.class);
-        put(StateManagerKey.TEAMS, new TypeToken<List<Team>>() {
-        }.getType());
-        put(StateManagerKey.SCORE, long.class);
-        put(StateManagerKey.GAME_STARTED, boolean.class);
-    }};
-
-
-    /* --------------------------------------------------------------- */
-    /* ------------------------- CONSTRUCTOR ------------------------- */
-    /* --------------------------------------------------------------- */
 
     /**
-     * StateManager is the constructor for the class StateManager.
+     * StateManagerWithSocket is the constructor for the class StateManagerWithSocket.
+     */
+    StateManager() {
+        super();
+    }
+
+    /**
+     * StateManagerWithSocket is the constructor for the class StateManagerWithSocket.
      *
      * @param sharedPreferences the shared preferences to load and save the current state from and to.
      */
-    public StateManager(SharedPreferences sharedPreferences) {
+    StateManager(SharedPreferences sharedPreferences) {
         super(sharedPreferences);
     }
 
 
-    /* ----------------------------------------------------------- */
-    /* ------------------------- METHODS ------------------------- */
-    /* ----------------------------------------------------------- */
-
-    /* ------------------------- GETTERS ------------------------- */
-
     @Override
-    protected Map<StateManagerKey, Type> getKeyTypeMap() {
-        return KEY_TYPE_MAP;
+    protected IStateManagerKey convertStringToKey(String string) {
+        return EStateManagerKey.convertFromString(string);
     }
 
-    /**
-     * internalGet is the method that gets called when someone tries to get the state of a key.
-     * This method does the internal handling of the change of a state when the state
-     * is called.
-     *
-     * @param key         key is the key of which the state is asked.
-     * @param changedKeys changedKeys are the keys that changed in the chain of getting (and maybe
-     *                    setting) states.
-     * @return The value of the asked state.
-     * @throws IllegalArgumentException It is possible that when an argument is passed, the argument
-     *                                  is not valid. In that case, the exception is thrown.
-     */
+    @NonNull
     @Override
-    protected synchronized Object internalGet(StateManagerKey key, List<StateManagerKey> changedKeys)
-            throws IllegalArgumentException {
-        Object value = currentState.get(key);
-
-        if (value == null) {
-            Type type = KEY_TYPE_MAP.get(key);
-            return PrimitiveDefaults.getDefaultValue(type);
-        }
-
-        return value;
+    public String getTAG() {
+        return TAG;
     }
 
-
-    /* ------------------------- SETTERS ------------------------- */
-
-    /**
-     * internalSet is the method that gets called when someone tries to set the state of a key.
-     * This method does the internal handling of the change of a state when the state
-     * is set.
-     *
-     * @param key         key is the key of which the value is set.
-     * @param value       value is the value that the state should be set to.
-     * @param changedKeys changedKeys are the keys that changed in the chain of setting (and maybe
-     *                    getting) states.
-     * @throws IllegalArgumentException It is possible that when an argument is passed, the argument
-     *                                  is not valid. In that case, the exception is thrown.
-     */
-    @Override
-    protected synchronized void internalSet(StateManagerKey key, Object value, List<StateManagerKey> changedKeys)
-            throws IllegalArgumentException {
-        this.currentState.put(key, value);
-        changedKeys.add(key);
-    }
 }

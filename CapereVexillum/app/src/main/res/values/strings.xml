@@ -9,7 +9,7 @@
     <string name="beacon_NA">Beacon niet beschikbaar</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="do_you_want_to_start_the_quiz">Do you want to start the quiz?</string>
+    <string name="do_you_want_to_start_the_quiz">Do you want to capture the flag?</string>
     <string name="waar_wilt_u_naartoe">Waar wilt u naartoe?</string>
     <string name="lobby">Lobby</string>
     <string name="start">Start</string>
@@ -23,4 +23,6 @@
     <string name="lobby_password_text">Lobby password</string>
     <string name="join_lobby_text">JOIN LOBBY</string>
     <string name="join_lobby_button_text">JOIN</string>
+    <string name="player_name_label">Player name</string>
+    <string name="restart">Restart</string>
 </resources>

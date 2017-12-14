@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -35,4 +38,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     testCompile 'junit:junit:4.12'
     compile 'com.github.flepsik:progress-ring-view:1.1.2'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'org.jetbrains:annotations-java5:15.0'
 }

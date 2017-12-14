@@ -1,99 +1,69 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.models;
 
-import android.os.Handler;
-import android.os.Message;
+import android.databinding.ObservableArrayList;
+import android.util.Log;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.Arrays;
-import java.util.Vector;
-
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.helpers.ISerializable;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.Beacon;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Beacon.IBeacon;
 
 
 /**
  * Created by Michiel on 12/10/2017.
+ * Last updated by Wim on 28/11/2017
  */
 
-public class Flags {
-    /* ---------------------------------------------------------- */
-    /* ------------------------- FIELDS ------------------------- */
-    /* ---------------------------------------------------------- */
+public class Flags extends ObservableArrayList<Flag> implements ISerializable {
 
-    /**
-     * Property that keeps track of all the flags
-     */
-    private Vector<Flag> registeredFlags = new Vector<Flag>();
-    private IFlagSync flagSyncListener;
-    /* --------------------------------------------------------------- */
-    /* ------------------------- CONSTRUCTOR ------------------------- */
-    /* --------------------------------------------------------------- */
+    @Override
+    public String serialize() {
 
-    /**
-     * Constructor creates an instance of Flags
-     * no properties need to be set
-     */
-    Socket socket;
-
-    public Flags() {/*Nothing to do here*/}
-
-    Gson gson = new Gson();
-    /* ----------------------------------------------------------- */
-    /* ------------------------- listeners ------------------------- */
-    /* ----------------------------------------------------------- */
-    Emitter.Listener resyncFlags = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-            String request = (String) args[0];
-            Flag[] requestedFlags = gson.fromJson(request, Flag[].class);
-            Vector<Flag> newFlags = new Vector(Arrays.asList(requestedFlags));
-            registeredFlags = newFlags;
-            updateScoreInView.obtainMessage(1).sendToTarget();
+        try{
+            return new Gson().toJson(this);}
+        catch(Exception ex){
+            Log.d("Model=>Flags", ex.getMessage());
+           // throw new RuntimeException();
         }
-    };
-    Handler updateScoreInView = new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            flagSyncListener.syncFlags();
+        return "";
+    }
+    public void clearThis(){
+        this.clear();
+    }
+    @Override
+    public void deserialize(String serializedObject) {
+        try {
+            ObservableArrayList<Flag> flags = new Gson().fromJson(serializedObject, new TypeToken<ObservableArrayList<Flag>>() {
+            }.getType());
+            this.clear();
+            this.addAll(flags);
         }
-    };
-    /* ----------------------------------------------------------- */
-    /* ------------------------- METHODS ------------------------- */
-    /* ----------------------------------------------------------- */
+        catch(Exception ex){
+                Log.d("Models=>Flags", ex.getMessage());
+//                throw new RuntimeException();
 
-    /**
-     * Method adds new flags to the registeredFlags vector
-     *
-     * @param flag the flag to add
-     */
-    public void addFlag(Flag flag) {
-
-        registeredFlags.add(flag);
-
-        String sendValue = gson.toJson(flag).toString();
-        socket.emit("addFlag", sendValue);
+        }
     }
 
     /**
-     * Method scans for an existing flag in the vector registeredFlags
+     * find scans for an existing flag in the vector registeredFlags
      * based on the registered beaconMAC of a flag
      *
      * @param beacon beacon to search the flag of
      * @return whether the flag exists or not
      */
-    public Flag findFlag(IBeacon beacon, String team) {
+    public Flag find(IBeacon beacon) {
+        if(beacon==null){
+            return null;
+        }
+
         //The beaconMAC the function is looking for
         String beaconMAC = beacon.getAddress();
-        int index = 0;
 
         //Iterates over every flag registered in the registeredFlags vector
-        for (Flag flag : registeredFlags) {
-            index++;
+        for (Flag flag : this) {
             //Checks if the currently iterated flag's beaconMAC matches
             // the beaconMAC the function is looking for
             if (!flag.getBeaconMAC().equals(beaconMAC)) {
@@ -101,7 +71,7 @@ public class Flags {
             }
 
             //If the beaconMAC's match the function returns true
-            if (flag.team.equals(team)) {
+            if (flag.getBeaconMAC().equals(beacon.getAddress())) {
                 return flag;
             }
         }
@@ -110,53 +80,23 @@ public class Flags {
         return null;
     }
 
-    /* ------------------------- GETTERS ------------------------- */
-
-    /**
-     * @return the registeredFlags vector
-     */
-    public Vector<Flag> getRegisteredFlags() {
-        return registeredFlags;
-    }
-
-    /* ------------------------- SETTERS ------------------------- */
-
-    /**
-     * @param registeredFlags the registeredFlags vector's content
-     */
-    public void setRegisteredFlags(Vector<Flag> registeredFlags) {
-
-        this.registeredFlags = registeredFlags;
-    }
-
-    public void removeBeacon(Beacon beacon) {
-        int index = 0;
-        //Iterates over every flag registered in the registeredFlags vector
-        for (Flag flag : registeredFlags) {
-            index++;
-            //Checks if the currently iterated flag's beaconMAC matches
-            // the beaconMAC the function is looking for
-            if (flag.getBeaconMAC().equals(beacon.getAddress())) {
-                registeredFlags.remove(index);
+    public void remove(Beacon beacon) {
+        for (int i = 0; i < size(); i++) {
+            if (get(i).getBeaconMAC().equals(beacon.getAddress())) {
+                remove(i);
+                i--;
             }
         }
     }
 
-    public int getFlagByTeam(String team) {
+    public int getNumberOfFlagsOfTeam(String team) {
         int amountOfFlags = 0;
-        for (Flag flag : registeredFlags) {
-            if (flag.team.equals(team))
+        for (int i = 0; i < size(); i++) {
+            if (get(i).team.equals(team)) {
                 amountOfFlags++;
+            }
         }
         return amountOfFlags;
     }
 
-    public void setSyncFlagListener(IFlagSync flagSyncListener) {
-        this.flagSyncListener = flagSyncListener;
-    }
-
-    public void addSocket(Socket socket) {
-        this.socket = socket;
-        socket.on("syncFlags", resyncFlags);
-    }
 }

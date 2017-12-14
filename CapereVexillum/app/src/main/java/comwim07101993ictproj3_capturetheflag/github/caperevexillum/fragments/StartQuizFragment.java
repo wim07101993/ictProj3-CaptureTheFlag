@@ -10,7 +10,6 @@ import android.widget.Button;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
 
 /**
  * Gives an fragment where you can choose to begin the quiz or not
@@ -29,9 +28,8 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener 
     private Button YesButton;
     private Button NoButton;
 
-    // Instance statemanager
     private GameActivity gameActivity;
-    private StateManager stateManager;
+
 
     /* --------------------------------------------------------------- */
     /* ------------------------- CONSTRUCTOR ------------------------- */
@@ -53,12 +51,12 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       /* Vibrator v = (Vibrator) gameActivity.getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(1000);
+        gameActivity = (GameActivity) getActivity();
+       // Vibrator v = (Vibrator) gameActivity.getSystemService(Context.VIBRATOR_SERVICE);
+        //v.vibrate(1000);
 
         // declarate the statemanager
-        gameActivity = (GameActivity) getActivity();
-        stateManager = gameActivity.getStateManager();
+
 
         // declarate the buttons on the fragment
         YesButton = (Button) getView().findViewById(R.id.YesButton);
@@ -66,7 +64,7 @@ public class StartQuizFragment extends Fragment implements View.OnClickListener 
 
         // set the listener for the buttons
         YesButton.setOnClickListener(this);
-        NoButton.setOnClickListener(this);*/
+        NoButton.setOnClickListener(this);
     }
 
     /**

@@ -1,55 +1,60 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
-
-import java.net.URISyntaxException;
+import com.github.nkzawa.emitter.Emitter;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.bases.AActivityWithStateManager;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.LobbySettings;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.EStateManagerKey;
 
-public class JoinLobbyActivity extends AppCompatActivity implements View.OnClickListener{
+public class JoinLobbyActivity extends AActivityWithStateManager implements View.OnClickListener {
 
-    Socket socket;
+    private static final String TAG = JoinLobbyActivity.class.getSimpleName();
 
-    EditText lobbyNameEditText;
-    EditText lobbyPasswordEditText;
+    private EditText lobbyNameEditText;
+    private EditText lobbyPasswordEditText;
+    private EditText playerNameEditText;
 
-    Button joinLobbyButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        backButtonEnabled=true;
         setContentView(R.layout.activity_join_lobby);
 
-        joinLobbyButton = (Button)findViewById(R.id.join_lobby_button);
-        joinLobbyButton.setOnClickListener(this);
-
-        lobbyNameEditText = (EditText)findViewById(R.id.lobby_name_edittext);
-        lobbyPasswordEditText = (EditText)findViewById(R.id.lobby_password_edittext);
+        findViewById(R.id.join_lobby_button).setOnClickListener(this);
+        gameController.setBoolean(EStateManagerKey.IS_HOST,false);
+        lobbyNameEditText = (EditText) findViewById(R.id.lobby_name_edittext);
+        lobbyPasswordEditText = (EditText) findViewById(R.id.lobby_password_edittext);
+        playerNameEditText = (EditText) findViewById(R.id.playername_edittext);
     }
 
     @Override
     public void onClick(View view) {
-        if(view.getId() == R.id.join_lobby_button){
-            if(socket == null){
-                try{
-                    socket = IO.socket(GameActivity.SERVER_URL);
-                    socket.connect();
-                }catch(URISyntaxException e){
-                    Log.d("JoinLobbyActivity", e.getMessage());
-                }
-            }
+        if (view.getId() == R.id.join_lobby_button) {
 
-            if(socket != null){
-                socket.emit("checkCredentials", lobbyNameEditText.getText(), lobbyPasswordEditText.getText());
-            }
+            gameController.joinLobby(
+                    new LobbySettings(
+                            lobbyNameEditText.getText().toString(),
+                            lobbyPasswordEditText.getText().toString(),
+                            0.0f,
+                            playerNameEditText.getText().toString()
+                    )
+            );
         }
     }
+
+    @Override
+    protected String getTAG() {
+        return TAG;
+    }
+
 }

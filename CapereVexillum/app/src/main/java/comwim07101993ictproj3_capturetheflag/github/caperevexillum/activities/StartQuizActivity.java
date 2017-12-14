@@ -1,9 +1,7 @@
 package comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -42,8 +40,8 @@ public class StartQuizActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_quiz);
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(500);
+      //  Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+       // v.vibrate(500);
         YesButton = (Button) findViewById(R.id.YesButton);
         NoButton = (Button) findViewById(R.id.NoButton);
 

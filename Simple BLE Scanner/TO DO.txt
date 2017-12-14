@@ -1,3 +1,0 @@
-- Meer data uit BLE device halen (bv battery level, checken of het een beacon is)
-- Device uit lijst verwijderen wanneer het uit range gaat
-- Beperking van range naar ~1m a.d.h.v signaalsterkte

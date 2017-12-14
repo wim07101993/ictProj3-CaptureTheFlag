@@ -1,7 +1,0 @@
-#Sun Oct 08 16:27:36 CEST 2017
-base.0=D\:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_94cc96131decb1d6964faf8dfb2ef2dcc5fa3b16
-renamed.1=classes2.dex
-renamed.0=classes.dex
-file.1=D\:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_c272d626a085b6f6045037b378af6df0ff461663\\classes.dex
-base.1=D\:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_c272d626a085b6f6045037b378af6df0ff461663
-file.0=D\:\\Stack\\School\\MobileApps2\\Projects\\BLE\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_94cc96131decb1d6964faf8dfb2ef2dcc5fa3b16\\classes.dex

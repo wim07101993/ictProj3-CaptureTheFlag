@@ -1,55 +1,63 @@
-const server = require('http').createServer();
 
-const io = require('socket.io')(server, {
-  path: '/',
-  serveClient: true,
-  // below are engine.IO options
-  pingInterval: 10000,
-  pingTimeout: 5000,
-  cookie: false
-});
 import timeClass from "./library/timesync"
 import flagsClass from "./library/flagsSync"
-import teamClass from "./library/teamSync"
-let players=[];
-var teams;
+import lobbyClass from "./library/lobbySync"
 
-io.on('connection', function(socket){
-    console.log("connected");
-  
-    if (players.length ==0){
-      console.log("host connected")
-      players.push(socket);
-      socket.emit("host","");
-    }else{
-      console.log("client connected")
-      flagsClass.askFlags(socket);
-      timeClass.clientStart(socket);
+export default class{
+    getal=5;
+    players=[];    
+    lobbies=[];
+    //server variable gets filled in by te bootstrapper => io
+    server;
+    
+    //void
+    OnInit(){
+        console.log("starting up server");
+        this.server.on("connection",(socket)=>this.OnSocketConnect(socket))
+        
+
+    }
+    //void
+    OnSocketConnect(socket){
+        let parent=this;
+        try{
+        console.log("connection to the server");
+        socket.on("createLobby",(playerName, lobbyName, password, time)=> lobbyClass.createLobby(this.server, socket, playerName, lobbyName, password, time,this.lobbies));
+        socket.on("createLobbyNew",(settings)=>lobbyClass.createLobby(parent.server,socket,settings,this.lobbies));
+        socket.on("joinLobby",(settings)=>lobbyClass.joinLobby(parent.server,socket,JSON.parse(settings),this.lobbies));
+        socket.on("joinLobbyio",(settings)=>lobbyClass.joinLobby(parent.server,socket,settings,this.lobbies));
+        
+        socket.on("leaveLobby", (lobbyId, playerName) => lobbyClass.leaveLobby(lobbyId, playerName, this.server,this.lobbies));
+        socket.on("hostLeft", (lobbyID) => lobbyClass.hostLeft(this.server, lobbyID,this.lobbies));
+        socket.on("joinTeam",(value)=>{
+            let player = JSON.parse(value);
+            lobbyClass.joinTeam(player["lobbyId"], player["team"]["teamName"],player["name"], this.server,this.lobbies)
+        });
+        socket.on("startLobby", (lobbyId) => {
+          
+          lobbyClass.startTime(lobbyId, parent.server, socket,parent.lobbies);
+          parent.AddLobbyListeners(socket);
+        });
+        socket.on("askPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket,this.lobbies));
+        socket.on("restartLobby", (lobbyID) => lobbyClass.restart(lobbyID));
+        }catch(e){}
     }
     
-    // time
-    socket.on("start",(duration) => timeClass.start(io,socket,duration));
-    socket.on("syncTime",(timeLeft) => timeClass.syncTime(io,socket,timeLeft))
-    socket.on("askTime",() => timeClass.askTime(io,socket));
+    //void
+    AddLobbyListeners(socket){
+        // flags 
+         try{
+        socket.on("askFlags",()=> flagsClass.askFlags(socket));
+        socket.on("addFlag",(flag)=> flagsClass.addFlag(lobby, socket, flag));
+        socket.on("updateFlag",(flag)=> flagsClass.updateFlag(lobby, socket, flag));
+        socket.on("removeFlag",(flag)=> flagsClass.removeFlag(lobby, socket, flag));
+         }catch(e){}
+    }
 
-    // flags
-    socket.on("askFlags",()=> flagsClass.askFlags(socket));
-    socket.on("addFlag",(flag)=> flagsClass.addFlag(io, socket, flag));
-    socket.on("updateFlag",(flag)=> flagsClass.updateFlag(io, socket, flag));
-    socket.on("removeFlag",(flag)=> flagsClass.removeFlag(io, socket, flag));
-    
-    // teams
-    teamClass.addStaticTeams();
-    socket.on("askTeams",() => teamClass.askTeams(socket));
-    socket.on("addPlayer", (teamName, player) => teamClass.addPlayer(io, teamName, player));
-    socket.on("addTeam", (team) => teamClass.addTeam(io, team));
-
-    // lobby
-    socket.on("checkCredentials", (lobbyName, lobbyPassword) => console.log("checkCredentials req received: " + lobbyName + " - " + lobbyPassword));
-    socket.on("disconnectFromLobby", () => console.log("someone disconnected from lobby"));
-});
+    //Object<lobby>
+    getLobby(lobyIndex){
+        return thislobbies[lobyIndex] ;
+    }
+}
 
 
-
-console.log("listening")
-server.listen(4040);

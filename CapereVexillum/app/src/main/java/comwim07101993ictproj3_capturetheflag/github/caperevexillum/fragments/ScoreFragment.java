@@ -3,6 +3,9 @@ package comwim07101993ictproj3_capturetheflag.github.caperevexillum.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,14 +14,17 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
+
 import java.util.Vector;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.activities.GameActivity;
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flag;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Flags;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.StateManager;
-import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.enums.StateManagerKey;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.models.Team;
+import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stateManager.interfaces.IStateManager;
 
 
 /**
@@ -34,16 +40,20 @@ public class ScoreFragment extends Fragment {
     private TextView amountFlagsRedView;
     private TextView amountFlagsGreenView;
     private ProgressBar scoreBalanceProgressbar;
-    private StateManager stateManager;
+    private IStateManager stateManager;
     private View view;
     private GameActivity gameActivity;
     private Vector<Flag> flags;
 
     private int amountFlagsGreen;
     private int amountFlagsRed;
+    private int flagGreen;
+    private int flagRed;
     private double scoreGreen;
     private double scoreRed;
+
     private double scoreBalance;
+    private Socket socket;
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
@@ -60,69 +70,102 @@ public class ScoreFragment extends Fragment {
         amountFlagsRedView = (TextView) view.findViewById(R.id.aantalFlagsRood);
         amountFlagsGreenView = (TextView) view.findViewById(R.id.aantalFlagsGroen);
         scoreBalanceProgressbar = (ProgressBar) view.findViewById(R.id.scoreVerhoudingProgressBar);
-
-        stateManager = gameActivity.getStateManager();
-
-        setViewValues();
-
+        stateManager = gameActivity.getGameController();
+        stateManager.getSocketService().getSocket().on("syncTeamScore",syncScoreListenner);
         return view;
     }
+    public void synScore(Team[] teams){
+        String red="1";
+        String green="1";
+        for(Team team : teams){
+            if(team.getTeamName().equals("orange")){
+                red = team.getScore()+"";
+                if(red.equals("0"))
+                    red ="1";
+            }
+            if(team.getTeamName().equals("green")){
+                green = team.getScore()+"";
+                if(green.equals("0"))
+                    green="1";
+            }
+        }
 
+        scoreRed = Double.parseDouble(red);
+        scoreGreen = Double.parseDouble(green);
+        setScoreHandler.obtainMessage(1).sendToTarget();
+    }
+    Emitter.Listener syncScoreListenner = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Gson gson = new Gson();
+            Team[] teams = gson.fromJson((String)args[0], Team[].class) ;
+
+            String red="1";
+            String green="1";
+            for(Team team : teams){
+                if(team.getTeamName().equals("orange")){
+                    red = team.getScore()+"";
+                    if(red.equals("0"))
+                        red ="1";
+                }
+                if(team.getTeamName().equals("green")){
+                    green = team.getScore()+"";
+                    if(green.equals("0"))
+                        green="1";
+                }
+            }
+
+            scoreRed = Double.parseDouble(red);
+            scoreGreen = Double.parseDouble(green);
+            setScoreHandler.obtainMessage(1).sendToTarget();
+        }
+    };
+
+
+    Handler setScoreHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if((scoreGreen+scoreRed)!=0){
+
+
+            scoreBalanceProgressbar.setMax((int)(scoreGreen + scoreRed));
+            scoreBalanceProgressbar.setProgress((int) scoreRed);
+            }
+        }
+    };
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public void setScores(int redScore,int greenScore){
-        scoreRed = (double)redScore+0.01;
-        scoreGreen = (double)greenScore+0.01;
-        amountFlagsRedView.setText(((int)scoreRed)+"");
-        amountFlagsGreenView.setText(((int)scoreGreen)+"");
+    public void setFlags(int redScore, int greenScore){
 
-
-        scoreBalanceProgressbar.setMax((int)(scoreGreen+scoreRed));
-        scoreBalanceProgressbar.setProgress((int)scoreRed);
-    }
-    private void setViewValues(){
+        this.flagGreen=greenScore;
+        this.flagRed=redScore;
+        //setFlagHandler.obtainMessage(1).sendToTarget();
         try {
-            if (stateManager !=null){
-               /*
-               //todo statemanager include
-                flags = ((Flags)stateManager.get(StateManagerKey.FLAGS)).getRegisteredFlags();
+            Handler myHandler = new Handler(Looper.getMainLooper());
 
-                for (Flag flag: flags) {
-
-                    switch (flag.getTeam()){
-                        case "red": amountFlagsRed++;
-                            break;
-                        case "green":  amountFlagsGreen++;
-                            break;
-                        default: break;
-                    }
-
-                }*/
-            }else {
-                scoreRed = 0.01;
-                scoreGreen = 0.01;
-                amountFlagsRed = 0;
-                amountFlagsGreen = 0;
-
-
-
-            }
-            scoreBalance= scoreGreen/(scoreGreen+scoreRed)*100.0;
-
-            amountFlagsRedView.setText(amountFlagsRed+"");
-            amountFlagsGreenView.setText(amountFlagsGreen+"");
-
-            scoreBalanceProgressbar.setProgress((int)scoreBalance);
-        }catch (Exception ex){
-
+            myHandler.post(new Runnable() {
+                public void run() {
+                    setTextViews();
+                }
+            });
+        }catch(Exception ex){
+            Log.d("scorefragment", "setFlags");
         }
 
-
-
+    }
+    public void setTextViews(){
+        try{
+        amountFlagsRedView.setText(flagRed+"");
+        amountFlagsGreenView.setText(flagGreen+"");}
+        catch(Exception ex){
+            Log.d("scorefragment", "setTextViews");
+        }
     }
 
 }
+
+
 
