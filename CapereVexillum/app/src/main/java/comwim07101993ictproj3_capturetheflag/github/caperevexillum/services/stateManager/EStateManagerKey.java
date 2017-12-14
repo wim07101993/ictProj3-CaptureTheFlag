@@ -20,7 +20,12 @@ import comwim07101993ictproj3_capturetheflag.github.caperevexillum.services.stat
  */
 
 public enum EStateManagerKey implements IStateManagerKey {
-
+    END_MESSAGE {
+        @Override
+        public Class getValueClass() {
+            return String.class;
+        }
+    },
     REGISTERED_KEYS {
         @Override
         public Class getValueClass() {

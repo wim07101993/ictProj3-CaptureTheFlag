@@ -34,7 +34,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
     private AActivityWithStateManager context;
     private static Gson gson = new Gson();
 
-
+    private String team;
     /**
      * StateManagerWithSocket is the constructor for the class StateManagerWithSocket.
      */
@@ -83,7 +83,7 @@ public class GameController extends StateManagerWithSocket implements IGameContr
         if (lobbySettings.getId() != -1) {
             setInt(EStateManagerKey.LOBBY_ID, lobbySettings.getId());
             setString(EStateManagerKey.PLAYER_NAME, lobbySettings.getHostName());
-            setBoolean(EStateManagerKey.IS_HOST, true);
+
 
             showToast("navigating to lobby activity");
             context.startActivity(LobbyActivity.class);
@@ -163,13 +163,14 @@ public class GameController extends StateManagerWithSocket implements IGameContr
         Gson gson = new Gson();
         String jsonPlayer =gson.toJson(player);
 
+        this.team=team;
         socketService.send(ESocketEmitKey.JOIN_TEAM, jsonPlayer);
         //Player player = new Player()
 
         socketService.addObserver(new Observer() {
             @Override
             public void update(Observable observable, Object arg) {
-
+                setString(EStateManagerKey.MY_TEAM,GameController.this.team);
                 notifyObservers(arg);
 
             }

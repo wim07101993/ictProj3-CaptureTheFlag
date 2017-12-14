@@ -48,7 +48,7 @@ public class LobbySettings implements ISerializable {
             return new Gson().toJson(this);}
         catch(Exception ex){
             Log.d("Model=>LobbySettings", "serialize: LobbySettings");
-            throw new RuntimeException();
+           return "";
         }
     }
 
@@ -64,7 +64,7 @@ public class LobbySettings implements ISerializable {
         }
         catch(Exception ex){
             Log.d("Model=>LobbySettings", "deserialize: LobbySettings");
-            throw new RuntimeException();
+
 
         }
     }

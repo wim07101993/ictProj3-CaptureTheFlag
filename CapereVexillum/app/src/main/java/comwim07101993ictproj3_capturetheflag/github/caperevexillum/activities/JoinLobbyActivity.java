@@ -27,10 +27,11 @@ public class JoinLobbyActivity extends AActivityWithStateManager implements View
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        backButtonEnabled=true;
         setContentView(R.layout.activity_join_lobby);
 
         findViewById(R.id.join_lobby_button).setOnClickListener(this);
-
+        gameController.setBoolean(EStateManagerKey.IS_HOST,false);
         lobbyNameEditText = (EditText) findViewById(R.id.lobby_name_edittext);
         lobbyPasswordEditText = (EditText) findViewById(R.id.lobby_password_edittext);
         playerNameEditText = (EditText) findViewById(R.id.playername_edittext);
@@ -39,6 +40,7 @@ public class JoinLobbyActivity extends AActivityWithStateManager implements View
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.join_lobby_button) {
+
             gameController.joinLobby(
                     new LobbySettings(
                             lobbyNameEditText.getText().toString(),

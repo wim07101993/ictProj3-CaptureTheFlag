@@ -70,6 +70,7 @@ export default{
             this.getPlayers(resultLobby.id, io,lobbies);
             //set flag capture listener 
             socket.on("captureFlag",(flag)=>resultLobby.captureFlags(flag));
+            socket.on("captureFlagio",(flag)=>resultLobby.captureFlags(JSON.stringify(flag)));
           }
   
         }else{

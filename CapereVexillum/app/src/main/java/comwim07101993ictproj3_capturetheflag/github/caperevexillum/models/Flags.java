@@ -24,22 +24,25 @@ public class Flags extends ObservableArrayList<Flag> implements ISerializable {
         try{
             return new Gson().toJson(this);}
         catch(Exception ex){
-            Log.d("Model=>Flags", "serialize: Flags");
-            throw new RuntimeException();
+            Log.d("Model=>Flags", ex.getMessage());
+           // throw new RuntimeException();
         }
+        return "";
     }
-
+    public void clearThis(){
+        this.clear();
+    }
     @Override
     public void deserialize(String serializedObject) {
         try {
             ObservableArrayList<Flag> flags = new Gson().fromJson(serializedObject, new TypeToken<ObservableArrayList<Flag>>() {
             }.getType());
-
+            this.clear();
             this.addAll(flags);
         }
         catch(Exception ex){
-                Log.d("Models=>Flags", "deserialize: in Flags");
-                throw new RuntimeException();
+                Log.d("Models=>Flags", ex.getMessage());
+//                throw new RuntimeException();
 
         }
     }
@@ -52,6 +55,10 @@ public class Flags extends ObservableArrayList<Flag> implements ISerializable {
      * @return whether the flag exists or not
      */
     public Flag find(IBeacon beacon) {
+        if(beacon==null){
+            return null;
+        }
+
         //The beaconMAC the function is looking for
         String beaconMAC = beacon.getAddress();
 

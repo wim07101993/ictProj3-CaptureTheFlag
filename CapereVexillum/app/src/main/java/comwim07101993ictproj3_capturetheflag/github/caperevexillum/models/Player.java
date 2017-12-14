@@ -36,7 +36,7 @@ public class Player implements ISerializable{
             return new Gson().toJson(this);}
         catch(Exception ex){
             Log.d("Model=>Player", "serialize: Player");
-            throw new RuntimeException();
+            return "";
         }
     }
 
@@ -51,7 +51,7 @@ public class Player implements ISerializable{
 
         }catch(Exception ex){
             Log.d("Model=>player", "deserialize: Player");
-            throw new RuntimeException();
+
 
         }
     }

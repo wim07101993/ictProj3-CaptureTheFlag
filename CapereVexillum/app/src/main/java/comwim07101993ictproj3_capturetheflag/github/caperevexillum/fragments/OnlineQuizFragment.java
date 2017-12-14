@@ -18,7 +18,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import comwim07101993ictproj3_capturetheflag.github.caperevexillum.R;
@@ -85,7 +87,8 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG, error + "");
-            capturedFlag();
+            Toast.makeText(gameActivity, "Can't fetch questions", Toast.LENGTH_SHORT).show();
+            gameActivity.showQuiz(false);
         }
     };
 
@@ -162,31 +165,7 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         }
         return true;
     }
-//    /* originele quizfragment2 enquiz en capturedflag
-//    //zet variabele terug normaal en toont een melding dat het antwoord fout was
-//    //het toont een nieuwe question en zet de antwoorden erbij
-//    public  void endQuiz(){
-//        count = 0;
-//        Toast.makeText(gameActivity.getApplicationContext(),"You failed to capture the flag", Toast.LENGTH_SHORT).show();
-//        Flag flag = new Flag(currentBeacon);
-//        flag.CaptureAndCooldown(Team.NO_TEAM);
-//        ((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
-//        gameActivity.showQuiz(false);
-//    }
-//
-//    //geeft een melding dat de vragen juist waren en de vlag overgenomen is
-//    //zet de variabele terug tegoei
-//    public void capturedFlag(){
-//        Toast.makeText(gameActivity.getApplicationContext(),"You captured the flag", Toast.LENGTH_SHORT).show();
-//        Flag flag = new Flag(currentBeacon);
-//        flag.CaptureAndCooldown(gameActivity.MY_TEAM);
-//        ((Flags)gameController.get(StateManagerKey.FLAGS)).addFlag(flag);
-//
-//        count=0;
-//        gameActivity.showQuiz(false);
-//
-//    }
-//    */
+
 //    //zet variabele terug normaal en toont een melding dat het antwoord fout was
 //    //het toont een nieuwe question en zet de antwoorden erbij
 
@@ -194,9 +173,9 @@ public class OnlineQuizFragment extends Fragment implements View.OnClickListener
         count = 0;
         Toast.makeText(gameActivity.getApplicationContext(), "You failed to capture the flag", Toast.LENGTH_SHORT).show();
 
-        currentFlag.CaptureAndCooldown(currentFlag.getTeam());
-        stateManager.setSerializable(EStateManagerKey.CAPTURED_FLAG, currentFlag);
+        currentFlag.setCooldownTime();
 
+        gameActivity.setCurrentFlag(currentFlag);
         gameActivity.showQuiz(false);
     }
 

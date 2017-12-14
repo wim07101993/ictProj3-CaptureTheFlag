@@ -32,7 +32,6 @@ public class GameTimer {
     private Date dateTimeOver;
     private String stringTimeOver;
     private TextView textViewTime;
-    private OnGameTimerFinishedListener onGameTimerFinishedListener;
     private IStateManager stateManager;
     private Socket socket;
     private boolean timerStarted = false;
@@ -81,28 +80,17 @@ public class GameTimer {
                 dateTimeOver = new Date(longTimeOver);
                 if (longTimeOver > 0) {
                     timerHandler.obtainMessage(1).sendToTarget();
-                } else {
-                    finishHandler.obtainMessage(1).sendToTarget();
                 }
 
             }
         };
         timer.scheduleAtFixedRate(UpdateTimer, 0, 1000);
+        textViewTime.setText("Connecting to the server");
 
     }
 
-    public void addListener(OnGameTimerFinishedListener onGameTimerFinishedListener) {
-        this.onGameTimerFinishedListener = onGameTimerFinishedListener;
-    }
 
-    Handler finishHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            onGameTimerFinishedListener.OnGameTimerFinished();
-            timer.cancel();
-            timer.purge();
-        }
-    };
+
     Handler timerHandler = new Handler() {
 
         @Override

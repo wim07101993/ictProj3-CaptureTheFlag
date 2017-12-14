@@ -122,7 +122,7 @@ public class Flag implements ISerializable {
         this.cooldownTimer = This.cooldownTimer;}
         catch(Exception ex){
             Log.d("Model=>Flag", "deserialize: Flag");
-            throw new RuntimeException();
+
 
         }
     }
@@ -151,7 +151,13 @@ public class Flag implements ISerializable {
     public Date getCooldownTime() {
         return cooldownTimer;
     }
+    public void setCooldownTime() {
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, 30);
+        Date d = calendar.getTime();
+        this.cooldownTimer=d;
+    };
     /**
      * @return the Flag's team alignment
      */

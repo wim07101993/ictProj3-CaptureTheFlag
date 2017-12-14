@@ -22,7 +22,7 @@ public class Players extends Vector<Player> implements ISerializable {
             return new Gson().toJson(this);}
         catch(Exception ex){
             Log.d("Model=>Players", "serialize: Players");
-            throw new RuntimeException();
+            return "";
         }
     }
 
@@ -35,7 +35,7 @@ public class Players extends Vector<Player> implements ISerializable {
             this.addAll(playerList);
         }catch(Exception ex){
             Log.d("Models=>Players", "deserialize: in Player");
-            throw new RuntimeException();
+
 
         }
     }

@@ -32,8 +32,9 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     private ListView teamOrangeListView;
     private ListView teamGreenListView;
     private ListView noTeamListView;
-
-
+    private List<Player> teamGreen;
+    private List<Player> teamOrange;
+    private List<Player> noTeam;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,19 +46,21 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
         findViewById(R.id.teamGreenJoinButton).setOnClickListener(this);
         findViewById(R.id.teamOrangeJoinButton).setOnClickListener(this);
-        findViewById(R.id.leaveButton).setOnClickListener(this);
+        Button leaveButton=(Button) findViewById(R.id.leaveButton);
         Button startGameButton = (Button) findViewById(R.id.startButton);
         startGameButton.setOnClickListener(this);
-
+        leaveButton.setOnClickListener(this);
+        findViewById(R.id.autoJoinButton).setOnClickListener(this);
         // Set startbutton visible for host
         if (gameController.getBoolean(EStateManagerKey.IS_HOST)) {
             startGameButton.setVisibility(View.VISIBLE);
         } else {
             startGameButton.setVisibility(View.INVISIBLE);
+            leaveButton.setVisibility(View.INVISIBLE);
+
         }
 
         gameController.addObserver(stateChangeObserver);
-        //gameController.getSerializable(EStateManagerKey.PLAYERS);
         gameController.askPlayers();
 
     }
@@ -77,12 +80,22 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
             case R.id.teamOrangeJoinButton:
                 gameController.joinTeam(Team.TEAM_ORANGE);
-                break;
+               break;
 
             case R.id.startButton:
+                if(noTeam.size()>0){
+                    showToast("Not al players have chosen a team");
+                    return;
+                }
                 gameController.startGame();
                 break;
+            case R.id.autoJoinButton:
+                if(teamGreen.size()<teamOrange.size())
+                    gameController.joinTeam(Team.TEAM_GREEN);
+                else
+                    gameController.joinTeam(Team.TEAM_ORANGE);
 
+                break;
             case R.id.leaveButton:
                 gameController.leaveLobby();
                 break;
@@ -94,16 +107,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
     public void startGameActivity() {
         Intent i = new Intent(this, GameActivity.class);
         String team = gameController.getString(EStateManagerKey.MY_TEAM);
-        if (team.equals(EStateManagerKey.MY_TEAM.getDefaultValue())) {
-            Random rand = new Random();
 
-            int n = rand.nextInt(50) + 1;
-            if (n < 25) {
-                gameController.setString(EStateManagerKey.MY_TEAM, Team.TEAM_GREEN);
-            } else {
-                gameController.setString(EStateManagerKey.MY_TEAM, Team.TEAM_ORANGE);
-            }
-        }
         showToast("Your team is:" + team);
         i.putExtra("myTeam", team);
         startActivity(i);
@@ -138,15 +142,14 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
 
     private void gameStarted(List<Player> players) {
         if (players.size() > 0) {
-            gameController.setString(EStateManagerKey.MY_TEAM, players.get(0).getTeam().getTeamName());
             startGameActivity();
         }
     }
 
     private void gotPlayersResult(List<Player> players) {
-        List<Player> teamGreen = new ArrayList<>();
-        List<Player> teamOrange = new ArrayList<>();
-        List<Player> noTeam = new ArrayList<>();
+        teamGreen = new ArrayList<>();
+         teamOrange = new ArrayList<>();
+         noTeam = new ArrayList<>();
 
         for (Player p : players) {
 
@@ -164,7 +167,7 @@ public class LobbyActivity extends AActivityWithStateManager implements View.OnC
                     break;
             }
             if (p.getName().equals(gameController.getString(EStateManagerKey.PLAYER_NAME))) {
-                gameController.setString(EStateManagerKey.MY_TEAM, p.getTeam().getTeamName());
+                //gameController.setString(EStateManagerKey.MY_TEAM, p.getTeam().getTeamName());
             }
         }
         updateUI(noTeam, noTeamListView);

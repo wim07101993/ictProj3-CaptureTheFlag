@@ -4,8 +4,10 @@ import android.app.Fragment;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,18 +142,29 @@ public class ScoreFragment extends Fragment {
 
         this.flagGreen=greenScore;
         this.flagRed=redScore;
-        setFlagHandler.obtainMessage(1).sendToTarget();
+        //setFlagHandler.obtainMessage(1).sendToTarget();
+        try {
+            Handler myHandler = new Handler(Looper.getMainLooper());
 
+            myHandler.post(new Runnable() {
+                public void run() {
+                    setTextViews();
+                }
+            });
+        }catch(Exception ex){
+            Log.d("scorefragment", "setFlags");
+        }
 
     }
-    Handler setFlagHandler  = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            amountFlagsRedView.setText(flagRed+"");
-            amountFlagsGreenView.setText(flagGreen+"");
-
+    public void setTextViews(){
+        try{
+        amountFlagsRedView.setText(flagRed+"");
+        amountFlagsGreenView.setText(flagGreen+"");}
+        catch(Exception ex){
+            Log.d("scorefragment", "setTextViews");
         }
-    };
+    }
+
 }
 
 

@@ -5,6 +5,9 @@ export default class {
         this.time = time;
         let parent = this;
         timeInterval= setInterval(function(){parent.calculateTime(parent,io,socket)},1000)
+        setTimeout(()=>{
+            io.emit("reSyncTime",parent.time-0.4+"");    
+        },1500);
 
     }
     clientStart(socket){
@@ -12,7 +15,7 @@ export default class {
     }
     syncTime(io,socket,parent){
         try {
-            console.log("timesync:"+(parent.time-0.4)+"");    
+            
             io.emit("reSyncTime",parent.time-0.4+"");    
         } catch (error) {
             console.log("resync error")
@@ -37,7 +40,7 @@ export default class {
          parent.syncTime(io,socket,parent);
         }
         if(seconds<0.01){
-            io.emit("endScreen","");
+            io.showEndScreen();
         }
     }
 }

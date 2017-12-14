@@ -25,11 +25,18 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     private static final String TAG = AActivityWithStateManager.class.getSimpleName();
 
     protected IGameController gameController;
-
+    public boolean backButtonEnabled=false;
 
     /* ----------------------------------------------------------- */
     /* ------------------------- METHODS ------------------------- */
     /* ----------------------------------------------------------- */
+    @Override
+    public void onBackPressed() {
+        if(backButtonEnabled){
+             super.onBackPressed();
+        }
+// dont call **super**, if u want disable back button in current screen.
+    }
     public void startActivity(Class activity){
         startActivity(new Intent(this.getBaseContext(), activity));
         finish();
@@ -44,14 +51,22 @@ public abstract class AActivityWithStateManager extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        try{
         if (gameController != null)
-            gameController.save();
+            gameController.save();}
+            catch(Exception ex){
+
+            }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initStateManager();
+        try{
+        initStateManager();}
+        catch(Exception ex){
+
+        }
     }
 
     protected void initStateManager() {

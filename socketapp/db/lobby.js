@@ -12,7 +12,7 @@ export default class Lobby {
     playersockets=[];
     flags=[];
     timeInterval;
-    timer;
+    timer=null;
     scoreInterval;
  
     constructor(id, name, password, time, players){
@@ -26,13 +26,38 @@ export default class Lobby {
     }
     deleteLobby(){
         console.log("deleting lobby");
-        this.players=null;
-        this.teams=null;
+        delete this.players;
+        delete this.teams;
+        this.name="";
+        this.id="";
         clearInterval(this.scoreInterval);
         clearInterval(this.timeInterval);
-        this.flags=null;
-        timer=null;
-
+        delete this.flags;
+        if(this.timer!=null){this.timer=null};
+    }
+    showEndScreen(){
+        try{
+        let greenScore=0;
+        let redScore=0;
+        let finalMessage="The winner is: Team ";
+        this.teams.filter((team)=>{
+            if(team.teamName=="orange"){
+                redScore= team.score;
+            }
+            if(team.teamName=="green"){
+                greenScore= team.score;
+            }
+        });
+        if(greenScore>redScore) {
+            finalMessage+="Green"
+        }else if(redScore > greenScore){
+            finalMessage+="Orange"
+        }else{
+            finalMessage="It's a draw";
+        }
+        this.emit("endScreen",finalMessage);
+        this.deleteLobby()
+    }catch(e){}
     }
     captureFlags(flag){
         try {
@@ -60,7 +85,7 @@ export default class Lobby {
                 let flags = JSON.stringify(this.flags);
 
             }else{
-                this.flags[index]=flag;
+                this.flags[index]=JSON.parse(flag);
             }
             
             this.emit("syncFlags",JSON.stringify(this.flags));

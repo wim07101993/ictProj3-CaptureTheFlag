@@ -55,10 +55,10 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
 
     private static final String TAG = GameActivity.class.getSimpleName();
 
-    Beacon currentBeacon;
-    private static final boolean USE_BLUETOOTH = false;
+    private Beacon currentBeacon;
+    private static final boolean USE_BLUETOOTH = true;
     private static final int GAME_DURATION_IN_MINUTES = 30;
-
+    private Flag currentFlag=null;
     public float gameTime;
 
     // TODO Someone: create in socket
@@ -80,7 +80,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     /* ------------------------- Beacon scanner ------------------------- */
 
     private static final int START_QUIZ_ACTIVITY = 70;
-    private static final double SIGNAL_THRESHOLD = 2;
+    private static final double SIGNAL_THRESHOLD = 2.5f;
     private IBeaconScanner beaconScanner;
     private boolean beaconWithCooldown = false;
 
@@ -92,8 +92,11 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         return MY_TEAM;
     }
 
+    public void setCurrentFlag(Flag currentFlag){
+        this.currentFlag=currentFlag;
+    }
+
     private void makeAppFullScreen() {
-        // Hide UI first
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -141,6 +144,7 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         beaconWithCooldown = (cooldownLeft > 1010);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         if (!beaconWithCooldown) {
+            currentFlag=null;
             ft.hide(cooldownFragment);
         } else {
 
@@ -169,13 +173,16 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
             if (bluetoothManager != null) {
                 BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
                 beaconScanner = new BeaconScanner(bluetoothAdapter);
+                beaconScanner.addOnScanListener(this);
+                beaconScanner.start();
             }
-        } else if (Variables.DEBUG) {
+        } else if (Variables.DEBUG && !USE_BLUETOOTH) {
             beaconScanner = new MockBeaconScanner();
+            beaconScanner.addOnScanListener(this);
+            beaconScanner.start();
         }
 
-        beaconScanner.addOnScanListener(this);
-        beaconScanner.start();
+
     }
 
     // TODO Safe remove this method
@@ -216,9 +223,14 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
+        try{ 
+        Flags flags = ((Flags) gameController.getSerializable(EStateManagerKey.FLAGS));
+        flags.clearThis();
+        gameController.setSerializable(EStateManagerKey.FLAGS,flags);}
+        catch(Exception ex){
+            Log.d(TAG, "onCreate: couldn't reset flags");
+        }
         try {
             initBeaconScanner();
         } catch (Exception ex) {
@@ -263,6 +275,8 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
                 isStartQuizActivityOpen = false;
                 if (resultCode == 1) {
                     showQuiz(true);
+                }else{
+                    currentFlag.setCooldownTime();
                 }
         }
     }
@@ -276,45 +290,73 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
     @Override
     public void onScanStarted() {
     }
-
+    private void updateUI(){
+        try{
+        Flags flags = (Flags) gameController.getSerializable(EStateManagerKey.FLAGS);
+        int redFlags = flags.getNumberOfFlagsOfTeam(Team.TEAM_ORANGE);
+        int greenFlags = flags.getNumberOfFlagsOfTeam(Team.TEAM_GREEN);
+        scoreFragment.setFlags(redFlags, greenFlags);}
+        catch (Exception ex){
+            Log.d(TAG, "updateUI");
+        }
+    }
     @Override
     public void onBeaconFound(IBeacon beacon) {
-
+        updateUI();
         if (currentBeacon != null) {
             if (currentBeacon.equals(beacon)) {
                 return;
             }
         }
 
-        if ((beacon.getRelativeRssi() > SIGNAL_THRESHOLD || quizLayout2.getVisibility() == View.VISIBLE)) {
+        if ((beacon.getRelativeRssi() > SIGNAL_THRESHOLD || quizLayout2.getVisibility() == View.VISIBLE||isStartQuizActivityOpen)) {
             return;
         }
+        try{
+            Flags flags = ((Flags) gameController.getSerializable(EStateManagerKey.FLAGS));
+            Flag flag=null;
+            if(flags!=null){
+                flag = flags.find(beacon);
+            }
 
-        Flag flag = ((Flags) gameController.getSerializable(EStateManagerKey.FLAGS)).find(beacon);
         if (flag != null) {
             //it's a nested if because get team would return on null
             //return if my team already has the flag
-            if (flag.getTeam().equals(MY_TEAM)) {
+            if (flag.getTeam().equals(gameController.getString(EStateManagerKey.MY_TEAM))) {
                 hideCooldownFragment();
                 return;
             }
             //return if i can't capture the flag
-            if (flag.getCooldown()) {
-                showCooldownFragment(flag.getCooldownTime());
+            if(currentFlag!=null){
+            if (flag.getBeaconMAC().equals(currentFlag.getBeaconMAC())) {
+                showCooldownFragment(currentFlag.getCooldownTime());
                 return;
-            }
+            }}
         }
-
+        if(currentFlag!=null){
+            if (beacon.getAddress().equals(currentFlag.getBeaconMAC())) {
+                showCooldownFragment(currentFlag.getCooldownTime());
+                return;
+            }}
         beaconWithCooldown = false;
         if (flag == null) {
             flag = new Flag(beacon);
             flag.setTeam(Team.NO_TEAM);
+            flag.setCooldownTime();
+            currentFlag=flag;
         }
         onlineQuizFragment.setCurrentFlag(flag);
         if (!isStartQuizActivityOpen) {
+            if(flag.getTeam().equals(MY_TEAM)){
+
+                return;
+            }
             Intent intent = new Intent(this, StartQuizActivity.class);
             startActivityForResult(intent, START_QUIZ_ACTIVITY);
             isStartQuizActivityOpen = true;
+        }}
+        catch(Exception ex){
+
         }
 
     }
@@ -353,19 +395,6 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
         @Override
         public void handleMessage(Message msg) {
             GameTimer gameTimer = new GameTimer(gameController, timerTextView, gameTime);
-            gameTimer.addListener(new OnGameTimerFinishedListener() {
-                @Override
-                public void OnGameTimerFinished() {
-                    Flags flags = (Flags) gameController.getSerializable(EStateManagerKey.FLAGS);
-                    Utils.toast(getApplicationContext(), "Game Finished, you have captured "
-                            + flags.size() +
-                            " flags");
-                    timerTextView.setText(R.string.finished);
-                    gameController.setBoolean(EStateManagerKey.GAME_STARTED, false);
-                    startEndActivity();
-                    gameController.setBoolean(EStateManagerKey.GAME_STARTED, false);
-                }
-            });
         }
     };
 
@@ -386,21 +415,29 @@ public class GameActivity extends AActivityWithStateManager implements OnScanLis
                 Team[] teams = gson.fromJson((String)((StateChangedArgs) args).getNewValue(), Team[].class) ;
                 scoreFragment.synScore(teams);
                 break;
+            case END_SCREEN:
+                gameController.setString(EStateManagerKey.END_MESSAGE,(String)((StateChangedArgs) args).getNewValue());
+                startActivity(EndActivity.class);
+
+
+                beaconScanner.stop();
+                break;
 
         }
 
-
+        try {
         IStateManagerKey key = ((StateChangedArgs) args).getKey();
 
-        if (key == EStateManagerKey.FLAGS) {
-            try {
+            if (key == EStateManagerKey.FLAGS) {
+                /*
                 Flags flags = (Flags) gameController.getSerializable(EStateManagerKey.FLAGS);
                 int redFlags = flags.getNumberOfFlagsOfTeam(Team.TEAM_ORANGE);
                 int greenFlags = flags.getNumberOfFlagsOfTeam(Team.TEAM_GREEN);
-                scoreFragment.setFlags(redFlags, greenFlags);
-            } catch (Exception err) {
+                scoreFragment.setFlags(redFlags, greenFlags);*/
+            }
+        } catch (Exception err) {
                 Log.e("Lobby activity", "show toast");
             }
-        }
     }
+
 }

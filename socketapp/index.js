@@ -20,10 +20,13 @@ export default class{
     //void
     OnSocketConnect(socket){
         let parent=this;
+        try{
         console.log("connection to the server");
         socket.on("createLobby",(playerName, lobbyName, password, time)=> lobbyClass.createLobby(this.server, socket, playerName, lobbyName, password, time,this.lobbies));
         socket.on("createLobbyNew",(settings)=>lobbyClass.createLobby(parent.server,socket,settings,this.lobbies));
         socket.on("joinLobby",(settings)=>lobbyClass.joinLobby(parent.server,socket,JSON.parse(settings),this.lobbies));
+        socket.on("joinLobbyio",(settings)=>lobbyClass.joinLobby(parent.server,socket,settings,this.lobbies));
+        
         socket.on("leaveLobby", (lobbyId, playerName) => lobbyClass.leaveLobby(lobbyId, playerName, this.server,this.lobbies));
         socket.on("hostLeft", (lobbyID) => lobbyClass.hostLeft(this.server, lobbyID,this.lobbies));
         socket.on("joinTeam",(value)=>{
@@ -31,20 +34,24 @@ export default class{
             lobbyClass.joinTeam(player["lobbyId"], player["team"]["teamName"],player["name"], this.server,this.lobbies)
         });
         socket.on("startLobby", (lobbyId) => {
-          lobbyClass.distributePlayers(lobbyId, parent.server,parent.lobbies);
+          
           lobbyClass.startTime(lobbyId, parent.server, socket,parent.lobbies);
           parent.AddLobbyListeners(socket);
         });
         socket.on("askPlayers", (lobbyId) => lobbyClass.getPlayers(lobbyId,socket,this.lobbies));
         socket.on("restartLobby", (lobbyID) => lobbyClass.restart(lobbyID));
+        }catch(e){}
     }
+    
     //void
     AddLobbyListeners(socket){
-        // flags
+        // flags 
+         try{
         socket.on("askFlags",()=> flagsClass.askFlags(socket));
         socket.on("addFlag",(flag)=> flagsClass.addFlag(lobby, socket, flag));
         socket.on("updateFlag",(flag)=> flagsClass.updateFlag(lobby, socket, flag));
         socket.on("removeFlag",(flag)=> flagsClass.removeFlag(lobby, socket, flag));
+         }catch(e){}
     }
 
     //Object<lobby>
