@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 07, 2017 at 03:52 PM
+-- Generation Time: Dec 14, 2017 at 11:35 AM
 -- Server version: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -42,8 +42,33 @@ CREATE TABLE `answer` (
 --
 
 INSERT INTO `answer` (`Answer_ID`, `Answer`, `Question_ID`, `Correct`) VALUES
-(14, 'Een beest', 12, 1),
-(15, 'Een kast', 12, 0);
+(18, 'De relativiteitstheorie', 14, 0),
+(19, 'Het foto-elektrisch effect', 14, 1),
+(20, 'Het bestaan van moleculen', 14, 0),
+(21, '6', 15, 0),
+(25, '9', 15, 1),
+(26, 'Vierkantswortel 81', 15, 1),
+(27, 'Brussel', 16, 0),
+(28, 'Johannesburg', 16, 0),
+(29, 'Budapest', 16, 1),
+(30, 'Praag', 16, 0),
+(31, 'Heusden-Zolder', 16, 0),
+(32, 'Japan', 17, 0),
+(33, 'Duitsland', 17, 1),
+(34, 'Nederland', 17, 0),
+(35, 'Brazilië', 17, 0),
+(36, 'Kwijlen', 18, 1),
+(37, 'Eten', 18, 0),
+(38, 'Poot geven', 18, 0),
+(39, 'Een backflip doen', 18, 0),
+(40, 'Omrollen', 18, 0),
+(41, 'Dood', 19, 1),
+(42, 'Levend', 19, 1),
+(43, 'Beide', 19, 1),
+(44, 'Zombie', 19, 0),
+(45, 'God is dood', 20, 1),
+(46, 'God leeft', 20, 0),
+(47, 'God is wel ne chille kerel', 20, 0);
 
 -- --------------------------------------------------------
 
@@ -62,7 +87,11 @@ CREATE TABLE `category` (
 
 INSERT INTO `category` (`Category_ID`, `Name`) VALUES
 (1, 'Alle'),
-(17, 'Wiskunde');
+(19, 'Wiskunde'),
+(20, 'Aardrijkskunde'),
+(21, 'Fysica'),
+(22, 'Psychologie'),
+(23, 'Theologie');
 
 -- --------------------------------------------------------
 
@@ -84,7 +113,7 @@ CREATE TABLE `migrations` (
 
 CREATE TABLE `question` (
   `Question_ID` int(11) NOT NULL,
-  `Question` varchar(50) NOT NULL
+  `Question` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -92,7 +121,14 @@ CREATE TABLE `question` (
 --
 
 INSERT INTO `question` (`Question_ID`, `Question`) VALUES
-(12, 'Wat is een eenhoorn?');
+(14, 'Voor welke theorie heeft Einstein de nobelprijs gekregen?'),
+(15, 'Wat is de uitkomst van 3² ?'),
+(16, 'Wat is de hoofstad van Hongarije?'),
+(17, 'Welk land is een buurland van Polen?'),
+(18, 'Wat deden de honden van Pavlov als de bel rinkelde?'),
+(19, 'Is Schrödinger\'s kat dood of levend?'),
+(20, 'Wat zei Nietzsche over God?'),
+(21, 'Bestaat God?');
 
 -- --------------------------------------------------------
 
@@ -111,8 +147,22 @@ CREATE TABLE `question_per_category` (
 --
 
 INSERT INTO `question_per_category` (`Question_Per_Category_ID`, `Question_ID`, `Category_ID`) VALUES
-(20, 12, 1),
-(21, 12, 17);
+(24, 14, 1),
+(25, 14, 21),
+(26, 15, 1),
+(27, 15, 19),
+(28, 16, 1),
+(29, 16, 20),
+(30, 17, 1),
+(31, 17, 20),
+(32, 18, 1),
+(33, 18, 22),
+(34, 19, 1),
+(35, 19, 21),
+(36, 20, 1),
+(37, 20, 23),
+(38, 21, 1),
+(39, 21, 23);
 
 -- --------------------------------------------------------
 
@@ -188,13 +238,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `Answer_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `Answer_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -206,13 +256,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `question`
 --
 ALTER TABLE `question`
-  MODIFY `Question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `Question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `question_per_category`
 --
 ALTER TABLE `question_per_category`
-  MODIFY `Question_Per_Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `Question_Per_Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `users`
