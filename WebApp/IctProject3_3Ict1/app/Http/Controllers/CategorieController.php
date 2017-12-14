@@ -17,6 +17,9 @@ class CategorieController extends Controller
     
     function GetCategorieën(){
         $categorieën = CategoryModel::all();
+        foreach($categorieën as $categorie){
+            $categorie["Questions"] = CategoryModel::find($categorie["Category_ID"])->questions;
+        }
         return $categorieën; 
     }
     

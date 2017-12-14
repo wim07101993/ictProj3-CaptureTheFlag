@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 14, 2017 at 12:24 PM
+-- Generation Time: Dec 14, 2017 at 12:47 PM
 -- Server version: 10.1.28-MariaDB
 -- PHP Version: 7.1.10
 
@@ -45,9 +45,6 @@ INSERT INTO `answer` (`Answer_ID`, `Answer`, `Question_ID`, `Correct`) VALUES
 (18, 'De relativiteitstheorie', 14, 0),
 (19, 'Het foto-elektrisch effect', 14, 1),
 (20, 'Het bestaan van moleculen', 14, 0),
-(21, '6', 15, 0),
-(25, '9', 15, 1),
-(26, 'Vierkantswortel 81', 15, 1),
 (27, 'Brussel', 16, 0),
 (28, 'Johannesburg', 16, 0),
 (30, 'Praag', 16, 0),
@@ -121,7 +118,6 @@ CREATE TABLE `question` (
 
 INSERT INTO `question` (`Question_ID`, `Question`) VALUES
 (14, 'Voor welke theorie heeft Einstein de nobelprijs gekregen?'),
-(15, 'Wat is de uitkomst van 3² ?'),
 (16, 'Wat is de hoofstad van Hongarije?'),
 (17, 'Welk land is een buurland van Polen?'),
 (18, 'Wat deden de honden van Pavlov als de bel rinkelde?'),
@@ -148,8 +144,6 @@ CREATE TABLE `question_per_category` (
 INSERT INTO `question_per_category` (`Question_Per_Category_ID`, `Question_ID`, `Category_ID`) VALUES
 (24, 14, 1),
 (25, 14, 21),
-(26, 15, 1),
-(27, 15, 19),
 (28, 16, 1),
 (29, 16, 20),
 (30, 17, 1),
@@ -255,13 +249,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `question`
 --
 ALTER TABLE `question`
-  MODIFY `Question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `Question_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `question_per_category`
 --
 ALTER TABLE `question_per_category`
-  MODIFY `Question_Per_Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `Question_Per_Category_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `users`

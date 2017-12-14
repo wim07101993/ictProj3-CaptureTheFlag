@@ -9,6 +9,7 @@
                     <table class="centered bordered">
                     <thead>
                         <th>Categorie</th>
+                        <th>Aantal vragen</th>
                         <th colspan="2" style="height: 75px;">
                             <input id="search" placeholder=" Search..." class="grey"  id="search" ></input>
                         </th>
