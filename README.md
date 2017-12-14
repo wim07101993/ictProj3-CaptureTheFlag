@@ -7,7 +7,8 @@
 >* [X] sprint 1
 >* [X] sprint 2
 >* [X] sprint 3
->* [ ] sprint 4
+>* [X] sprint 4
+>* [ ] sprint 5
 
 ## Student
 
